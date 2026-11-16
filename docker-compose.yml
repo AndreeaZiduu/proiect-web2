@@ -1,0 +1,22 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: farmacii_sibiu_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_dev_password
+      MYSQL_DATABASE: farmacii_sibiu
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_dev_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_dev_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysqldata:

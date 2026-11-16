@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum FacilityType {
+  PHARMACY
+  PERMANENCE_CENTER
+}
+
+enum CorrectionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CONFLICT
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+
+  favorites            Favorite[]
+  submittedCorrections ScheduleCorrection[] @relation("SubmittedBy")
+  reviewedCorrections  ScheduleCorrection[] @relation("ReviewedBy")
+}
+
+model Facility {
+  id             String       @id @default(cuid())
+  name           String
+  type           FacilityType
+  address        String
+  city           String       @default("Sibiu")
+  latitude       Float
+  longitude      Float
+  phone          String?
+  sourceName     String
+  lastVerifiedAt DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  services         FacilityService[]
+  regularSchedules RegularSchedule[]
+  holidaySchedules HolidaySchedule[]
+  onCallRotations  OnCallRotation[]
+  corrections      ScheduleCorrection[]
+  favorites        Favorite[]
+}
+
+model FacilityService {
+  id          String   @id @default(cuid())
+  facilityId  String
+  facility    Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  serviceName String
+
+  @@index([serviceName])
+}
+
+model RegularSchedule {
+  id              String   @id @default(cuid())
+  facilityId      String
+  facility        Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  dayOfWeek       Int
+  openMinute      Int
+  closeMinute     Int
+  crossesMidnight Boolean  @default(false)
+
+  @@index([facilityId, dayOfWeek])
+}
+
+model HolidaySchedule {
+  id          String    @id @default(cuid())
+  facilityId  String?
+  facility    Facility? @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  date        DateTime  @db.Date
+  holidayName String
+  isClosed    Boolean   @default(true)
+  openMinute  Int?
+  closeMinute Int?
+}
+
+model OnCallRotation {
+  id          String   @id @default(cuid())
+  facilityId  String
+  facility    Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  startsAt    DateTime
+  endsAt      DateTime
+  importBatch String
+
+  @@unique([facilityId, startsAt, endsAt])
+  @@index([startsAt, endsAt])
+}
+
+model ScheduleCorrection {
+  id               String           @id @default(cuid())
+  facilityId       String
+  facility         Facility         @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  submittedById    String
+  submittedBy      User             @relation("SubmittedBy", fields: [submittedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?            @relation("ReviewedBy", fields: [reviewedById], references: [id])
+  proposedNote     String           @db.Text
+  proposedOpenMin  Int?
+  proposedCloseMin Int?
+  isClosedOverride Boolean          @default(false)
+  validFrom        DateTime
+  validUntil       DateTime
+  confirmations    Int              @default(1)
+  status           CorrectionStatus @default(PENDING)
+  createdAt        DateTime         @default(now())
+}
+
+model Favorite {
+  userId     String
+  facilityId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  facility Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@id([userId, facilityId])
+}

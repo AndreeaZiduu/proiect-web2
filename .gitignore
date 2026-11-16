@@ -1,1 +1,6 @@
-.claude/worktrees/
+node_modules/
+**/node_modules/
+.env
+**/.env
+dist/
+**/dist/
