@@ -15,7 +15,7 @@ enum Role {
 
 enum FacilityType {
   PHARMACY
-  PERMANENCE_CENTER
+  EMERGENCY_VET
 }
 
 enum CorrectionStatus {
