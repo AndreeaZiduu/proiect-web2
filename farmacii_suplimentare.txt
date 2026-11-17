@@ -1,0 +1,147 @@
+Denumire
+	Localitate
+	Adresă
+	Telefon
+	Tip
+	Program
+	Program sărbători
+	DR.MAX Sibiu 20
+	Sibiu
+	Str.Lungă nr.63 fost bloc 12, ap.2
+	0739/663877
+	circuit deschis
+	L-V = 8-20 S= 8 - 14 D=închis
+	15.08.2026 = închis
+	DR.MAX Sibiu 21
+	Sibiu
+	B-dul M. Viteazu nr. 11
+	0745/071218
+	circuit deschis
+	Luni - Duminică = 8 - 21 S = 8-18 D= 8-14
+	15.08.2026= închis
+	DR.MAX Sibiu 22
+	Sibiu
+	Str. Semaforului nr. 39
+	0743/057860
+	circuit deschis
+	L-V = 8-20 S= 8-14 D =închis
+	15.08.2026= închis
+	Dr.MAX Sibiu 10
+	Sibiu
+	B-dul M.Viteazu nr.15
+	0799/914634
+	circuit deschis
+	L-V=8-21 S=8-18 D= închis
+	15.08.2026 = 8 - 18
+	Dr.Max Sibiu 11
+	Sibiu
+	B-dul M.Viteazu bl.11
+	0738/747706
+	circuit deschis
+	L-V= 8-21 S= 8-14 D=închis
+	15.08.2026 = închis
+	Dr.Max Sibiu 12
+	Sibiu
+	Str. N. Balcescu nr. 2-4
+	0739/860111
+	circuit deschis
+	L- V 9-21 S- D =10-20 D =10-20
+	15.08.2026 = 10-20
+	Dr.Max Cisnădie 2
+	Cisnadie
+	Str.Piata Noua,Mag.Margareta, bl.S.,ap.V
+	0793/175716
+	circuit deschis
+	L-V= 9 - 17 S= închis D=închis
+	15.08.2026 = închis
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Constituției nr.2, bl.24
+	0269/520640 0741/108212
+	circuit deschis
+	L-V= 8-21 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Șelimbăr
+	str.Doamna Stanca nr.3A ap.14
+	0369/421180 0756/099843
+	circuit deschis
+	L-V= 8-21 S= 8-16 D= 9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Lomonosov nr.1
+	0269254109 0755/011387
+	circuit deschis
+	L-V= 7,30-21 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Mediaș
+	str.1 Decembrie nr.23
+	0269/823449 0743/004149
+	circuit deschis
+	L- V= 8-20 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Vasile Aron bl.81,ap.5
+	0369/442 008 0744/381847
+	circuit deschis
+	L-V= 8-21 S= 8-16 D= 9-14
+	15.08.2026= închis
+	Farmacia CATENA FARMACIE
+	Avrig
+	Str. Closca 23B
+	0269524806 0743/004272
+	circuit deschis
+	L- V= 8-20 S= 8-14 D=9-14
+	15.08.2026 = 8 - 14
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Calea Gușteriței 16A
+	0269-211409 0743/004162
+	circuit deschis
+	L- V= 7,30-21 S= 8-16 D =9-14
+	15.08.2026 = 8 - 16
+	Farmacia Dona Logistică 228
+	Sibiu
+	Str. Prometeu nr.2 ap1
+	0372/407228
+	circuit deschis
+	L-V = 8-20 S=8-16 D=închis
+	30.11.2026 = închis 01.12.2026= închis
+	Farmacia Dona Logistică 370
+	Cisnadie
+	P-ța Revoluției nr.3
+	0269563202
+	circuit deschis
+	L-V = 8-20 S=8-14 D=închis
+	01.11.2026 = 9-15 01.12.2026 = 9-15
+	Farmacia Dona Logistică 489
+	Medias
+	str.I.C.Brătianu nr.2
+	0269/835049
+	circuit deschis
+	L-V = 8-16 S=8-16 D=închis
+	01.11.2026 = 9-15 01.12.2026 = 9-15
+	Farmacia Dona Logistică 506
+	Sibiu
+	str.Bihorului nr.7 sc.C
+	0372/409466
+	circuit deschis
+	L-V = 8-20 S=8-16 D=închis
+	01.11.2026 = 9-16 01.12.2026 = 9-16
+	Help Net Farma 362
+	Sibiu
+	Str. Doljului nr. 8
+	0269225215
+	circuit deschis
+	L-V= 8-20 S=8-14 D= închis
+	15.08.2026 = închis
+	Help Net Farma 403
+	Medias
+	Calafat nr.8
+	0734/889495
+	circuit deschis
+	L-V= 8-20 S=8-16 D= 9-13
+	15.08.2026 = închis

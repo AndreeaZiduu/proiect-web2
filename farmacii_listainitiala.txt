@@ -1,0 +1,1313 @@
+﻿Denumire
+	Localitate
+	Adresă
+	Telefon
+	Tip
+	Program
+	Program sărbători
+	Adefarm Plus
+	Sibiu
+	str.Tribunei nr.1
+	0269/708 067 /0744381822
+	PROGR.PRELUNGIT
+	L – V = 8-22 S = 9-21 D=9-21
+	15.08.2026 = 9 -22
+	Adefarm Plus
+	Sibiu
+	B-dul M.Viteazu nr.11
+	0269/420162 0755/011325
+	NON STOP
+	NON STOP
+	NON STOP
+	Adefarm Plus
+	Sibiu
+	str.N.Iorga complex Cedonia
+	0269/255130 0755/011423
+	PROGR.PRELUNGIT
+	L – V = 7,30-22 S = 8-18 D = 8-16
+	15.08.2026 = 8 - 18
+	Adefarm Plus
+	Sibiu
+	Str.Lungă nr.63
+	0269/701133 0741/106867
+	
+
+	L-V = 8-21 S = 8-16 D= 8-14
+	15.08.2026 = 8 - 16
+	Adefarm Plus
+	Sibiu
+	Str.Oașa nr.2
+	0269/891841 0756/091788
+	
+
+	L- V = 7,30- 21,00 S= 8 - 15 D = 9 - 14
+	15.08.2026 = închis
+	Adefarm Plus
+	Mediaș
+	Str. I.C.Brătianu nr.4
+	0269/841203 / 0744/318356
+	PROGR.PRELUNGIT
+	L-V = 7,30-21 S = 8-17 D= 9-14
+	
+
+	Adefarm Plus
+	Cisnădie
+	Str.Cindrelu nr.3
+	0269/566270 /0741/106768
+	
+
+	L-V = 8-21 S=8-15 D= 9-14
+	15.08.2026 = 8 - 15
+	Adefarm Plus
+	Sibiu
+	Nicolae Bălcescu nr. 9
+	0269/243931 0755/011328
+	
+
+	L-V = 8-22 S= 9-22 D =9-22
+	15.08.2026= 09 - 22
+	Alexfarm Profes. Med
+	Brateiu
+	Brateiu nr.32
+	0269/863310
+	
+
+	L-V = 10-18 S -D = închis
+	
+
+	Alpha Med
+	Sibiu
+	Str.Iorga nr.50
+	0369/453918
+	farmacie cu receptură
+	L-V =8- 20 S= 8-14 D=închis
+	
+
+	Alpha Med
+	Cristian
+	Str. IV nr.6
+	0269579636
+	
+
+	L-V =8-20 S=9-13 D= închis
+	
+
+	Alpha Med
+	Sibiu
+	Str. Rahovei nr. 45
+	0269226639
+	
+
+	L-V= 8-16 S-D = închis
+	
+
+	Alpha Med
+	Miercurea Sibiului
+	Str. Ilie Macelaru nr.50
+	0269533533
+	farmacie cu receptură
+	L-V = 8-16 S= 9-13 D=închis
+	
+
+	Andredy Pharma-San
+	Tălmaciu
+	Str.P-ţa Textiliştilor bl.1
+	0269-550056
+	farmacie cu receptură
+	L-V= 8-20 S=8-14 D=8-13
+	
+
+	Anima Farm
+	Dumbraveni
+	Str. Mihai Eminescu 2
+	0269865336
+	
+
+	L-V= 8-16 S-D= închis
+	01.11.2026 = închis 01.12.2026 = închis
+	Beta Farm
+	Avrig
+	str.Horea nr.2
+	0269525414
+	
+
+	L-V= 8-20 S=9-14 D= închis
+	
+
+	Bisfarm
+	Selimbar
+	str.M.Viteazu nr.222
+	0269560254
+	
+
+	L-V = 10-18 S-D= închis
+	
+
+	Bisfarm
+	Șelimbăr
+	Str.Doamna Stanca Nr.53, Bl.2,sc.B, ap.2
+	0756/627121
+	circuit deschis
+	L-V =8-20 S=8-14 D=închis
+	
+
+	Bisfarm
+	Sadu
+	str.I.M.Klein nr.38
+	0756/627121
+	
+
+	L-V = 8-20 S-D = închis
+	
+
+	Bisfarm
+	SURA MICĂ
+	Sos.Sibiului 32 ,ap.2
+	0771/704123
+	circuit deschis
+	9-17
+	închis
+	Cassia Farm
+	Sibiu
+	Str. Valea Aurie bl. 28
+	0269241209
+	farmacie cu receptură
+	L-V = 8-20 S=9-14 D=închis
+	
+
+	Cold Farm
+	Dumbraveni
+	Str.M.Eminescu nr.7
+	0269865758
+	farmacie cu receptură
+	L-V = 9-17 S-D = închis
+	
+
+	DR.MAX Sibiu 20
+	Sibiu
+	Str.Lungă nr.63 fost bloc 12, ap.2
+	0739/663877
+	
+
+	L-V = 8-20 S= 8 - 14 D=închis
+	15.08.2026 = închis
+	DR.MAX Sibiu 24
+	Sibiu
+	Str. Lector nr.1-3A Promenada Mall Sibiu
+	0739/662442
+	on - line
+	L - D = 10- 22
+	15.08.2026 = 10 -22
+	DR.MAX Sibiu19
+	Sibiu
+	str.Ludoș bl.33
+	0739/663870
+	Farmacie cu receptură
+	L-V = 8-20 S= 8 - 14 D=închis
+	15.08.2026 = 8 - 14
+	DR.MAX HIPERFARMACIE - FARMACIE ON LINE
+	Șelimbăr
+	str.Sibiului nr.5 spatiul com.P 250_P260, Shoping City Sibiu
+	
+
+	circuit deschis
+	L-V= 10 - 22 S-D= 10 - 22
+	15.08.2026= 10- 22
+	DR.MAX Sibiu 21
+	Sibiu
+	B-dul M. Viteazu nr. 11
+	0745/071218
+	
+
+	Luni - Duminică = 8 - 21 S = 8-18 D= 8-14
+	15.08.2026= închis
+	DR.MAX Sibiu 22
+	Sibiu
+	Str. Semaforului nr. 39
+	0743/057860
+	
+
+	L-V = 8-20 S= 8-14 D =închis
+	15.08.2026= închis
+	DR.MAX Sibiu 23
+	Sibiu
+	P-ţa Unirii nr.1,subap.IX
+	0369/452097
+	PROGR.PRELUNGIT
+	L -V = 9 - 21 S-D =10-20
+	15.08.2026 = 10 - 20
+	DR.MAX Sibiu17
+	Sibiu
+	Str.Calea Cisnădiei 20,ap.3
+	0739/662434
+	Farmacie cu receptură
+	L-V = 8-20 S= 8 - 14 D=închis
+	15.08.2026= închis
+	DR.Max Cristian 1
+	Cristian
+	Com.Cristian, str.V nr.6
+	0725/683741
+	circuit deschis
+	L-V= 9-17 S= închis D=închis
+	15.08.2026 = închis
+	Deea Farm
+	Slimnic
+	Str. Mediaşului 6-8
+	0269856090
+	
+
+	L-V= 8,30 -16,30 S-D închis
+	
+
+	Defa Sib
+	Sibiu
+	Str. Ludos nr. 51
+	0269242120
+	farmacie cu receptură
+	L-V= 8-20 S=9-14 D=închis
+	
+
+	Dr. MAX Mediaș 2
+	Medias
+	Str.M.Eminescu 17A/14
+	0269841622
+	
+
+	L-V= 8-20 S= 8-14 D=închis
+	1.05.2026= 8 - 20
+	Dr. Max Mediaș 4
+	Mediaș
+	Str.Calafat nr.8
+	0799/914640
+	
+
+	L-V= 9-17 S = închis D=închis
+	1.05.2026 = închis
+	Dr.MAX Sibiu 10
+	Sibiu
+	B-dul M.Viteazu nr.15
+	0799/914634
+	
+
+	L-V=8-21 S=8-18 D= închis
+	15.08.2026 = 8 - 18
+	Dr.Max Sibiu 11
+	Sibiu
+	B-dul M.Viteazu bl.11
+	0738/747706
+	
+
+	L-V= 8-21 S= 8-14 D=închis
+	15.08.2026 = închis
+	Dr.Max Sibiu 12
+	Sibiu
+	Str. N. Balcescu nr. 2-4
+	0739/860111
+	
+
+	L- V 9-21 S- D =10-20 D =10-20
+	15.08.2026 = 10-20
+	Dr.Max Cisnădie 2
+	Cisnadie
+	Str.Piata Noua,Mag.Margareta, bl.S.,ap.V
+	0793/175716
+	
+
+	L-V= 9 - 17 S= închis D=închis
+	15.08.2026 = închis
+	Dr.Max Mediaș 1
+	Mediaș
+	Sos.Sibiului nr.81, Hipermarket Kuafland
+	0726/301405
+	
+
+	L-V = 9-21 S = 9-21 D = 9- 19
+	15.08.2026 = 9 - 21
+	Dr.Max Sibiu 7
+	Selimbar
+	Sos.Sibiului, nr.5 parter, unit.S1 Galeria Com.Shoping City
+	0737/477256
+	
+
+	L-V= 10 - 22 S= 10 - 22 D= 10 - 22
+	15.08.2026= 10 - 22
+	Dr.Max Sibiu Agnita
+	Agnita
+	P-ta Republicii nr.7
+	0733/083391
+	
+
+	L-V = 8 - 20 S= 8-14 D=închis
+	15.08.2026= 8 - 14
+	Dr.Max Sibiu 13
+	Sibiu
+	str.Bihorului bl.15,ap.1
+	0726/301227
+	
+
+	L-V= 8- 21 S= 8 - 14 D = închis
+	15.08.2026 = 8 - 14
+	Dr.Max Sibiu 14
+	Sibiu
+	Cartier Vasile Aron, bl.14, ap.V/I
+	0752/168746
+	
+
+	L-V= 8-20 S= 8 - 14 D= închis
+	15.08.2026 = închis
+	Dr.Max Sibiu 15
+	Sibiu
+	B-dul Victoriei nr.44B
+	 0752/168765
+	
+
+	L-V= 8-20 S= 8-14 D= închis
+	15.08.2026 = închis
+	Dr.Max Sibiu 3
+	Selimbar
+	Sos.Sibiului nr.1A Hipemarket Kaufland
+	0720/022848
+	PROGR.PRELUNGIT
+	L – V= 9 - 21 S= 9 - 20 D = 9-20
+	15.08.2026= 9 - 21
+	Dr.Max Sibiu 4
+	Selimbar
+	DN1 Sos.Sibiului Hypermarket ATAC
+	0745/159192
+	PROGR.PRELUNGIT
+	L-V = 10-22 S= 10-22 D = 10 - 22
+	15.08.2026= 10 - 22
+	Dr.Max Sibiu 8
+	Sibiu
+	Sos.Alba Iulia nr.40 Hipermarket Kaufland
+	0737/477252
+	
+
+	L-V= 9 -21 S= 9 -21 D= 9 -20
+	15.08.2026= 9 - 21
+	Dr.Max-Hiperfarmacie- CENTRU VACCINARE
+	Sibiu
+	Sibiu,Calea Șurii Mari nr.39,Prima Shoping Center ,sp.com.14
+	0720/022549
+	circuit deschis
+	L - D = 9 - 21
+	15.08.2026= 9 - 21
+	EV.PH. -Sano Farmacie
+	Axente Sever
+	Sat Axente Sever 165
+	0745/855152
+	
+
+	L-V = 8,30 -16,30 S = închis D =închis
+	
+
+	Ev.PH.Sano Farmacie
+	Șelimbăr
+	B-dul Mihai Viteazu nr.1
+	0745/855152
+	
+
+	L-V = 8-21 S=8-20 D=9-20
+	
+
+	Farmacia Anastasia
+	Sibiu
+	Tiglarilor complex
+	0269223808
+	farmacie cu receptură
+	L-v= 9-13,15-19 S=9-13D=închis
+	
+
+	Farmacia Apotheka
+	Sibiu
+	Str.Aleea Streiu nr.6
+	0269/218631
+	farmacie cu receptură
+	L-V = 8-20 S= 8-16 D= închis
+	15.08.2026= 8 -16
+	Farmacia Apotheka
+	Medias
+	Str. I.G. Duca 31
+	0269839214
+	farmacie cu receptură
+	L-V =7-20 S=8-14 D= închis
+	31.05.2026 = închis 1.06.2026= 9 - 13
+	Farmacia Apotheka
+	Sibiu
+	Semaforului nr.20 ap.1
+	0374/953226
+	
+
+	L – V= 7-21 S = 7 - 18 D= inchis
+	15.08..2026= 7 - 18
+	Farmacia Apotheka
+	Medias
+	Str.Virgil Mageru nr.1 Complex Comercial
+	0269/821182
+	
+
+	L-V= 7-19 S= 9-13 D închis
+	15.08.2026= 9 - 13
+	Farmacia Apotheka
+	Copsa mică
+	str. Eprubeta nr.11
+	0269840078
+	
+
+	L-V= 9-17 S-D = închis
+	15.08.2026 = închis
+	Farmacia Apotheka
+	Sibiu
+	Str. Lunga nr.65
+	0269223470
+	
+
+	L-V= 8-20 S=8- 16 D= 9-13
+	15.08.2026 = 8 - 16
+	Farmacia Apotheka
+	Bazna
+	str.Principală nr. 153
+	
+
+	
+
+	L- V= 9-17 S = 9-14 D= închis
+	15.08.2026 = închis
+	Farmacia Apotheka
+	Șeica Mare
+	Str.Principală 133
+	0269708794
+	
+
+	L-V= 10-18 S-D= închis
+	15.08.2026 = închis
+	Farmacia Apotheka
+	Medias
+	Str. Closca nr.2
+	0269843203
+	NON STOP -farmacie cu receptură
+	NON STOP
+	NON STOP
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Constituției nr.2, bl.24
+	0269/520640 0741/108212
+	
+
+	L-V= 8-21 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Șelimbăr
+	str.Doamna Stanca nr.3A ap.14
+	0369/421180 0756/099843
+	
+
+	L-V= 8-21 S= 8-16 D= 9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	B-dul M.Viteazu nr.15
+	0269/233737 0743/004268
+	circuit deschis
+	L-V= 7-22 S= 8-22 D= 8-22
+	15.08.2026 = 8 - 22
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Lungă nr.65
+	0743/004259
+	circuit deschis
+	L-V = 8 - 21 S = 8 - 16 D= 8 - 14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Râului nr.20
+	0269/708902 0755/011346
+	circuit deschis
+	L-V= 7,30 - 20,30 S= 8-16 D= 8 - 14
+	15.08.2026 = închis
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str. B-dul M.Viteazu 15
+	0269-233737 0743004268
+	PROGR.PRELUNGIT
+	L – V 7-22 S-D = 8-22
+	15.08.2026 = 8 - 12
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Lomonosov nr.1
+	0269254109 0755/011387
+	
+
+	L-V= 7,30-21 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Mediaș
+	str.1 Decembrie nr.23
+	0269/823449 0743/004149
+	
+
+	L- V= 8-20 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Vasile Aron bl.81,ap.5
+	0369/442 008 0744/381847
+	
+
+	L-V= 8-21 S= 8-16 D= 9-14
+	15.08.2026= închis
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Calea Dumbrăvii 137A
+	
+
+	circuit deschis
+	L-V= 7,30-21 S= 8-19 D= 8-14
+	
+
+	Farmacia CATENA FARMACIE
+	Sibiu
+	str.Bihorului nr.8 subap.1
+	0269/224355 0743/004471
+	circuit deschis
+	L-V = 8-21 S=8-17 D= 9-14
+	15.08.2026 = 8 - 17
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Sos.Alba Iulia nr.83
+	0269/229522 0745/100627
+	circuit deschis
+	L-V = 8-21 S= 8-16 D=9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Avrig
+	Str. Closca 23B
+	0269524806 0743/004272
+	
+
+	L- V= 8-20 S= 8-14 D=9-14
+	15.08.2026 = 8 - 14
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Calea Gușteriței 16A
+	0269-211409 0743/004162
+	
+
+	L- V= 7,30-21 S= 8-16 D =9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Turnului nr.23
+	0269210808
+	
+
+	L-V=7,30-20,30 S=8-16 D=8-14
+	31.05.2026= închis 01.06.2026= închis
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str.Herman Oberth 1A
+	0269/253542 0743/004262
+	
+
+	L-V= 7,30-21 S=8-16 D=9-14
+	15.08.2026= închis
+	Farmacia CATENA FARMACIE
+	Sibiu
+	B-dul Victoriei bl. 29
+	0269242922 0743/004256
+	
+
+	L-V= 8-21 S=8-16 D= 9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str. Semaforului bl. 13
+	0269247174 0744/372316
+	
+
+	L-V= 7,30-21 S=8-18 D=9-14
+	15.08.2026 = 8 - 18
+	Farmacia CATENA FARMACIE
+	Sibiu
+	Str. Raului nr.20
+	0269/708 902
+	farmacie cu receptură
+	L-V= 7,30-20,30 S=8-16 D= 8-14
+	09.06.2025 = ÎNCHIS
+	Farmacia CATENA FARMACIE
+	Mediaș
+	Str. Calafat nr.8
+	0269/842911 0741/106901
+	
+
+	L-V= 8-20,30 S= 8-16 D = 9-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA PHARMA
+	Sibiu
+	str.Calea Dumbrăvii nr. 137A
+	0269/701611 0753/241656
+	
+
+	L-V = 8-21 S=8-16 D= 9-13
+	15.08.2026 = 8 - 16
+	Farmacia CATENA PHARMA
+	Sibiu
+	str.Turnului nr.23
+	0269/210808 0743/004011
+	circuit deschis
+	L-V= 7,30-20,30 S= 8-16 D= 8-14
+	15.08.2026 = 8 - 16
+	Farmacia CATENA PHARMA
+	Mediaș
+	str. 1 Decembrie nr.23
+	
+
+	circuit deschis
+	L-V= 8 - 20 S= 8-16 D= 9-14
+	31.05.2026 = închis 1.06.2026= 9 - 14
+	Farmacia Caritas
+	Medias
+	I.G.Duca nr.40-42
+	0269843002
+	farmacie cu receptură
+	L-V = 8-20 S=închis D= închis
+	
+
+	Farmacia Caritas
+	Medias
+	Str. I.C.Bratianu 3
+	0269831148
+	farmacie cu receptură
+	L-V = 8-20 S=8-14 D= închis
+	
+
+	Farmacia Dona Logistică 228
+	Sibiu
+	Str. Prometeu nr.2 ap1
+	0372/407228
+	
+
+	L-V = 8-20 S=8-16 D=închis
+	30.11.2026 = închis 01.12.2026= închis
+	Farmacia Dona Logistică 370
+	Cisnadie
+	P-ța Revoluției nr.3
+	0269563202
+	
+
+	L-V = 8-20 S=8-14 D=închis
+	01.11.2026 = 9-15 01.12.2026 = 9-15
+	Farmacia Dona Logistică 489
+	Medias
+	str.I.C.Brătianu nr.2
+	0269/835049
+	
+
+	L-V = 8-16 S=8-16 D=închis
+	01.11.2026 = 9-15 01.12.2026 = 9-15
+	Farmacia Dona Logistică 506
+	Sibiu
+	str.Bihorului nr.7 sc.C
+	0372/409466
+	
+
+	L-V = 8-20 S=8-16 D=închis
+	01.11.2026 = 9-16 01.12.2026 = 9-16
+	Farmacia Dona Logistică 8
+	Sibiu
+	Parc Tineretului bl4 ap.5
+	0732/407008
+	PROGR.PRELUNGIT
+	L – V= 7 -20 S=8-13 D=închis
+	01.11.2026 = inchis 01.12.2026 = închis
+	Farmacia Dona Logistică 232
+	Sibiu
+	B-dul M.Viteazu bl.30 ap.I-IV
+	0372/407232
+	PROGR.PRELUNGIT
+	L -V = 8-20 S=8-16 D=9-13
+	01.11.2026 = 8 - 16 01.12.2026 = 9 -16
+	Farmacia Dona Logistică 280
+	Sibiu
+	Str.Semaforului nr.10
+	0372/401280
+	
+
+	L-V = 8-20 S=8-16 D=închis
+	01.11.2026 = 9-16 01.12.2026 = 9-16
+	Farmacia Dona Logistică 520
+	Avrig
+	Str. Sașilor nr.7
+	0269524111
+	
+
+	L-V = 8,30-19 S=8-16 D=închis
+	01.11.2026 = 8 - 16 01.12.2026 = 9-15
+	Farmacia GEORGE
+	Gura Râului
+	Gura Rîului nr.598
+	0774/480305
+	
+
+	L-V = 9-17 S= 9-14 D=închis
+	
+
+	Farmacia GEORGE
+	Nocrih
+	Nr. 210
+	0774/624813
+	
+
+	L-V = 10-18 S - D = închis
+	
+
+	Farmacia GEORGE
+	Medias
+	Str. George Enescu 11,ap.1
+	0774/624696
+	farmacie cu receptură
+	L-V= 8 - 20 S= 8-16 D= închis
+	
+
+	Farmacia GEORGE
+	Gura Raului
+	Gura Raului nr.197
+	0774/480307
+	
+
+	L-V= 8-16 S -D închis
+	
+
+	Farmacia GEORGE
+	Saliste
+	Str. Vale nr.7
+	0774/480306
+	
+
+	L-V = 9-20 S= 9-14 D=închis
+	
+
+	Farmacia GEORGE
+	Vurpăr
+	str .Dispensarului nr.443
+	0774/480300
+	
+
+	L- V= 9-17 S = 9-14 D=închis
+	
+
+	Farmacia GEORGE
+	Sura Mică
+	Sura Mică nr.89
+	0774/624696
+	
+
+	L-V= 8-16 S -D închis
+	
+
+	Farmacia GEORGE
+	Turnu Roșu
+	Str.Olteț nr.54
+	0774/480300
+	
+
+	L-V = 8-16 S – D = închis
+	
+
+	Farmacia Perfect Care
+	Sibiu
+	Str.Bâlea nr.1
+	0369/436626
+	
+
+	L-V =8-20 S= 9-15 D= închis
+	
+
+	Farmacia Perfect Care
+	Sibiu
+	Str. Hategului nr.10/28
+	0269234656
+	
+
+	L-V= 8-20 S=8-14 D= închis
+	
+
+	Farmacia Perfect Care
+	Șelimbăr
+	str.D-na Stanca nr.17
+	0369/454634
+	
+
+	L-V = 9-21 S= 9-15 D= închis
+	
+
+	Farmacia Perfect Care
+	Selimbar
+	M.Viteazu nr.63
+	0269560339
+	
+
+	L-V=8-20 S=9-15 D=închis
+	
+
+	Farmacia Ropharma 40
+	Sibiu
+	B-dul M.Viteazu nr.5
+	0269/233573
+	
+
+	L-V= 8-20 S= 9-14 D=închis
+	15.08.2026= 9 -14
+	Farmacia Ropharma 41
+	Sibiu
+	Str. Rusciorului bl.75/1
+	0269219500
+	
+
+	L-V= 8-20 S=9-14 D=închis
+	15.08.2026= închis
+	Farmacia Ropharma 46
+	Sibiu
+	str.Morilor nr.40, ap.II
+	0269/232428
+	
+
+	L- M = 10 - 18 M,J,V = 9 - 17 S= închis D= închis
+	15.08.2026 = închis
+	Farmacia Ropharma 47
+	Sibiu
+	str.Iacob Bologa nr.8,parter, sp.8
+	0269/250413
+	
+
+	L-V= 8-20 S=9-14 D=închis
+	15.08.2026= 9 - 14
+	Farmacia Ropharma 48
+	Avrig
+	Str.Closca bl.21,ap.2
+	0269523666
+	
+
+	L-V= 8-20 S=9-14 D=închis
+	15.08.2026= închis
+	Farmacia Sînziana
+	Laslea
+	str. Principala 281
+	0745767593
+	
+
+	L-V = 8-16 S=9-14 D= închis
+	
+
+	Farmacia-Evofarm
+	Racovița
+	Racovița nr.418
+	0269/527418
+	
+
+	L-V = 8-16 S= închis D=închis
+	
+
+	Farmaciile EVOFARM
+	Șelimbăr
+	str.M.Viteazu nr.260
+	
+
+	
+
+	L - V= 9-17 S=9-14 D=închis
+	
+
+	Farmaciile EVOFARM
+	Valea Viilor
+	Valea Viilor nr.338
+	0269/840128
+	
+
+	Luni -V= 8-16
+	
+
+	Farmaciile EVOFARM
+	Valea Viilor
+	str.Principală 338
+	
+
+	circuit deschis
+	L-V= 8-16 S= 8-14 D=închis
+	
+
+	Farmaciile EVOFARM
+	Biertran
+	str.1 Decembrie nr.16, ap.1
+	
+
+	circuit deschis
+	L- V= 9 -17 S-D = închis
+	
+
+	Farmacom Farmacia 17
+	Sibiu
+	Str.Calea Cisnădiei bl.19 ap.V
+	0269/430355
+	
+
+	L-V= 8-20 S = 8 -14 D=închis
+	
+
+	Farmacom Farmacia 18
+	Sibiu
+	Str.Poiana nr.11
+	0269/240305
+	
+
+	L-V= 8 - 19,30 S = 9 - 13 D = închis
+	15.08.2026 = închis
+	Farmacom Farmacia 19
+	Sibiu
+	Str. Lungă nr.43
+	0269/221755
+	
+
+	L-V= 9-17 S -D = închis
+	
+
+	Farmacom Farmacia 21
+	Sibiu
+	V.Aron nr.22
+	0269/446045
+	
+
+	L-V = 8-19 S= 8-13 D=închis
+	
+
+	Farmacom Farmacia 36
+	Agnita
+	Str.Avram Iancu nr.2
+	0269/510745
+	
+
+	L-V= 8 - 20 S = 8 -15 D = închis
+	
+
+	Farmacom Farmacia 39
+	Medias
+	Str.1Decembrie 1918 nr.23, ap.8
+	0269/842193
+	
+
+	L-V= 9-17 S-D = închis
+	
+
+	Farmacom Farmacia 40
+	Medias
+	Str. Iacob Piso 6, bl.41,parter,ap.67
+	0269/832650
+	farmacie cu receptură
+	L-V= 9-17 S-D = închis
+	
+
+	Farmacom Farmacia 55
+	Avrig
+	Str. Sasilor nr.25
+	0269/523643
+	farmacie cu receptură
+	L-V= 9-17 S-D = închis
+	
+
+	Farmacom Farmacia 57
+	Ocna Sibiului
+	Str. Bailor nr.2,bl.4 B
+	0269/541919
+	
+
+	L-V= 8 - 16 S-D = închis
+	
+
+	Farmacom Farmacia 70
+	Seica Mare
+	Str. Valea Mare nr.126
+	0269/853119
+	
+
+	L-V= 9- 17 S-D = închis
+	
+
+	Farmasib
+	Sibiu
+	Str. Nic. Balcescu nr. 53
+	0269217897
+	farmacie cu receptură
+	L -V 8-21 S=10- 20 D=10 -18 Sărb.legale= 10-20
+	
+
+	Farmasib
+	Sibiu
+	Str.Maramuresului 29
+	0269225777
+	farmacie cu receptură
+	L-V= 8-20 S= 9-14 D= închis Sărbăt.legale = închis
+	
+
+	Helixprod
+	Saliste
+	Str. Piața Junilor nr.27
+	0269553598
+	
+
+	L-V= 8-20 S= 8-14 D=închis
+	
+
+	Helixprod SRL
+	Poiana Sibiului
+	Vadu nr.416
+	0269531188
+	
+
+	L-V= 8-16 S= 9-13 D=închis
+	
+
+	Help Net Farma 234
+	Șelimbăr Shoping City
+	Sos.Sibiului nr.5 Shoping City
+	0269/560339
+	circuit deschis
+	L-V= 10-22 S= 10-22 D= 10-22
+	15.08.2026= 10-22
+	Help Net Farma 244
+	Sibiu Promenada Mall
+	str.Lector nr.1-3 unit.GF 55
+	0269213126
+	circuit deschis
+	L-V= 10-22 S= 10-22 D= 10-22
+	15.08.2026 = 10 -22
+	Help Net Farma 362
+	Sibiu
+	Str. Doljului nr. 8
+	0269225215
+	
+
+	L-V= 8-20 S=8-14 D= închis
+	15.08.2026 = închis
+	Help Net Farma 403
+	Medias
+	Calafat nr.8
+	0734/889495
+	
+
+	L-V= 8-20 S=8-16 D= 9-13
+	15.08.2026 = închis
+	Help Net Farma 405
+	Sibiu
+	str.Constituţiei nr.23
+	0732/500137
+	NON STOP
+	NON STOP
+	NON STOP
+	Help Net Farma 406
+	Sibiu
+	str.St. cel Mare nr.147
+	0725/113314
+	
+
+	L-V = 8-20 S=8-16 D= închis
+	15.08.2026 = închis
+	Help Net Farma 448
+	Sibiu
+	Calea Cisnădiei nr.95 Hipermarket Kaufland
+	0269235255
+	
+
+	L-V= 9 -22 S= 9-22 D = 9-22
+	15.08.2026=10 - 18
+	Laura Sib
+	Sibiu
+	Str. 9 Mai nr. 83
+	0269227818
+	farmacie cu receptură
+	L-V =8-20 S= 8-15 D=închis
+	
+
+	Laura Sib F.Salvia
+	Sibiu
+	Str. Gladiolelor nr.9
+	0269223939
+	
+
+	L-V =8-20 S= 8-15 D=închis
+	
+
+	Marcos Provit
+	Copsa Mica
+	str. Laborator 32
+	0269/840128
+	farmacie cu receptură
+	L-V = 8-18 S=9-13 D=închis
+	
+
+	Marcos Provit -Evofarm
+	Cisnadie
+	Str. Irina Rosetti nr.1/12
+	0269561369
+	
+
+	L-V= 8-20 S=8-14 D =închis
+	
+
+	Marcos Provit -Evofarm
+	Cisnadie
+	Str.Cindrelu nr.43
+	0269561607
+	
+
+	L-V = 8-20 S= 9-13 D=închis
+	
+
+	Marcos Provit-Evofarm
+	Sibiu
+	Str.Fabricii nr.2, bl.9, parter
+	0369/454913
+	Farmacie cu receptură
+	L-V = 8-20 S= 8 - 14 D=închis
+	
+
+	Neofarm
+	Sibiu
+	Str. Masinistilor nr. 70
+	0269237184
+	Farmacie cu receptură
+	L-V = 9-18 S= 9-12 D=închis
+	
+
+	Oxy Farm
+	Agnita
+	Str. Fabricii bl.32,ap.21
+	0269513316
+	Farmacie cu receptură
+	L-V =9-18 S= 9-13 D =închis
+	
+
+	Remedium
+	Mediaș
+	Avram Iancu nr.21
+	0269841855
+	Farmacie cu receptură
+	L-V= 8-20 S=8-14 D=închis
+	
+
+	Remedium
+	Mediaș
+	Str. După Zid nr.27
+	0369/445462
+	
+
+	L-V= 8-20 S=8-14 D=închis
+	
+
+	Ridalli
+	Talmaciu
+	Str. Textilistilor nr. 2
+	0269-550184
+	
+
+	L-V = 9-17 S= 8-13 D=închis
+	
+
+	Robertcom
+	Mediaș
+	Str. 1 Decembrie nr.28
+	0269835118
+	Farmacie cu receptură
+	L-V= 8 - 19 S= 8-14 D=închis
+	închis
+	Sanmarco
+	Sibiu
+	Str. Nic. Iorga nr..52 complex Cedonia
+	0269232187
+	NON STOP -farmacie cu receptură
+	NON STOP
+	NON STOP
+	Sev Sib Farm
+	Cristian
+	Str.IV nr.2
+	0269/579399
+	
+
+	L-V=8-20 S=9-13 D= închis
+	
+
+	Sfântul Spiridon
+	Arpasu de Jos
+	Str. Principala nr.117
+	0269520299
+	
+
+	L-V= 8-16 S-D = închis
+	
+
+	Sintezis
+	Rășinari
+	Str.Octavian Goga 1533
+	0269557090
+	
+
+	L-V=8,30-13, 14-19 S-D= închis
+	
+
+	Spectrum Farm
+	Șura Mare, jud.Sibiu
+	Principală nr.421
+	0723/665396
+	
+
+	L-V = 8,30 -18 S= 9 - 13 D = închis
+	
+
+	Speranța (Apotheka)
+	Cisnadie
+	P-ta Noua bl P2
+	0269564627
+	
+
+	L-V = 8 - 20 S =9-13 D = închis
+	15.08.2026 = 9 - 13
+	Trideea Farm
+	Orlat
+	str.Victoriei nr.201
+	0772/149579
+	circuit deschis
+	L - V = 9-18 S = 9 - 13 D = închis
+	
+
+	Turo Med
+	Boiţa,Jud.Sibiu
+	Traian nr.424
+	0742/069472
+	
+
+	L-V = 9-17 S-D = închis
+	
+
+	Veroli Farmacie
+	Şelimbăr
+	str.M.Viteazu nr.132
+	0269/560882
+	
+
+	L-V =8,30-19,30 S=8-15 D=închis
+	
+
+	Veroli Farmacie
+	Sibiu
+	Str. Lungă nr.65
+	0269243009
+	Farmacie cu receptură
+	L-V = 8-21 S=8-18 D= 9-14
+	
+
+	Viscum Farm
+	Mosna
+	str.Principală nr.527
+	0269/862140
+	
+
+	9-17
