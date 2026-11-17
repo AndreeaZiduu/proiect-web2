@@ -76,12 +76,15 @@ without new evidence. A rejected proposal is added there with the reason.
 <!-- graffino-agentic:end -->
 
 ## 1. What this repo is
-`proiect-web2` is a new, empty project repository. Its purpose, users, and runtime
-have not been established.
+`proiect-web2` este o aplicație web pentru căutarea și verificarea disponibilității în timp real a farmaciilor și cabinetelor veterinare de urgență din județul Sibiu. Tipuri de unități suportate: `PHARMACY` și `EMERGENCY_VET`.
 
 ## 2. Stack and commands
-Stack and project commands are not established. No build, run, test, or lint
-commands are available until the project has code and a manifest.
+- Backend: Node.js (Express), Prisma ORM, MySQL 8.0 (Docker port 3307), Vitest.
+- Frontend: React, Vite, CSS.
+- Comenzi backend:
+  - `npm test` — rulare suită de teste Vitest pentru calcul status unități.
+  - `npx prisma db push` — sincronizare schemă bază de date MySQL.
+  - `npm run seed` — populare bază de date din `sibiu-facilities.json` (65 unități).
 
 ## 3. Layout
 - `.claude/agents/` — planner and builder agent definitions.
