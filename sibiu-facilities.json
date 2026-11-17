@@ -1,0 +1,1301 @@
+[
+  {
+    "id": "FAC-PHARM-001",
+    "name": "Adefarm Plus",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "str.Tribunei nr.1",
+    "latitude": 45.7931,
+    "longitude": 24.1486,
+    "phone": "0269/708 067 /0744381822",
+    "regularScheduleRaw": "L – V = 8-22 S = 9-21 D=9-21",
+    "holidayScheduleRaw": "15.08.2026 = 9 -22",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-002",
+    "name": "Adefarm Plus",
+    "type": "PHARMACY",
+    "typeLabel": "NON STOP",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.11",
+    "latitude": 45.7824,
+    "longitude": 24.1481,
+    "phone": "0269/420162 0755/011325",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP",
+    "services": [
+      "Program Non-Stop",
+      "Eliberare rețete compensate",
+      "Urgențe farmaceutice noapte",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-003",
+    "name": "Adefarm Plus",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "str.N.Iorga complex Cedonia",
+    "latitude": 45.7795,
+    "longitude": 24.1558,
+    "phone": "0269/255130 0755/011423",
+    "regularScheduleRaw": "L – V = 7,30-22 S = 8-18 D = 8-16",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 18",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-004",
+    "name": "Bisfarm",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "SURA MICĂ",
+    "address": "Sos.Sibiului 32 ,ap.2",
+    "latitude": 45.8281,
+    "longitude": 24.0642,
+    "phone": "0771/704123",
+    "regularScheduleRaw": "9-17",
+    "holidayScheduleRaw": "închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-005",
+    "name": "DR.MAX Sibiu 24",
+    "type": "PHARMACY",
+    "typeLabel": "on - line",
+    "city": "Sibiu",
+    "address": "Str. Lector nr.1-3A Promenada Mall Sibiu",
+    "latitude": 45.7985,
+    "longitude": 24.1601,
+    "phone": "0739/662442",
+    "regularScheduleRaw": "L - D = 10- 22",
+    "holidayScheduleRaw": "15.08.2026 = 10 -22",
+    "services": [
+      "Rezervare și ridicare comenzi online",
+      "Eliberare rețete compensate",
+      "Dermato-cosmetice și suplimente"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-006",
+    "name": "DR.MAX Sibiu19",
+    "type": "PHARMACY",
+    "typeLabel": "Farmacie cu receptură",
+    "city": "Sibiu",
+    "address": "str.Ludoș bl.33",
+    "latitude": 45.7849,
+    "longitude": 24.1294,
+    "phone": "0739/663870",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 14",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-007",
+    "name": "DR.MAX Sibiu 23",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "P-ţa Unirii nr.1,subap.IX",
+    "latitude": 45.7928,
+    "longitude": 24.1477,
+    "phone": "0369/452097",
+    "regularScheduleRaw": "L -V = 9 - 21 S-D =10-20",
+    "holidayScheduleRaw": "15.08.2026 = 10 - 20",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-008",
+    "name": "DR.MAX Sibiu17",
+    "type": "PHARMACY",
+    "typeLabel": "Farmacie cu receptură",
+    "city": "Sibiu",
+    "address": "Str.Calea Cisnădiei 20,ap.3",
+    "latitude": 45.7761,
+    "longitude": 24.1448,
+    "phone": "0739/662434",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026= închis",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-009",
+    "name": "DR.Max Cristian 1",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Cristian",
+    "address": "Com.Cristian, str.V nr.6",
+    "latitude": 45.7836,
+    "longitude": 24.0294,
+    "phone": "0725/683741",
+    "regularScheduleRaw": "L-V= 9-17 S= închis D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-010",
+    "name": "Dr.Max Sibiu 3",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Selimbar",
+    "address": "Sos.Sibiului nr.1A Hipemarket Kaufland",
+    "latitude": 45.7725,
+    "longitude": 24.1685,
+    "phone": "0720/022848",
+    "regularScheduleRaw": "L – V= 9 - 21 S= 9 - 20 D = 9-20",
+    "holidayScheduleRaw": "15.08.2026= 9 - 21",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-011",
+    "name": "Dr.Max Sibiu 4",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Selimbar",
+    "address": "DN1 Sos.Sibiului Hypermarket ATAC",
+    "latitude": 45.7672,
+    "longitude": 24.1751,
+    "phone": "0745/159192",
+    "regularScheduleRaw": "L-V = 10-22 S= 10-22 D = 10 - 22",
+    "holidayScheduleRaw": "15.08.2026= 10 - 22",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-012",
+    "name": "Dr.Max-Hiperfarmacie- CENTRU VACCINARE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Sibiu,Calea Șurii Mari nr.39,Prima Shoping Center ,sp.com.14",
+    "latitude": 45.8162,
+    "longitude": 24.1534,
+    "phone": "0720/022549",
+    "regularScheduleRaw": "L - D = 9 - 21",
+    "holidayScheduleRaw": "15.08.2026= 9 - 21",
+    "services": [
+      "Centru de vaccinare",
+      "Testare rapidă diagnostică",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-013",
+    "name": "Farmacia Apotheka",
+    "type": "PHARMACY",
+    "typeLabel": "farmacie cu receptură",
+    "city": "Sibiu",
+    "address": "Str.Aleea Streiu nr.6",
+    "latitude": 45.7829,
+    "longitude": 24.1628,
+    "phone": "0269/218631",
+    "regularScheduleRaw": "L-V = 8-20 S= 8-16 D= închis",
+    "holidayScheduleRaw": "15.08.2026= 8 -16",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-014",
+    "name": "Farmacia Apotheka",
+    "type": "PHARMACY",
+    "typeLabel": "farmacie cu receptură",
+    "city": "Medias",
+    "address": "Str. I.G. Duca 31",
+    "latitude": 46.1648,
+    "longitude": 24.3512,
+    "phone": "0269839214",
+    "regularScheduleRaw": "L-V =7-20 S=8-14 D= închis",
+    "holidayScheduleRaw": "31.05.2026 = închis 1.06.2026= 9 - 13",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-015",
+    "name": "Farmacia Apotheka",
+    "type": "PHARMACY",
+    "typeLabel": "NON STOP -farmacie cu receptură",
+    "city": "Medias",
+    "address": "Str. Closca nr.2",
+    "latitude": 46.1623,
+    "longitude": 24.3489,
+    "phone": "0269843203",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP",
+    "services": [
+      "Program Non-Stop",
+      "Eliberare rețete compensate",
+      "Urgențe farmaceutice noapte",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-016",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.15",
+    "latitude": 45.7818,
+    "longitude": 24.1475,
+    "phone": "0269/233737 0743/004268",
+    "regularScheduleRaw": "L-V= 7-22 S= 8-22 D= 8-22",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 22",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-017",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str.Lungă nr.65",
+    "latitude": 45.8012,
+    "longitude": 24.1456,
+    "phone": "0743/004259",
+    "regularScheduleRaw": "L-V = 8 - 21 S = 8 - 16 D= 8 - 14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-018",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str.Râului nr.20",
+    "latitude": 45.7968,
+    "longitude": 24.1382,
+    "phone": "0269/708902 0755/011346",
+    "regularScheduleRaw": "L-V= 7,30 - 20,30 S= 8-16 D= 8 - 14",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-019",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "Str. B-dul M.Viteazu 15",
+    "latitude": 45.7818,
+    "longitude": 24.1475,
+    "phone": "0269-233737 0743004268",
+    "regularScheduleRaw": "L – V 7-22 S-D = 8-22",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 12",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-020",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Bihorului nr.8 subap.1",
+    "latitude": 45.7891,
+    "longitude": 24.1326,
+    "phone": "0269/224355 0743/004471",
+    "regularScheduleRaw": "L-V = 8-21 S=8-17 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 17",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-021",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Sos.Alba Iulia nr.83",
+    "latitude": 45.7915,
+    "longitude": 24.1198,
+    "phone": "0269/229522 0745/100627",
+    "regularScheduleRaw": "L-V = 8-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-022",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "farmacie cu receptură",
+    "city": "Sibiu",
+    "address": "Str. Raului nr.20",
+    "latitude": 45.7968,
+    "longitude": 24.1382,
+    "phone": "0269/708 902",
+    "regularScheduleRaw": "L-V= 7,30-20,30 S=8-16 D= 8-14",
+    "holidayScheduleRaw": "09.06.2025 = ÎNCHIS",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-023",
+    "name": "Farmacia CATENA PHARMA",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Turnului nr.23",
+    "latitude": 45.7989,
+    "longitude": 24.1492,
+    "phone": "0269/210808 0743/004011",
+    "regularScheduleRaw": "L-V= 7,30-20,30 S= 8-16 D= 8-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-024",
+    "name": "Farmacia Dona Logistică 8",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "Parc Tineretului bl4 ap.5",
+    "latitude": 45.7962,
+    "longitude": 24.1621,
+    "phone": "0732/407008",
+    "regularScheduleRaw": "L – V= 7 -20 S=8-13 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = inchis 01.12.2026 = închis",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-025",
+    "name": "Farmacia Dona Logistică 232",
+    "type": "PHARMACY",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu bl.30 ap.I-IV",
+    "latitude": 45.7806,
+    "longitude": 24.1468,
+    "phone": "0372/407232",
+    "regularScheduleRaw": "L -V = 8-20 S=8-16 D=9-13",
+    "holidayScheduleRaw": "01.11.2026 = 8 - 16 01.12.2026 = 9 -16",
+    "services": [
+      "Program prelungit",
+      "Eliberare rețete compensate",
+      "Măsurare tensiune arterială",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-026",
+    "name": "Help Net Farma 234",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Șelimbăr Shoping City",
+    "address": "Sos.Sibiului nr.5 Shoping City",
+    "latitude": 45.7681,
+    "longitude": 24.1732,
+    "phone": "0269/560339",
+    "regularScheduleRaw": "L-V= 10-22 S= 10-22 D= 10-22",
+    "holidayScheduleRaw": "15.08.2026= 10-22",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Help Net & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-027",
+    "name": "Help Net Farma 244",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu Promenada Mall",
+    "address": "str.Lector nr.1-3 unit.GF 55",
+    "latitude": 45.7985,
+    "longitude": 24.1601,
+    "phone": "0269213126",
+    "regularScheduleRaw": "L-V= 10-22 S= 10-22 D= 10-22",
+    "holidayScheduleRaw": "15.08.2026 = 10 -22",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Help Net & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-028",
+    "name": "Help Net Farma 405",
+    "type": "PHARMACY",
+    "typeLabel": "NON STOP",
+    "city": "Sibiu",
+    "address": "str.Constituţiei nr.23",
+    "latitude": 45.7954,
+    "longitude": 24.1582,
+    "phone": "0732/500137",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP",
+    "services": [
+      "Program Non-Stop",
+      "Eliberare rețete compensate",
+      "Urgențe farmaceutice noapte",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Site oficial Help Net & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-029",
+    "name": "Robertcom",
+    "type": "PHARMACY",
+    "typeLabel": "Farmacie cu receptură",
+    "city": "Mediaș",
+    "address": "Str. 1 Decembrie nr.28",
+    "latitude": 46.1612,
+    "longitude": 24.3541,
+    "phone": "0269835118",
+    "regularScheduleRaw": "L-V= 8 - 19 S= 8-14 D=închis",
+    "holidayScheduleRaw": "închis",
+    "services": [
+      "Farmacie cu receptură",
+      "Preparate magistrale și oficinale",
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-030",
+    "name": "Sanmarco",
+    "type": "PHARMACY",
+    "typeLabel": "NON STOP -farmacie cu receptură",
+    "city": "Sibiu",
+    "address": "Str. Nic. Iorga nr..52 complex Cedonia",
+    "latitude": 45.7795,
+    "longitude": 24.1558,
+    "phone": "0269232187",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP",
+    "services": [
+      "Program Non-Stop",
+      "Eliberare rețete compensate",
+      "Urgențe farmaceutice noapte",
+      "Consultanță farmaceutică"
+    ],
+    "source": "Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-031",
+    "name": "DR.MAX Sibiu 20",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str.Lungă nr.63 fost bloc 12, ap.2",
+    "latitude": 45.8009,
+    "longitude": 24.1458,
+    "phone": "0739/663877",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-032",
+    "name": "DR.MAX Sibiu 21",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "B-dul M. Viteazu nr. 11",
+    "latitude": 45.7824,
+    "longitude": 24.1481,
+    "phone": "0745/071218",
+    "regularScheduleRaw": "Luni - Duminică = 8 - 21 S = 8-18 D= 8-14",
+    "holidayScheduleRaw": "15.08.2026= închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-033",
+    "name": "DR.MAX Sibiu 22",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str. Semaforului nr. 39",
+    "latitude": 45.7812,
+    "longitude": 24.1691,
+    "phone": "0743/057860",
+    "regularScheduleRaw": "L-V = 8-20 S= 8-14 D =închis",
+    "holidayScheduleRaw": "15.08.2026= închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-034",
+    "name": "Dr.MAX Sibiu 10",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.15",
+    "latitude": 45.7818,
+    "longitude": 24.1475,
+    "phone": "0799/914634",
+    "regularScheduleRaw": "L-V=8-21 S=8-18 D= închis",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 18",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-035",
+    "name": "Dr.Max Sibiu 11",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu bl.11",
+    "latitude": 45.7824,
+    "longitude": 24.1481,
+    "phone": "0738/747706",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-036",
+    "name": "Dr.Max Sibiu 12",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str. N. Balcescu nr. 2-4",
+    "latitude": 45.7946,
+    "longitude": 24.1509,
+    "phone": "0739/860111",
+    "regularScheduleRaw": "L- V 9-21 S- D =10-20 D =10-20",
+    "holidayScheduleRaw": "15.08.2026 = 10-20",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-037",
+    "name": "Dr.Max Cisnădie 2",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Cisnadie",
+    "address": "Str.Piata Noua,Mag.Margareta, bl.S.,ap.V",
+    "latitude": 45.7138,
+    "longitude": 24.1512,
+    "phone": "0793/175716",
+    "regularScheduleRaw": "L-V= 9 - 17 S= închis D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Dr. Max & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-038",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Constituției nr.2, bl.24",
+    "latitude": 45.7972,
+    "longitude": 24.1565,
+    "phone": "0269/520640 0741/108212",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-039",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Șelimbăr",
+    "address": "str.Doamna Stanca nr.3A ap.14",
+    "latitude": 45.7738,
+    "longitude": 24.1624,
+    "phone": "0369/421180 0756/099843",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-040",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Lomonosov nr.1",
+    "latitude": 45.7876,
+    "longitude": 24.1462,
+    "phone": "0269254109 0755/011387",
+    "regularScheduleRaw": "L-V= 7,30-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-041",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Mediaș",
+    "address": "str.1 Decembrie nr.23",
+    "latitude": 46.1616,
+    "longitude": 24.3538,
+    "phone": "0269/823449 0743/004149",
+    "regularScheduleRaw": "L- V= 8-20 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-042",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Vasile Aron bl.81,ap.5",
+    "latitude": 45.7826,
+    "longitude": 24.1678,
+    "phone": "0369/442 008 0744/381847",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026= închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-043",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Avrig",
+    "address": "Str. Closca 23B",
+    "latitude": 45.7275,
+    "longitude": 24.3789,
+    "phone": "0269524806 0743/004272",
+    "regularScheduleRaw": "L- V= 8-20 S= 8-14 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 14",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-044",
+    "name": "Farmacia CATENA FARMACIE",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str.Calea Gușteriței 16A",
+    "latitude": 45.8016,
+    "longitude": 24.1685,
+    "phone": "0269-211409 0743/004162",
+    "regularScheduleRaw": "L- V= 7,30-21 S= 8-16 D =9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Catena & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-045",
+    "name": "Farmacia Dona Logistică 228",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str. Prometeu nr.2 ap1",
+    "latitude": 45.7839,
+    "longitude": 24.1648,
+    "phone": "0372/407228",
+    "regularScheduleRaw": "L-V = 8-20 S=8-16 D=închis",
+    "holidayScheduleRaw": "30.11.2026 = închis 01.12.2026= închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-046",
+    "name": "Farmacia Dona Logistică 370",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Cisnadie",
+    "address": "P-ța Revoluției nr.3",
+    "latitude": 45.7126,
+    "longitude": 24.1528,
+    "phone": "0269563202",
+    "regularScheduleRaw": "L-V = 8-20 S=8-14 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-15 01.12.2026 = 9-15",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-047",
+    "name": "Farmacia Dona Logistică 489",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Medias",
+    "address": "str.I.C.Brătianu nr.2",
+    "latitude": 46.1638,
+    "longitude": 24.3496,
+    "phone": "0269/835049",
+    "regularScheduleRaw": "L-V = 8-16 S=8-16 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-15 01.12.2026 = 9-15",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-048",
+    "name": "Farmacia Dona Logistică 506",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "str.Bihorului nr.7 sc.C",
+    "latitude": 45.7893,
+    "longitude": 24.1324,
+    "phone": "0372/409466",
+    "regularScheduleRaw": "L-V = 8-20 S=8-16 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-16 01.12.2026 = 9-16",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Farmaciile DONA & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-049",
+    "name": "Help Net Farma 362",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Sibiu",
+    "address": "Str. Doljului nr. 8",
+    "latitude": 45.7882,
+    "longitude": 24.1351,
+    "phone": "0269225215",
+    "regularScheduleRaw": "L-V= 8-20 S=8-14 D= închis",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Help Net & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-PHARM-050",
+    "name": "Help Net Farma 403",
+    "type": "PHARMACY",
+    "typeLabel": "circuit deschis",
+    "city": "Medias",
+    "address": "Calafat nr.8",
+    "latitude": 46.1594,
+    "longitude": 24.3582,
+    "phone": "0734/889495",
+    "regularScheduleRaw": "L-V= 8-20 S=8-16 D= 9-13",
+    "holidayScheduleRaw": "15.08.2026 = închis",
+    "services": [
+      "Eliberare rețete compensate",
+      "Consultanță farmaceutică",
+      "Medicamente fără prescripție (OTC)",
+      "Produse de îngrijire"
+    ],
+    "source": "Site oficial Help Net & Colegiul Farmaciștilor Sibiu"
+  },
+  {
+    "id": "FAC-VET-001",
+    "name": "Spitalul Veterinar Transilvania",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Spital veterinar / Urgențe 24/7",
+    "city": "Sibiu",
+    "address": "Str. Bâlea nr. 15",
+    "latitude": 45.7912,
+    "longitude": 24.1595,
+    "phone": "0369 991",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP (Urgențe 24/7)",
+    "services": [
+      "Urgențe veterinare 24/7",
+      "Terapie intensivă și spitalizare",
+      "Chirurgie veterinară de urgență",
+      "Imagistică (Ecografie / Radiologie)"
+    ],
+    "source": "Site oficial svtransilvania.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-002",
+    "name": "Clinica Veterinară VetHouse Sibiu",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Urgențe 24/7",
+    "city": "Sibiu",
+    "address": "Str. Nicovalei nr. 26",
+    "latitude": 45.7958,
+    "longitude": 24.1672,
+    "phone": "0752 210 071",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-15:00 D = închis",
+    "holidayScheduleRaw": "Urgențe non-stop la 0752 210 071",
+    "services": [
+      "Urgențe veterinare 24/7",
+      "Terapie intensivă și spitalizare",
+      "Chirurgie veterinară de urgență",
+      "Imagistică (Ecografie / Radiologie)"
+    ],
+    "source": "Site oficial vethouse.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-003",
+    "name": "Clinica Veterinară PartnerVet Bieltz",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Gardă urgențe 24/7",
+    "city": "Sibiu",
+    "address": "Str. Eduard Albert Bielz nr. 54",
+    "latitude": 45.7908,
+    "longitude": 24.1245,
+    "phone": "0742 832 972",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-15:00 D = 09:00-13:00",
+    "holidayScheduleRaw": "Linie urgențe 24/7 la 0742 832 972",
+    "services": [
+      "Urgențe veterinare 24/7",
+      "Terapie intensivă și spitalizare",
+      "Chirurgie veterinară de urgență",
+      "Imagistică (Ecografie / Radiologie)"
+    ],
+    "source": "Site oficial partnervet.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-004",
+    "name": "Clinica Veterinară PartnerVet Constituției",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Urgențe",
+    "city": "Sibiu",
+    "address": "Str. Constituției nr. 7",
+    "latitude": 45.7965,
+    "longitude": 24.1571,
+    "phone": "0374 541 922",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe asigurate prin linia de gardă 0742 832 972",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Site oficial partnervet.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-005",
+    "name": "Clinica Veterinară LaVet Medical",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Urgențe",
+    "city": "Sibiu",
+    "address": "Str. Măgheranului nr. 5",
+    "latitude": 45.8062,
+    "longitude": 24.1489,
+    "phone": "0757 526 436",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-13:00 D = închis",
+    "holidayScheduleRaw": "Triaj și asistență urgențe la 0757 526 436",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Site oficial lavet.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-006",
+    "name": "Cabinet Medical Veterinar Vet Doctor Pets",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Urgențe non-stop",
+    "city": "Sibiu",
+    "address": "Str. Rusciorului nr. 4",
+    "latitude": 45.8028,
+    "longitude": 24.1518,
+    "phone": "0753 634 748",
+    "regularScheduleRaw": "L-V = 10:00-18:00 S-D = închis",
+    "holidayScheduleRaw": "Asistență urgențe la 0753 634 748",
+    "services": [
+      "Asistență veterinară de urgență",
+      "Consultații și stabilizare pacienți critici",
+      "Tratamente de urgență",
+      "Microcipare și carnete de sănătate"
+    ],
+    "source": "Site oficial vetdoctorpets.com & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-007",
+    "name": "Clinica Veterinară Vetcon Sibiu",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Urgențe și chirurgie",
+    "city": "Sibiu",
+    "address": "Str. Semaforului nr. 10",
+    "latitude": 45.7831,
+    "longitude": 24.1652,
+    "phone": "0761 663 577",
+    "regularScheduleRaw": "L-V = 09:00-20:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe chirurgicale la 0761 663 577",
+    "services": [
+      "Urgențe chirurgicale",
+      "Anestezie inhalatorie",
+      "Tratamente perfuzabile",
+      "Laborator analize medicale veterinare"
+    ],
+    "source": "Site oficial vetcon.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-008",
+    "name": "Clinica Veterinară Pet Line",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Intervenții urgență",
+    "city": "Sibiu",
+    "address": "Str. Mirăslău nr. 21",
+    "latitude": 45.7852,
+    "longitude": 24.1498,
+    "phone": "0740 227 766",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0740 227 766",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Colegiul Medicilor Veterinari Sibiu & portal medical local"
+  },
+  {
+    "id": "FAC-VET-009",
+    "name": "Clinica Veterinară Exclusive Vets",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Clinică veterinară / Urgențe chirurgicale",
+    "city": "Sibiu",
+    "address": "Str. Bahluiului nr. 18",
+    "latitude": 45.7819,
+    "longitude": 24.1386,
+    "phone": "0745 607 080",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0745 607 080",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Site oficial exclusive-vets.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-010",
+    "name": "Cabinet Veterinar Sanipet Șelimbăr",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "city": "Șelimbăr",
+    "address": "Str. Triajului nr. 98, bl. 1, ap. 27",
+    "latitude": 45.7765,
+    "longitude": 24.1782,
+    "phone": "0740 881 325",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0740 881 325",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Site oficial sanipet.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-011",
+    "name": "Cabinet Veterinar Jack Medical Vet",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "city": "Șelimbăr",
+    "address": "Str. Doamna Stanca nr. 17D",
+    "latitude": 45.7729,
+    "longitude": 24.1645,
+    "phone": "0767 187 832",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0767 187 832",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Colegiul Medicilor Veterinari Sibiu & portal medical local"
+  },
+  {
+    "id": "FAC-VET-012",
+    "name": "Spitalul Veterinar Transilvania Cisnădie",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Gardă urgențe 24/7",
+    "city": "Cisnădie",
+    "address": "Str. Măgurii nr. 12",
+    "latitude": 45.7142,
+    "longitude": 24.1505,
+    "phone": "0369 733 225",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe preluate 24/7 la 0369 991",
+    "services": [
+      "Urgențe veterinare 24/7",
+      "Terapie intensivă și spitalizare",
+      "Chirurgie veterinară de urgență",
+      "Imagistică (Ecografie / Radiologie)"
+    ],
+    "source": "Site oficial svtransilvania.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-013",
+    "name": "Cabinet Veterinar Hermann Vet",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Urgențe și chirurgie",
+    "city": "Cisnădie",
+    "address": "Str. Sibiului nr. 111",
+    "latitude": 45.7225,
+    "longitude": 24.1568,
+    "phone": "0722 393 047",
+    "regularScheduleRaw": "L-V = 08:00-18:00 S = 08:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe și permanență la 0722 393 047",
+    "services": [
+      "Urgențe chirurgicale",
+      "Anestezie inhalatorie",
+      "Tratamente perfuzabile",
+      "Laborator analize medicale veterinare"
+    ],
+    "source": "Site oficial hermannvet.ro & Colegiul Medicilor Veterinari Sibiu"
+  },
+  {
+    "id": "FAC-VET-014",
+    "name": "Cabinet Veterinar DanVet Mediaș",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Gardă urgențe",
+    "city": "Mediaș",
+    "address": "Str. Horia nr. 9",
+    "latitude": 46.1629,
+    "longitude": 24.3524,
+    "phone": "0722 339 414",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0722 339 414 / 0733 103 346",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Colegiul Medicilor Veterinari Sibiu & portal medical local"
+  },
+  {
+    "id": "FAC-VET-015",
+    "name": "Cabinet Veterinar Total Vet Avrig",
+    "type": "EMERGENCY_VET",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "city": "Avrig",
+    "address": "Str. Cloșca nr. 25B",
+    "latitude": 45.7272,
+    "longitude": 24.3785,
+    "phone": "0746 088 095",
+    "regularScheduleRaw": "L-V = 09:00-18:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0746 088 095",
+    "services": [
+      "Linie telefonică urgențe",
+      "Consultații medicale veterinare",
+      "Tratamente injectabile și perfuzii",
+      "Microcipare și vaccinare"
+    ],
+    "source": "Colegiul Medicilor Veterinari Sibiu & portal medical local"
+  }
+]

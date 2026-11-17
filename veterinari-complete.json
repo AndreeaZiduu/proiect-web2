@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Spitalul Veterinar Transilvania",
+    "city": "Sibiu",
+    "address": "Str. Bâlea nr. 15",
+    "phone": "0369 991",
+    "typeLabel": "Spital veterinar / Urgențe 24/7",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP (Urgențe 24/7)"
+  },
+  {
+    "name": "Clinica Veterinară VetHouse Sibiu",
+    "city": "Sibiu",
+    "address": "Str. Nicovalei nr. 26",
+    "phone": "0752 210 071",
+    "typeLabel": "Clinică veterinară / Urgențe 24/7",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-15:00 D = închis",
+    "holidayScheduleRaw": "Urgențe non-stop la 0752 210 071"
+  },
+  {
+    "name": "Clinica Veterinară PartnerVet Bieltz",
+    "city": "Sibiu",
+    "address": "Str. Eduard Albert Bielz nr. 54",
+    "phone": "0742 832 972",
+    "typeLabel": "Clinică veterinară / Gardă urgențe 24/7",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-15:00 D = 09:00-13:00",
+    "holidayScheduleRaw": "Linie urgențe 24/7 la 0742 832 972"
+  },
+  {
+    "name": "Clinica Veterinară PartnerVet Constituției",
+    "city": "Sibiu",
+    "address": "Str. Constituției nr. 7",
+    "phone": "0374 541 922",
+    "typeLabel": "Clinică veterinară / Urgențe",
+    "regularScheduleRaw": "L-V = 08:00-20:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe asigurate prin linia de gardă 0742 832 972"
+  },
+  {
+    "name": "Clinica Veterinară LaVet Medical",
+    "city": "Sibiu",
+    "address": "Str. Măgheranului nr. 5",
+    "phone": "0757 526 436",
+    "typeLabel": "Clinică veterinară / Urgențe",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-13:00 D = închis",
+    "holidayScheduleRaw": "Triaj și asistență urgențe la 0757 526 436"
+  },
+  {
+    "name": "Cabinet Medical Veterinar Vet Doctor Pets",
+    "city": "Sibiu",
+    "address": "Str. Rusciorului nr. 4",
+    "phone": "0753 634 748",
+    "typeLabel": "Cabinet veterinar / Urgențe non-stop",
+    "regularScheduleRaw": "L-V = 10:00-18:00 S-D = închis",
+    "holidayScheduleRaw": "Asistență urgențe la 0753 634 748"
+  },
+  {
+    "name": "Clinica Veterinară Vetcon Sibiu",
+    "city": "Sibiu",
+    "address": "Str. Semaforului nr. 10",
+    "phone": "0761 663 577",
+    "typeLabel": "Clinică veterinară / Urgențe și chirurgie",
+    "regularScheduleRaw": "L-V = 09:00-20:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe chirurgicale la 0761 663 577"
+  },
+  {
+    "name": "Clinica Veterinară Pet Line",
+    "city": "Sibiu",
+    "address": "Str. Mirăslău nr. 21",
+    "phone": "0740 227 766",
+    "typeLabel": "Clinică veterinară / Intervenții urgență",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0740 227 766"
+  },
+  {
+    "name": "Clinica Veterinară Exclusive Vets",
+    "city": "Sibiu",
+    "address": "Str. Bahluiului nr. 18",
+    "phone": "0745 607 080",
+    "typeLabel": "Clinică veterinară / Urgențe chirurgicale",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0745 607 080"
+  },
+  {
+    "name": "Cabinet Veterinar Sanipet Șelimbăr",
+    "city": "Șelimbăr",
+    "address": "Str. Triajului nr. 98, bl. 1, ap. 27",
+    "phone": "0740 881 325",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0740 881 325"
+  },
+  {
+    "name": "Cabinet Veterinar Jack Medical Vet",
+    "city": "Șelimbăr",
+    "address": "Str. Doamna Stanca nr. 17D",
+    "phone": "0767 187 832",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 10:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0767 187 832"
+  },
+  {
+    "name": "Spitalul Veterinar Transilvania Cisnădie",
+    "city": "Cisnădie",
+    "address": "Str. Măgurii nr. 12",
+    "phone": "0369 733 225",
+    "typeLabel": "Cabinet veterinar / Gardă urgențe 24/7",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe preluate 24/7 la 0369 991"
+  },
+  {
+    "name": "Cabinet Veterinar Hermann Vet",
+    "city": "Cisnădie",
+    "address": "Str. Sibiului nr. 111",
+    "phone": "0722 393 047",
+    "typeLabel": "Cabinet veterinar / Urgențe și chirurgie",
+    "regularScheduleRaw": "L-V = 08:00-18:00 S = 08:00-14:00 D = închis",
+    "holidayScheduleRaw": "Urgențe și permanență la 0722 393 047"
+  },
+  {
+    "name": "Cabinet Veterinar DanVet Mediaș",
+    "city": "Mediaș",
+    "address": "Str. Horia nr. 9",
+    "phone": "0722 339 414",
+    "typeLabel": "Cabinet veterinar / Gardă urgențe",
+    "regularScheduleRaw": "L-V = 09:00-19:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe la apel 0722 339 414 / 0733 103 346"
+  },
+  {
+    "name": "Cabinet Veterinar Total Vet Avrig",
+    "city": "Avrig",
+    "address": "Str. Cloșca nr. 25B",
+    "phone": "0746 088 095",
+    "typeLabel": "Cabinet veterinar / Urgențe",
+    "regularScheduleRaw": "L-V = 09:00-18:00 S = 09:00-13:00 D = închis",
+    "holidayScheduleRaw": "Urgențe telefonice la 0746 088 095"
+  }
+]

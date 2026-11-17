@@ -1,0 +1,452 @@
+[
+  {
+    "name": "Adefarm Plus",
+    "city": "Sibiu",
+    "address": "str.Tribunei nr.1",
+    "phone": "0269/708 067 /0744381822",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L – V = 8-22 S = 9-21 D=9-21",
+    "holidayScheduleRaw": "15.08.2026 = 9 -22"
+  },
+  {
+    "name": "Adefarm Plus",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.11",
+    "phone": "0269/420162 0755/011325",
+    "typeLabel": "NON STOP",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP"
+  },
+  {
+    "name": "Adefarm Plus",
+    "city": "Sibiu",
+    "address": "str.N.Iorga complex Cedonia",
+    "phone": "0269/255130 0755/011423",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L – V = 7,30-22 S = 8-18 D = 8-16",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 18"
+  },
+  {
+    "name": "Bisfarm",
+    "city": "SURA MICĂ",
+    "address": "Sos.Sibiului 32 ,ap.2",
+    "phone": "0771/704123",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "9-17",
+    "holidayScheduleRaw": "închis"
+  },
+  {
+    "name": "DR.MAX Sibiu 24",
+    "city": "Sibiu",
+    "address": "Str. Lector nr.1-3A Promenada Mall Sibiu",
+    "phone": "0739/662442",
+    "typeLabel": "on - line",
+    "regularScheduleRaw": "L - D = 10- 22",
+    "holidayScheduleRaw": "15.08.2026 = 10 -22"
+  },
+  {
+    "name": "DR.MAX Sibiu19",
+    "city": "Sibiu",
+    "address": "str.Ludoș bl.33",
+    "phone": "0739/663870",
+    "typeLabel": "Farmacie cu receptură",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 14"
+  },
+  {
+    "name": "DR.MAX Sibiu 23",
+    "city": "Sibiu",
+    "address": "P-ţa Unirii nr.1,subap.IX",
+    "phone": "0369/452097",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L -V = 9 - 21 S-D =10-20",
+    "holidayScheduleRaw": "15.08.2026 = 10 - 20"
+  },
+  {
+    "name": "DR.MAX Sibiu17",
+    "city": "Sibiu",
+    "address": "Str.Calea Cisnădiei 20,ap.3",
+    "phone": "0739/662434",
+    "typeLabel": "Farmacie cu receptură",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026= închis"
+  },
+  {
+    "name": "DR.Max Cristian 1",
+    "city": "Cristian",
+    "address": "Com.Cristian, str.V nr.6",
+    "phone": "0725/683741",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 9-17 S= închis D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "Dr.Max Sibiu 3",
+    "city": "Selimbar",
+    "address": "Sos.Sibiului nr.1A Hipemarket Kaufland",
+    "phone": "0720/022848",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L – V= 9 - 21 S= 9 - 20 D = 9-20",
+    "holidayScheduleRaw": "15.08.2026= 9 - 21"
+  },
+  {
+    "name": "Dr.Max Sibiu 4",
+    "city": "Selimbar",
+    "address": "DN1 Sos.Sibiului Hypermarket ATAC",
+    "phone": "0745/159192",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L-V = 10-22 S= 10-22 D = 10 - 22",
+    "holidayScheduleRaw": "15.08.2026= 10 - 22"
+  },
+  {
+    "name": "Dr.Max-Hiperfarmacie- CENTRU VACCINARE",
+    "city": "Sibiu",
+    "address": "Sibiu,Calea Șurii Mari nr.39,Prima Shoping Center ,sp.com.14",
+    "phone": "0720/022549",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L - D = 9 - 21",
+    "holidayScheduleRaw": "15.08.2026= 9 - 21"
+  },
+  {
+    "name": "Farmacia Apotheka",
+    "city": "Sibiu",
+    "address": "Str.Aleea Streiu nr.6",
+    "phone": "0269/218631",
+    "typeLabel": "farmacie cu receptură",
+    "regularScheduleRaw": "L-V = 8-20 S= 8-16 D= închis",
+    "holidayScheduleRaw": "15.08.2026= 8 -16"
+  },
+  {
+    "name": "Farmacia Apotheka",
+    "city": "Medias",
+    "address": "Str. I.G. Duca 31",
+    "phone": "0269839214",
+    "typeLabel": "farmacie cu receptură",
+    "regularScheduleRaw": "L-V =7-20 S=8-14 D= închis",
+    "holidayScheduleRaw": "31.05.2026 = închis 1.06.2026= 9 - 13"
+  },
+  {
+    "name": "Farmacia Apotheka",
+    "city": "Medias",
+    "address": "Str. Closca nr.2",
+    "phone": "0269843203",
+    "typeLabel": "NON STOP -farmacie cu receptură",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.15",
+    "phone": "0269/233737 0743/004268",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 7-22 S= 8-22 D= 8-22",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 22"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Str.Lungă nr.65",
+    "phone": "0743/004259",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8 - 21 S = 8 - 16 D= 8 - 14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Str.Râului nr.20",
+    "phone": "0269/708902 0755/011346",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 7,30 - 20,30 S= 8-16 D= 8 - 14",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Str. B-dul M.Viteazu 15",
+    "phone": "0269-233737 0743004268",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L – V 7-22 S-D = 8-22",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 12"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "str.Bihorului nr.8 subap.1",
+    "phone": "0269/224355 0743/004471",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-21 S=8-17 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 17"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Sos.Alba Iulia nr.83",
+    "phone": "0269/229522 0745/100627",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Str. Raului nr.20",
+    "phone": "0269/708 902",
+    "typeLabel": "farmacie cu receptură",
+    "regularScheduleRaw": "L-V= 7,30-20,30 S=8-16 D= 8-14",
+    "holidayScheduleRaw": "09.06.2025 = ÎNCHIS"
+  },
+  {
+    "name": "Farmacia CATENA PHARMA",
+    "city": "Sibiu",
+    "address": "str.Turnului nr.23",
+    "phone": "0269/210808 0743/004011",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 7,30-20,30 S= 8-16 D= 8-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia Dona Logistică 8",
+    "city": "Sibiu",
+    "address": "Parc Tineretului bl4 ap.5",
+    "phone": "0732/407008",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L – V= 7 -20 S=8-13 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = inchis 01.12.2026 = închis"
+  },
+  {
+    "name": "Farmacia Dona Logistică 232",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu bl.30 ap.I-IV",
+    "phone": "0372/407232",
+    "typeLabel": "PROGR.PRELUNGIT",
+    "regularScheduleRaw": "L -V = 8-20 S=8-16 D=9-13",
+    "holidayScheduleRaw": "01.11.2026 = 8 - 16 01.12.2026 = 9 -16"
+  },
+  {
+    "name": "Help Net Farma 234",
+    "city": "Șelimbăr Shoping City",
+    "address": "Sos.Sibiului nr.5 Shoping City",
+    "phone": "0269/560339",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 10-22 S= 10-22 D= 10-22",
+    "holidayScheduleRaw": "15.08.2026= 10-22"
+  },
+  {
+    "name": "Help Net Farma 244",
+    "city": "Sibiu Promenada Mall",
+    "address": "str.Lector nr.1-3 unit.GF 55",
+    "phone": "0269213126",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 10-22 S= 10-22 D= 10-22",
+    "holidayScheduleRaw": "15.08.2026 = 10 -22"
+  },
+  {
+    "name": "Help Net Farma 405",
+    "city": "Sibiu",
+    "address": "str.Constituţiei nr.23",
+    "phone": "0732/500137",
+    "typeLabel": "NON STOP",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP"
+  },
+  {
+    "name": "Robertcom",
+    "city": "Mediaș",
+    "address": "Str. 1 Decembrie nr.28",
+    "phone": "0269835118",
+    "typeLabel": "Farmacie cu receptură",
+    "regularScheduleRaw": "L-V= 8 - 19 S= 8-14 D=închis",
+    "holidayScheduleRaw": "închis"
+  },
+  {
+    "name": "Sanmarco",
+    "city": "Sibiu",
+    "address": "Str. Nic. Iorga nr..52 complex Cedonia",
+    "phone": "0269232187",
+    "typeLabel": "NON STOP -farmacie cu receptură",
+    "regularScheduleRaw": "NON STOP",
+    "holidayScheduleRaw": "NON STOP"
+  },
+  {
+    "name": "DR.MAX Sibiu 20",
+    "city": "Sibiu",
+    "address": "Str.Lungă nr.63 fost bloc 12, ap.2",
+    "phone": "0739/663877",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-20 S= 8 - 14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "DR.MAX Sibiu 21",
+    "city": "Sibiu",
+    "address": "B-dul M. Viteazu nr. 11",
+    "phone": "0745/071218",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "Luni - Duminică = 8 - 21 S = 8-18 D= 8-14",
+    "holidayScheduleRaw": "15.08.2026= închis"
+  },
+  {
+    "name": "DR.MAX Sibiu 22",
+    "city": "Sibiu",
+    "address": "Str. Semaforului nr. 39",
+    "phone": "0743/057860",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-20 S= 8-14 D =închis",
+    "holidayScheduleRaw": "15.08.2026= închis"
+  },
+  {
+    "name": "Dr.MAX Sibiu 10",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu nr.15",
+    "phone": "0799/914634",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V=8-21 S=8-18 D= închis",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 18"
+  },
+  {
+    "name": "Dr.Max Sibiu 11",
+    "city": "Sibiu",
+    "address": "B-dul M.Viteazu bl.11",
+    "phone": "0738/747706",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-14 D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "Dr.Max Sibiu 12",
+    "city": "Sibiu",
+    "address": "Str. N. Balcescu nr. 2-4",
+    "phone": "0739/860111",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L- V 9-21 S- D =10-20 D =10-20",
+    "holidayScheduleRaw": "15.08.2026 = 10-20"
+  },
+  {
+    "name": "Dr.Max Cisnădie 2",
+    "city": "Cisnadie",
+    "address": "Str.Piata Noua,Mag.Margareta, bl.S.,ap.V",
+    "phone": "0793/175716",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 9 - 17 S= închis D=închis",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "str.Constituției nr.2, bl.24",
+    "phone": "0269/520640 0741/108212",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Șelimbăr",
+    "address": "str.Doamna Stanca nr.3A ap.14",
+    "phone": "0369/421180 0756/099843",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "str.Lomonosov nr.1",
+    "phone": "0269254109 0755/011387",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 7,30-21 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Mediaș",
+    "address": "str.1 Decembrie nr.23",
+    "phone": "0269/823449 0743/004149",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L- V= 8-20 S= 8-16 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "str.Vasile Aron bl.81,ap.5",
+    "phone": "0369/442 008 0744/381847",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-21 S= 8-16 D= 9-14",
+    "holidayScheduleRaw": "15.08.2026= închis"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Avrig",
+    "address": "Str. Closca 23B",
+    "phone": "0269524806 0743/004272",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L- V= 8-20 S= 8-14 D=9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 14"
+  },
+  {
+    "name": "Farmacia CATENA FARMACIE",
+    "city": "Sibiu",
+    "address": "Str.Calea Gușteriței 16A",
+    "phone": "0269-211409 0743/004162",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L- V= 7,30-21 S= 8-16 D =9-14",
+    "holidayScheduleRaw": "15.08.2026 = 8 - 16"
+  },
+  {
+    "name": "Farmacia Dona Logistică 228",
+    "city": "Sibiu",
+    "address": "Str. Prometeu nr.2 ap1",
+    "phone": "0372/407228",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-20 S=8-16 D=închis",
+    "holidayScheduleRaw": "30.11.2026 = închis 01.12.2026= închis"
+  },
+  {
+    "name": "Farmacia Dona Logistică 370",
+    "city": "Cisnadie",
+    "address": "P-ța Revoluției nr.3",
+    "phone": "0269563202",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-20 S=8-14 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-15 01.12.2026 = 9-15"
+  },
+  {
+    "name": "Farmacia Dona Logistică 489",
+    "city": "Medias",
+    "address": "str.I.C.Brătianu nr.2",
+    "phone": "0269/835049",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-16 S=8-16 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-15 01.12.2026 = 9-15"
+  },
+  {
+    "name": "Farmacia Dona Logistică 506",
+    "city": "Sibiu",
+    "address": "str.Bihorului nr.7 sc.C",
+    "phone": "0372/409466",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V = 8-20 S=8-16 D=închis",
+    "holidayScheduleRaw": "01.11.2026 = 9-16 01.12.2026 = 9-16"
+  },
+  {
+    "name": "Help Net Farma 362",
+    "city": "Sibiu",
+    "address": "Str. Doljului nr. 8",
+    "phone": "0269225215",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-20 S=8-14 D= închis",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  },
+  {
+    "name": "Help Net Farma 403",
+    "city": "Medias",
+    "address": "Calafat nr.8",
+    "phone": "0734/889495",
+    "typeLabel": "circuit deschis",
+    "regularScheduleRaw": "L-V= 8-20 S=8-16 D= 9-13",
+    "holidayScheduleRaw": "15.08.2026 = închis"
+  }
+]
