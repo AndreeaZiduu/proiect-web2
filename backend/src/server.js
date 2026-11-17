@@ -125,7 +125,7 @@ app.get('/api/facilities', async (req, res) => {
     const moment = at ? new Date(at) : new Date();
 
     const where = {};
-    if (type && (type === 'PHARMACY' || type === 'PERMANENCE_CENTER')) {
+    if (type && (type === 'PHARMACY' || type === 'EMERGENCY_VET')) {
       where.type = type;
     }
 

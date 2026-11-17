@@ -195,4 +195,71 @@ describe('getFacilityStatus - 5 surse de adevăr (Europe/Bucharest)', () => {
     expect(res.isOpen).toBe(true);
     expect(res.source).toBe('REGULAR_SCHEDULE');
   });
+
+  it('17. Spital veterinar de urgență Non-Stop (EMERGENCY_VET)', () => {
+    const emergencyVet = {
+      id: 'vet-1',
+      name: 'Spital Veterinar Non-Stop Sibiu',
+      type: 'EMERGENCY_VET',
+      regularSchedules: [0, 1, 2, 3, 4, 5, 6].map((day) => ({
+        dayOfWeek: day,
+        openMinute: 0,
+        closeMinute: 1440,
+        crossesMidnight: false
+      })),
+      holidaySchedules: [],
+      onCallRotations: [],
+      corrections: []
+    };
+    const res = getFacilityStatus(emergencyVet, new Date('2026-11-17T03:00:00+02:00'));
+    expect(res.isOpen).toBe(true);
+    expect(res.code).toBe('OPEN');
+    expect(res.label).toBe('Deschis Non-Stop');
+  });
+
+  it('18. Cabinet veterinar (EMERGENCY_VET) cu rotație activă de gardă în afara programului', () => {
+    const vetClinic = {
+      id: 'vet-2',
+      name: 'Clinica Veterinară Sibiu',
+      type: 'EMERGENCY_VET',
+      regularSchedules: [
+        { dayOfWeek: 2, openMinute: 9 * 60, closeMinute: 19 * 60, crossesMidnight: false }
+      ],
+      holidaySchedules: [],
+      onCallRotations: [
+        {
+          startsAt: '2026-11-17T19:00:00+02:00',
+          endsAt: '2026-11-18T08:00:00+02:00'
+        }
+      ],
+      corrections: []
+    };
+    // Marți ora 22:30 (în afara programului de lucru de zi 09:00-19:00)
+    const res = getFacilityStatus(vetClinic, new Date('2026-11-17T22:30:00+02:00'));
+    expect(res.isOpen).toBe(true);
+    expect(res.isOnCall).toBe(true);
+    expect(res.source).toBe('ON_CALL_ROTATION');
+    expect(res.label).toBe('Deschis acum (De gardă)');
+  });
+
+  it('19. Cabinet veterinar (EMERGENCY_VET) închis de sărbători fără gardă', () => {
+    const vetClinic = {
+      id: 'vet-3',
+      name: 'Cabinet Veterinar Mediaș',
+      type: 'EMERGENCY_VET',
+      regularSchedules: [
+        { dayOfWeek: 5, openMinute: 9 * 60, closeMinute: 17 * 60, crossesMidnight: false }
+      ],
+      holidaySchedules: [
+        { date: '2026-12-25', holidayName: 'Crăciun', isClosed: true }
+      ],
+      onCallRotations: [],
+      corrections: []
+    };
+    const res = getFacilityStatus(vetClinic, new Date('2026-12-25T11:00:00+02:00'));
+    expect(res.isOpen).toBe(false);
+    expect(res.code).toBe('CLOSED');
+    expect(res.source).toBe('HOLIDAY_SCHEDULE');
+    expect(res.label).toContain('Crăciun');
+  });
 });
