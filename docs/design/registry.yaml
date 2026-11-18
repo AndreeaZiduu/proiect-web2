@@ -1,0 +1,119 @@
+# Registry of Design Screens (DS-) — P10 Sibiu
+# Status: APPROVED (approved by user on 2026-11-18)
+# Reference: README.md (Scope) and SPEC.md (Requirements)
+
+screens:
+  - id: DS-01
+    name: "Ecran principal (Explorer) — Hartă interactivă și listă unități deschise acum / de gardă"
+    status: approved
+    route: "/"
+    type: page
+    description: >
+      Vizualizare de bază cu split-screen pe desktop (hartă Leaflet stânga, listă carduri derulabilă dreapta)
+      și comutator sticky pe mobil (Hartă ⟷ Listă). Include bara de filtrare (Toate, Farmacii, Urgențe Veterinare),
+      filtre rapide chips (Deschis Acum, De Gardă / Non-Stop, Închidere în curând), selector dropdown de localitate
+      (Sibiu, Mediaș, Cisnădie, Șelimbăr etc.) și căutare text după nume/adresă. Cardurile afișează badge-ul semantic
+      de status, distanța GPS calculată prin Haversine, buton de apel direct și salvare la favorite.
+    scope_ref:
+      - "README.md: 1.2 (pct. 1, 2, 3)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 1)"
+      - "PATTERNS.md: PATTERN-001 (Split-screen & mobile toggle), PATTERN-002 (Modern Healthcare Minimalist)"
+    key_components:
+      - FilterBar & SearchInput
+      - CitySelectorDropdown
+      - InteractiveLeafletMap (CartoDB tiles, custom status pins)
+      - FacilityCardList (Infinite scroll / responsive grid)
+      - FacilityCard (Semantic status badge, distance tag, direct call button, favorite toggle)
+      - MobileStickyViewToggle (Map / List switch)
+    mock_file: "docs/design/mocks/ds-01-home.html"
+    mock_status: "draft"
+
+  - id: DS-02
+    name: "Panou / Modal detalii unitate și raportare program greșit"
+    status: approved
+    route: "/facility/:id"
+    type: modal_or_drawer
+    description: >
+      Vedere detaliată a unității selectate (modal pe desktop, bottom sheet / drawer pe mobil).
+      Prezintă adresa completă, coordonatele GPS, programul săptămânal pe zile cu pauze de masă și ture
+      peste miezul nopții (crossesMidnight), excepțiile de sărbători legale (HolidaySchedule) și lista completă
+      de servicii medicale sau veterinare autorizate. Conține butoane mari de acțiune directă (Apelează unitatea,
+      Deschide navigație în Google Maps/Waze, Salvează la favorite) și formularul de sesizare a programului
+      eronat de către comunitate (ScheduleCorrection).
+    scope_ref:
+      - "README.md: 1.2 (pct. 3, 4)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 2)"
+      - "DECISIONS.md: D-001 (8 Confirmări comunitare), D-003 (Auth required for reporting)"
+    key_components:
+      - FacilityHeader (Nume, tipologie 💊/🐾, status badge)
+      - WeeklyScheduleTable (Luni–Duminică, pauze de prânz, ture nocturne)
+      - HolidayScheduleList (Excepții sărbători legale)
+      - ServicesList (Rețete compensate, receptură, analize vet etc.)
+      - ActionButtonGroup (Call direct, Google Maps/Waze, Add to Favorites)
+      - ScheduleCorrectionForm (Propunere notă, orar modificat, override închis temporar)
+
+  - id: DS-03
+    name: "Panou Admin pentru moderare sesizări și import CSV gardă"
+    status: approved
+    route: "/admin"
+    type: page
+    description: >
+      Panou securizat de gestiune dedicat moderatorilor și administratorilor.
+      Conține două secțiuni principale:
+      1) Coada de moderare a corecțiilor de orar (status PENDING), afișând numărul de confirmări
+         acumulate de la comunitate (progres spre pragul de 8) cu acțiuni rapide de Aprobă / Respinge.
+      2) Modulul de import CSV pentru rotațiile lunare de gardă (OnCallRotation), cu parser, validare sintactică
+         și previzualizare tabelară înainte de salvarea definitivă în baza de date MySQL.
+    scope_ref:
+      - "README.md: 1.2 (pct. 4, 5)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 5)"
+      - "DECISIONS.md: D-001 (8 Confirmări), D-003 (Auth & RBAC)"
+      - "CONTRACTS.md: C-003 (Corrections API), C-004 (CSV Import API)"
+    key_components:
+      - AdminNavigationTabs (Moderare Sesizări / Import CSV Gardă)
+      - CorrectionsReviewQueue (Carduri / tabel sesizări, contor confirmări, butoane Aprobă/Respinge)
+      - CsvDropzone & FileUploader
+      - CsvPreviewTable (Validare coloane: facilityId, date, ore, telefon gardă)
+      - ImportFeedbackAlert (Statistici rânduri importate / erori)
+
+  - id: DS-04
+    name: "Autentificare și Favoritele mele"
+    status: approved
+    route: "/auth & /favorites"
+    type: page_or_modal
+    description: >
+      Modul unificat pentru gestionarea contului de utilizator și acces rapid la facilitățile preferate:
+      1) Formular securizat de Autentificare și Înregistrare cont nou (JWT auth, validare email/parolă,
+         mesaj explicativ de redirecționare când un anonim încearcă să adauge la favorite sau să raporteze).
+      2) Pagina „Favoritele Mele” cu lista unităților salvate de utilizator, cu re-calculare deterministică a
+         statusului în timp real la deschiderea ecranului (esențial pentru acces nocturn instantaneu).
+    scope_ref:
+      - "README.md: 1.2 (pct. 6)"
+      - "SPEC.md: Secțiunea 4 (Ecranele 3 și 4)"
+      - "DECISIONS.md: D-003 (Autentificare cerută pentru favorite)"
+    key_components:
+      - AuthFormToggle (Comutare Login ⟷ Register)
+      - AuthInputs (Email, Parolă, Nume, butoane submit)
+      - FavoritesHeader & QuickFilter
+      - FavoriteFacilityCards (Re-evaluare status live, buton ștergere favorit, apel rapid)
+      - EmptyFavoritesState (Ghid și buton de explorare unități Sibiu)
+
+  - id: DS-05
+    name: "Ghid de Urgență și Numere Utile (Județul Sibiu)"
+    status: approved
+    route: "/urgente"
+    type: page
+    description: >
+      Secțiune informativă de triaj rapid și asistență critică în județul Sibiu.
+      Afișează într-un format aerisit și contrastant numerele de telefon de urgență cu apelare la un singur tap:
+      Numărul unic național 112, Dispecerat DSVSA Sibiu (0269 223 069), Colegiul Farmaciștilor Sibiu
+      (informații rotații oficiale de noapte) și linia roșie de gardă Spitalul Veterinar Transilvania 24/7 (0369 991).
+      Include scurte instrucțiuni de prim-ajutor și triaj pentru oameni și animale până la sosirea la unitate.
+    scope_ref:
+      - "README.md: 1.2 (pct. 7)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 6)"
+    key_components:
+      - EmergencyPhoneCards (112, DSVSA Sibiu, Colegiul Farmaciștilor, Spitalul Veterinar Transilvania)
+      - QuickCallButtons (Apelare imediată cu 1-tap)
+      - TriageGuidanceAccordions (Pași recomandați în caz de urgență nocturnă)
+      - DirectLinks (Legături rapide către farmacii de gardă sau spitale vet non-stop)
