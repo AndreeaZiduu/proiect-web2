@@ -10,12 +10,13 @@
 
 ## Index
 - Q-001 · What is this project's purpose and intended stack? · _answered_
-- Q-002 · How should user location be determined for distance calculation?
-- Q-003 · How to distinguish 24/7 physical emergency vets from on-call vet clinics in the UI?
+- Q-002 · How should user location be determined for distance calculation? · _answered_
+- Q-003 · How to distinguish 24/7 physical emergency vets from on-call vet clinics in the UI? · _answered_
 - Q-004 · How should the monthly on-call rotation CSV be imported?
-- Q-005 · Should the application support real-time medicine stock tracking or search?
-- Q-006 · Should the application implement turn-by-turn navigation or rely on external map links?
-- Q-007 · Should the management system distinguish between MODERATOR and ADMIN roles or collapse into a single ADMIN role?
+- Q-005 · Should the application support real-time medicine stock tracking or search? · _answered_
+- Q-006 · Should the application implement turn-by-turn navigation or rely on external map links? · _answered_
+- Q-007 · Should the management system distinguish between MODERATOR and ADMIN roles or collapse into a single ADMIN role? · _answered_
+- Q-008 · How should direct action buttons (call and navigation) be presented on facility cards? · _answered_
 
 ---
 
@@ -28,18 +29,20 @@
 ---
 
 ## Q-002 · How should user location be determined for distance calculation?
-- **Status:** open
+- **Status:** answered
+- **Confirmed:** 2026-11-18
 - **Blocks:** Geolocation and distance-based sorting in the frontend.
 - **Who answers:** Project owner
-- **Proposed answer:** Geolocation API in browser with Piața Mare (Sibiu) fallback and a manual city selector dropdown.
+- **Answer:** Geolocation API in browser (`navigator.geolocation`) with Piața Mare (Sibiu, `45.7983, 24.1503`) fallback and manual city dropdown selector. (Answered: 2026-11-18)
 
 ---
 
 ## Q-003 · How to distinguish 24/7 physical emergency vets from on-call vet clinics in the UI?
-- **Status:** open
+- **Status:** answered
+- **Confirmed:** 2026-11-18
 - **Blocks:** Visual status badges and facility card presentation for veterinary emergencies.
 - **Who answers:** Project owner
-- **Proposed answer:** Distinct visual badges: Green for 24/7 physical presence vs Orange with a call icon for on-call phone response.
+- **Answer:** Distinct visual badges: Emerald Green `DESCHIS 24/7 (NON-STOP)` for 24/7 physical presence vs Indigo/Violet `GARDĂ LA APEL TELEFONIC` with pulse dot indicator for on-call phone response outside normal hours. (Answered: 2026-11-18)
 
 ---
 
@@ -52,23 +55,32 @@
 ---
 
 ## Q-005 · Should the application support real-time medicine stock tracking or search?
-- **Status:** open
+- **Status:** answered
 - **Blocks:** Medicine inventory database models, search inputs, and pharmacy API integrations.
 - **Who answers:** Project owner
-- **Proposed answer:** Out of scope; public real-time pharmacy inventory APIs do not exist in Romania.
+- **Answer:** Out of scope. The platform is strictly for emergency triage and availability, without live medicine stock tracking; public real-time pharmacy inventory APIs do not exist in Romania (D-002). (Answered: 2026-11-18)
 
 ---
 
 ## Q-006 · Should the application implement turn-by-turn navigation or rely on external map links?
-- **Status:** open
+- **Status:** answered
 - **Blocks:** Map routing engine, GPS tracking services, and navigation buttons in the UI.
 - **Who answers:** Project owner
-- **Proposed answer:** External deep links to Google Maps / Waze / Apple Maps using facility latitude and longitude.
+- **Answer:** External deep links to Google Maps / Waze / Apple Maps using facility latitude and longitude (`https://www.google.com/maps/dir/?api=1&destination={lat},{lng}`). (Answered: 2026-11-18)
 
 ---
 
 ## Q-007 · Should the management system distinguish between MODERATOR and ADMIN roles or collapse into a single ADMIN role?
-- **Status:** open
+- **Status:** answered
 - **Blocks:** RBAC schema simplification, user management views, and route protection guards.
 - **Who answers:** Project owner
-- **Proposed answer:** Keep separate roles (MODERATOR for queue approval, ADMIN for facilities, CSV roster imports, and user management) as already defined in Prisma schema.
+- **Answer:** NU păstrăm două roluri separate — comasăm MODERATOR și ADMIN într-un singur rol ADMIN (alături de USER autentificat și vizitator neautentificat) pentru simplitate arhitecturală. ADMIN gestionează atât moderarea corecțiilor de program, cât și unitățile și importul CSV de rotații. (Answered: 2026-11-18)
+
+---
+
+## Q-008 · How should direct action buttons (call and navigation) be presented on facility cards?
+- **Status:** answered
+- **Confirmed:** 2026-11-18
+- **Blocks:** Facility card action layout and visual prominence for emergency actions.
+- **Who answers:** Project owner
+- **Answer:** Single prominent direct quick-call pill button (`[ 📞 Apelează direct: ... ]`) on each facility card for immediate 1-tap emergency dialer access; GPS navigation route deep link is provided in the interactive map tooltip and in the full facility detail modal (DS-02). (Answered: 2026-11-18)

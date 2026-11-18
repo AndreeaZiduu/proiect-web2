@@ -121,12 +121,16 @@ app.post('/api/auth/login', async (req, res) => {
 // 3. Director unități + filtrare + sortare distanță + status calculat
 app.get('/api/facilities', async (req, res) => {
   try {
-    const { q, type, openNow, lat, lng, at } = req.query;
+    const { q, type, city, openNow, onCall, lat, lng, at } = req.query;
     const moment = at ? new Date(at) : new Date();
 
     const where = {};
     if (type && (type === 'PHARMACY' || type === 'EMERGENCY_VET')) {
       where.type = type;
+    }
+
+    if (city && city.trim() && city.trim().toLowerCase() !== 'all') {
+      where.city = city.trim();
     }
 
     if (q && q.trim()) {
@@ -171,6 +175,10 @@ app.get('/api/facilities', async (req, res) => {
 
     if (openNow === 'true') {
       enriched = enriched.filter((f) => f.status.isOpen);
+    }
+
+    if (onCall === 'true') {
+      enriched = enriched.filter((f) => f.status.isOnCall);
     }
 
     if (userLat !== null && !Number.isNaN(userLat)) {
@@ -363,8 +371,8 @@ app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) 
   }
 });
 
-// 6. Moderare corecții (MODERATOR & ADMIN)
-app.get('/api/moderation/corrections', authenticateToken, requireRole('MODERATOR', 'ADMIN'), async (req, res) => {
+// 6. Moderare corecții (ADMIN)
+app.get('/api/moderation/corrections', authenticateToken, requireRole('ADMIN'), async (req, res) => {
   try {
     const items = await prisma.scheduleCorrection.findMany({
       where: { status: { in: ['PENDING', 'CONFLICT'] } },
@@ -380,7 +388,7 @@ app.get('/api/moderation/corrections', authenticateToken, requireRole('MODERATOR
   }
 });
 
-app.patch('/api/moderation/corrections/:id', authenticateToken, requireRole('MODERATOR', 'ADMIN'), async (req, res) => {
+app.patch('/api/moderation/corrections/:id', authenticateToken, requireRole('ADMIN'), async (req, res) => {
   try {
     const { decision } = req.body; // 'APPROVED' sau 'REJECTED'
     if (!['APPROVED', 'REJECTED'].includes(decision)) {

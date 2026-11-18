@@ -149,3 +149,172 @@
    * Rezultat: **`✓ ledger ok`** (toate indexurile pentru `DECISIONS.md`, `PATTERNS.md`, `CONTRACTS.md`, `OPEN-QUESTIONS.md` au fost reconstruite și validate fără erori).
 2. **Integritatea Fișierelor:**
    * Fără modificări neautorizate în codul React sau backend.
+
+---
+
+# Sesiunea 4 — Mock DS-01: Variante Alternative Aerisite și Minimaliste (2026-11-18)
+
+## 1. Context & Cerință
+Utilizatorul a solicitat crearea a 2 variante alternative mai aerisite și minimaliste ale ecranului principal `DS-01`, fără ștergerea variantei existente (`ds-01-home.html`), utilizând exclusiv token-urile de design din `docs/design/DESIGN.md`.
+
+## 2. Ce S-a Livrat
+1. **Varianta A (`docs/design/mocks/ds-01-airy-map.html`):**
+   * **Concept:** *Focus Hartă Imersivă & Insule Flotante* (inspirat din Modern Doctolib / Apple Maps).
+   * **Structură:** Header capsulă flotantă (`--radius-2xl`, `--shadow-floating`), split 58% hartă / 42% listă, carduri cu acțiuni tip pilulă rotunjită (`--radius-full`), spațiere aerisită (`--space-5`).
+   * **Tokens:** 100% tokens din `DESIGN.md` (culori semantice, Midnight Slate, Plus Jakarta Sans, tabular-nums).
+2. **Varianta B (`docs/design/mocks/ds-01-zen-list.html`):**
+   * **Concept:** *Zen Editorial & Calm Triage* (inspirat din Apple Health / Nordic Healthcare Kry).
+   * **Structură:** Header editorial cu ceas local `Europe/Bucharest`, split echilibrat 50% / 50%, carduri cu spațiere internă generoasă (`--space-6`: 24px), buton de apel direct proeminent pe lățime întreagă și link discret de navigație GPS.
+3. **Păstrarea Variantei Originale & Conectare:**
+   * `ds-01-home.html` a fost păstrat intact și i s-a adăugat în bara de previzualizare acces rapid la toate cele 3 variante pentru comparație directă.
+4. **Documentație Actualizată:**
+   * `docs/design/mocks/DS-01.md` conține secțiunea comparativă a celor 2 variante alternative.
+   * `docs/design/registry.yaml` listează variantele alternative `DS-01-A` și `DS-01-B`.
+
+## 3. Verificări
+* `python3 docs/agents/tools/ledger-lint.py` — `✓ ledger ok`.
+* Verificare statică a culorilor — exclusiv token-uri definite în `DESIGN.md`.
+
+---
+
+# Sesiunea 5 — Mock DS-01: Variantele B (Clean Editorial v2) și C (Map-First Fullscreen v3) (2026-11-18)
+
+## 1. Context & Cerință
+Utilizatorul a specificat exact cerințele pentru 2 variante alternative avansate:
+1. **Varianta B (`docs/design/mocks/ds-01-home-v2.html`)**:
+   - Stil Clean Editorial / Minimalist inspirat de Airbnb / Apple Maps.
+   - Mult spațiu alb (whitespace), carduri fără chenare groase (doar umbre foarte fine și colțuri rotunjite), maxim 3 informații pe card:
+     1) Titlu + Badge status
+     2) Adresă + Distanță
+     3) Buton Apel rapid
+   - Header pe un singur rând subțire, fără bare suplimentare aglomerate.
+   - Layout: Harta ocupă 60% în dreapta, iar lista aerisită ocupă 40% în stânga.
+2. **Varianta C (`docs/design/mocks/ds-01-home-v3.html`)**:
+   - Stil Map-First / Hartă pe tot ecranul cu panou plutitor (full-viewport 100%).
+   - Lista cu unitățile deschise/de gardă este un panou plutitor (floating drawer) semitransparent în stânga (`backdrop-filter: blur(20px)`), cu carduri compacte de 2 rânduri:
+     1) Titlu + Badge semantic
+     2) Adresă & distanță + Mini buton rapid de apel (`[ 📞 Sună ]`)
+   - Bara de căutare și filtrele plutesc curat sus peste hartă.
+3. Ambele fișiere păstrează bara mică de control sus pentru previzualizarea stărilor (Success, Empty, Loading, Error, Long Text), Light/Dark mode (Midnight Slate `#0B0F19`) și comutator Desktop/Mobil.
+
+## 2. Ce S-a Livrat
+* `docs/design/mocks/ds-01-home-v2.html` — creat conform tuturor cerințelor de la punctul 1, 100% tokens `DESIGN.md`.
+* `docs/design/mocks/ds-01-home-v3.html` — creat conform tuturor cerințelor de la punctul 2, 100% tokens `DESIGN.md`.
+* `docs/design/mocks/ds-01-home.html` — menținut intact, legături actualizate către `v2` și `v3`.
+* `docs/design/registry.yaml` — înregistrat `DS-01-V2` și `DS-01-V3`.
+* `docs/design/mocks/DS-01.md` — descriere detaliată a variantelor v2 și v3.
+
+## 3. Verificări
+* `python3 docs/agents/tools/ledger-lint.py` — `✓ ledger ok`.
+* Verificare conformitate cod CSS și token-uri semantice.
+
+---
+
+# Sesiunea 6 — Adoptare Oficială Varianta v2 în ds-01-home.html și Curățare Registru (2026-11-18)
+
+## 1. Context & Cerință
+Utilizatorul a selectat oficial Varianta B (`ds-01-home-v2.html` — Clean Editorial Minimalist) și a solicitat:
+1. Înlocuirea definitivă a fișierului `docs/design/mocks/ds-01-home.html` cu conținutul din `ds-01-home-v2.html`.
+2. Ștergerea fișierelor temporare de prototipare (`v2`, `v3`, `ds-01-airy-map.html`, `ds-01-zen-list.html`) pentru a menține registrul curat.
+3. Actualizarea documentației conexe și a registrului `docs/design/registry.yaml`.
+
+## 2. Ce S-a Livrat
+* `docs/design/mocks/ds-01-home.html` — actualizat complet cu stilul Clean Editorial:
+  - 40% listă aerisită în stânga / 60% hartă în dreapta.
+  - Maxim 3 informații pe card: 1) Titlu + Badge status, 2) Adresă + Distanță, 3) Buton apel rapid.
+  - Header subțire pe un singur rând (brand, căutare + oraș integrat, filtre chips).
+  - Bară de control superioară pentru previzualizarea stărilor (Success, Loading, Empty, Error, Long Text), temă Light/Dark (Midnight Slate `#0B0F19`) și comutator Desktop/Mobil.
+  - Exclusiv tokens din `docs/design/DESIGN.md`.
+* Ștergerea tuturor fișierelor temporare (`ds-01-home-v2.html`, `ds-01-home-v3.html`, `ds-01-airy-map.html`, `ds-01-zen-list.html`).
+* `docs/design/registry.yaml` — curățat, lăsând strict `mock_file: docs/design/mocks/ds-01-home.html`.
+* `docs/design/mocks/DS-01.md` — actualizat pentru a documenta versiunea oficială adoptată.
+
+## 3. Verificări
+* `python3 docs/agents/tools/ledger-lint.py` — `✓ ledger ok`.
+* `git status` — verificată starea curată a directorului `docs/design/mocks/`.
+
+## 4. Confirmare Formală DS-01
+Utilizatorul a confirmat formal mock-ul ecranului principal DS-01 (`the mock for the main screen DS-01 is confirmed`):
+* `mock_status` a fost actualizat la `approved` în `docs/design/registry.yaml`.
+* Bara de instrumente din `docs/design/mocks/ds-01-home.html` a fost actualizată cu eticheta semantică `Approved Mock`.
+* Validare completă prin `python3 docs/agents/tools/ledger-lint.py --fix`.
+
+---
+
+# Sesiunea 7 — Soluționare Întrebări Deschise și Aliniere Arhitectură DS-01 (2026-11-18)
+
+## 1. Decizii și Răspunsuri Confirmate de Utilizator
+1. **Filtrare Backend `city` și `onCall` (A1):** Se adaugă parametrii expliciți `city` și `onCall` în `GET /api/facilities` din `backend/src/server.js`, aliniind codul la contractul `C-001`.
+2. **Tile-uri Hartă Leaflet (A2):** Se adoptă CartoDB Voyager (Light) și CartoDB Dark Matter (Dark) pentru consecvență estetică cu tema duală din `DESIGN.md`.
+3. **Acces Ghid Urgențe DS-05 (A3):** Se include un buton discret `🚨 Urgențe` în dreapta în header-ul DS-01 pentru acces rapid la numerele critice (112, DSVSA Sibiu, Spital Vet 24/7).
+4. **Reîmprospătare Status (A4):** Re-evaluare locală la 60s (pentru comutare promptă la `CLOSING_SOON`/`CLOSED`) + refetch din API la 5 minute.
+5. **Închiderea Întrebărilor Deschise (A5):** Confirmate formal răspunsurile pentru `Q-002`, `Q-003`, `Q-005`, `Q-006`, `Q-007`, `Q-008` în `docs/agents/OPEN-QUESTIONS.md`.
+
+## 2. Verificări
+* `python3 docs/agents/tools/ledger-lint.py --fix` — `✓ ledger ok` (indexul `OPEN-QUESTIONS.md` reconstruit automat).
+
+## 3. Comasare Roluri (Q-007) și Politică Reîmprospătare Status (2026-11-18)
+1. **Comasare Roluri (Q-007):**
+   - S-a eliminat rolul separat `MODERATOR`, unificând toate drepturile de moderare a sesizărilor comunitare și administrare în rolul unic `ADMIN`.
+   - Structura unificată a utilizatorilor: Vizitator anonim (public), `USER` (autentificat: salvare favorite, trimitere/confirmare corecții orar) și `ADMIN` (drepturi depline: moderare corecții, gestiune unități, import CSV rotații de gardă).
+   - Fișiere actualizate și sincronizate: `backend/prisma/schema.prisma` (`enum Role { USER, ADMIN }`), Prisma client regenerat prin `prisma generate`, `backend/src/server.js` (rutele `/api/moderation/corrections` protejate cu `requireRole('ADMIN')`), `backend/prisma/seed.js`, `SPEC.md` și `docs/SPEC.md` (matricea de drepturi RBAC și diagrama ERD), `docs/agents/CONTRACTS.md` (C-003), `docs/agents/ARCHITECTURE.md` și `docs/agents/OPEN-QUESTIONS.md` (Q-007).
+2. **Politică Reîmprospătare Status (Întrebarea 4):**
+   - Re-evaluare locală a stării la fiecare 60 de secunde în fusul orar `Europe/Bucharest` pentru tranziții prompte și exacte către `CLOSING_SOON` și `CLOSED` fără reîncărcarea paginii.
+   - Reîmprospătare din API (`refetch`) la fiecare 5 minute pentru preluarea datelor noi și a rotațiilor de gardă actualizate pe server.
+   - Sincronizat în `SPEC.md` (Secțiunea 7) și `docs/agents/CONTRACTS.md` (C-001).
+3. **Validări:**
+   - Suita Vitest: `npm --prefix backend test` (19/19 teste trecute).
+   - Linter registru: `python3 docs/agents/tools/ledger-lint.py --fix` (`✓ ledger ok`).
+
+---
+
+# Sesiunea 8 — Planificare și Aprobare Plan Implementare DS-01 (2026-11-18)
+
+## 1. Cerință Utilizator
+Utilizatorul a solicitat planificarea conform procedurii `.claude/skills/plan/SKILL.md` pentru ecranul principal **DS-01** (hartă interactivă Sibiu cu tile-uri CartoDB Voyager/Dark Matter, filtre inclusiv `city` și `onCall` pe `GET /api/facilities`, carduri de unitate cu status în timp real în `Europe/Bucharest` actualizat local la 60s și prin refetch API la 5m, și link în header către ghidul de urgențe DS-05). Fără modificarea fișierelor de cod în faza de planificare.
+
+## 2. Planul Generat și Aprobarea Utilizatorului
+* **Planul complet DS-01** a fost formulat respectând structura standard: Size (M), Abordare (paritate client-server prin modulul utilitar `status.js`, carduri conform machetei aprobate `ds-01-home.html`, comutator mobil jos), Lista fișierelor afectate, Teste automate, Secvențiere, Riscuri, Out of scope și tabela Knowledge used.
+* **Verdict confirm:** Utilizatorul a confirmat în totalitate intrările de cunoștințe utilizate:
+  - `D-004`: Calcul status strict ancorat în `Europe/Bucharest`.
+  - `D-005`: Calcul distanță Haversine cu fallback Piața Mare Sibiu.
+  - `D-006`: Design tokens Modern Healthcare Minimalist din `DESIGN.md`.
+  - `PATTERN-001`: Responsive split-screen desktop (40/60) și dock switch pe mobil.
+  - `PATTERN-002`: Card curat pe 3 rânduri și diferențiere cromatică de domeniu.
+  - `C-001`: Ruta `GET /api/facilities` cu ciclu local 60s și refetch 5m.
+  - `C-002`: Interfața motorului de status cu 5 surse de adevăr.
+  - `External Contract`: Tile service CartoDB Leaflet și navigare Google Maps.
+  - `Q-002`: Geolocation API cu fallback Piața Mare și dropdown localitate.
+  - `Q-003`: Diferențiere vizuală `DESCHIS 24/7` vs `GARDĂ LA APEL TELEFONIC`.
+  - `Q-008`: Buton proeminent de apel direct `tel:...` pe rândul 3 al cardului.
+* **Status Plan:** **Aprobat oficial de utilizator** (*"Verdict confirm pentru toate intrările din Knowledge used ... Planul este complet și clar — The plan is approved"*).
+* Intrările confirmate au primit linia `- **Confirmed:** 2026-11-18` în registre conform procedurii din `AGENTS.md`.
+
+## 3. Verificări
+* `python3 docs/agents/tools/ledger-lint.py --fix` — `✓ ledger ok`.
+* Faza `/build` nu a fost începută, conform instrucțiunilor utilizatorului.
+
+---
+
+# Sesiunea 9 — Curățare FIELD.md și Stabilire Șablon Neutru de Observație în Teren (2026-11-18)
+
+## 1. Cerință Utilizator
+Utilizatorul a solicitat eliminarea oricăror date sau observații simulate/inventate din `FIELD.md` și înlocuirea conținutului cu un șablon gol de observație de teren conținând strict câmpurile:
+- `Data și ora`
+- `Unitatea observată`
+- `Adresa`
+- `Ce am observat pe afiș/ușă`
+- `Dovadă foto/link`
+
+Fără nicio dată pre-completată fictiv, și consemnarea acțiunii în `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **`FIELD.md`**: suprascris complet. Conține:
+  1. Metodologia și obiectivul auditului în teren.
+  2. Șablonul unitar de colectare a datelor cu cele 5 câmpuri obligatorii specificate.
+  3. Tabelul centralizator gol pregătit pentru completare pe parcursul verificărilor reale din teren.
+* Respectă cu strictețe principiul din `AGENTS.md`: *„Build only from approved entries. Unanswered means out of scope: record a Q-, never invent a value, a requirement or a behaviour.”*
+
+## 3. Verificări
+* `python3 docs/agents/tools/ledger-lint.py` — `✓ ledger ok`.
+* Verificare integritate fișier `FIELD.md` — zero date simulate, structură pregătită pentru date reale.

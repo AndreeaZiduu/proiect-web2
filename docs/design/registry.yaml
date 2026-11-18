@@ -26,7 +26,7 @@ screens:
       - FacilityCard (Semantic status badge, distance tag, direct call button, favorite toggle)
       - MobileStickyViewToggle (Map / List switch)
     mock_file: "docs/design/mocks/ds-01-home.html"
-    mock_status: "draft"
+    mock_status: "approved"
 
   - id: DS-02
     name: "Panou / Modal detalii unitate și raportare program greșit"

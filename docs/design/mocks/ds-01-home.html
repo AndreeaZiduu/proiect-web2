@@ -12,11 +12,11 @@
 
   <style>
     /* ==========================================================================
-       DESIGN SYSTEM TOKENS (Strictly matching docs/design/DESIGN.md)
+       DESIGN SYSTEM TOKENS (Strictly from docs/design/DESIGN.md)
        ========================================================================== */
     :root {
       /* Typography */
-      --font-family-primary: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-family-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-family-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
       --font-size-xs: 0.75rem;    /* 12px */
@@ -108,7 +108,7 @@
       --shadow-card-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.07), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
       --shadow-floating: 0 20px 25px -5px rgba(15, 23, 42, 0.10), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
 
-      /* Map Mock Canvas (Light) */
+      /* Map Canvas (Light) */
       --map-bg: #E2E8F0;
       --map-water: #BAE6FD;
       --map-park: #DCFCE7;
@@ -117,7 +117,7 @@
       --map-label: #475569;
       --map-bridge: #94A3B8;
 
-      /* Utility & Toolbar Tokens */
+      /* Toolbar Tokens */
       --toolbar-bg: #1E293B;
       --toolbar-text: #F8FAFC;
       --toolbar-btn-bg: #334155;
@@ -196,9 +196,7 @@
       --status-error-bg: rgba(248, 113, 113, 0.12);
     }
 
-    /* ==========================================================================
-       RESET & BASE TYPOGRAPHY
-       ========================================================================== */
+    /* Reset & Typography */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -208,7 +206,7 @@
     body {
       font-family: var(--font-family-primary);
       font-size: var(--font-size-base);
-      line-height: 1.4;
+      line-height: 1.5;
       color: var(--text-primary);
       background-color: var(--bg-app);
       font-variant-numeric: tabular-nums;
@@ -220,13 +218,25 @@
       overflow-x: hidden;
     }
 
+    /* Pulse animation for ON_DUTY */
+    @keyframes pulse-duty {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.45;
+        transform: scale(1.2);
+      }
+    }
+
     /* ==========================================================================
-       PREVIEW TOOLBAR (Top fixed demo switcher)
+       TOP DEMO TOOLBAR: State Previews, Themes & Mockup Switcher
        ========================================================================== */
     .preview-bar {
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 1200;
       background-color: var(--toolbar-bg);
       color: var(--toolbar-text);
       padding: var(--space-2) var(--space-4);
@@ -245,620 +255,312 @@
       gap: var(--space-2);
     }
 
-    .status-badge-draft {
-      background-color: var(--status-duty-bg);
-      color: var(--status-duty-text);
-      border: 1px solid var(--status-duty-border);
+    .variant-pill {
+      background: var(--color-pharmacy-bg);
+      color: var(--color-pharmacy-text);
+      border: 1px solid var(--color-pharmacy-border);
       padding: 2px var(--space-2);
-      border-radius: var(--radius-sm);
-      font-size: var(--font-size-xs);
+      border-radius: var(--radius-full);
       font-weight: var(--font-weight-bold);
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .preview-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-1);
-    }
-
-    .preview-btn {
-      background-color: var(--toolbar-btn-bg);
-      color: var(--toolbar-text);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 3px var(--space-2);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      cursor: pointer;
+    .switcher-cluster {
       display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      transition: background-color var(--transition-fast);
-    }
-
-    .preview-btn.active {
-      background-color: var(--toolbar-btn-active);
-      color: var(--text-on-accent);
-      border-color: var(--toolbar-btn-active);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    /* ==========================================================================
-       ADJUSTMENT 1: UNIFIED SINGLE-ROW COMPACT HEADER & ULTRA-THIN EMERGENCY RIBBON
-       ========================================================================== */
-    /* Ultra-thin Emergency Strip */
-    .emergency-ribbon {
-      background-color: var(--status-closing-bg);
-      border-bottom: 1px solid var(--status-closing-border);
-      color: var(--status-closing-text);
-      padding: 3px var(--space-4);
-      font-size: var(--font-size-xs);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      white-space: nowrap;
-      overflow-x: auto;
-      gap: var(--space-4);
-    }
-
-    .emergency-ribbon-left {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-
-    .emergency-tag-link {
-      color: var(--status-closing-text);
-      text-decoration: none;
-      font-weight: var(--font-weight-bold);
-      background-color: var(--bg-surface);
-      padding: 1px var(--space-2);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--status-closing-border);
-      display: inline-flex;
-      align-items: center;
+      background: var(--toolbar-btn-bg);
+      border-radius: var(--radius-full);
+      padding: 2px;
       gap: 2px;
     }
 
-    .emergency-tag-link:hover {
-      text-decoration: underline;
+    .switcher-btn {
+      background: transparent;
+      border: none;
+      color: var(--toolbar-text);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--font-size-xs);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: var(--font-weight-medium);
+      transition: background var(--transition-fast), color var(--transition-fast);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
     }
 
-    /* Single-Row Unified Header */
-    .compact-header {
+    .switcher-btn.active {
+      background-color: var(--toolbar-btn-active);
+      color: var(--text-on-accent);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ==========================================================================
+       SUBȚIRE HEADER PE UN SINGUR RÂND (Ultra-Clean Single Row)
+       ========================================================================== */
+    .clean-header {
       background-color: var(--bg-surface);
       border-bottom: 1px solid var(--border-subtle);
-      padding: var(--space-2) var(--space-4);
+      padding: var(--space-2) var(--space-6);
+      width: 100%;
+      position: sticky;
+      top: 36px;
+      z-index: 1000;
+    }
+
+    .clean-header-inner {
+      max-width: 1540px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--space-3);
-      width: 100%;
+      gap: var(--space-4);
+      min-height: 48px;
     }
 
-    .header-brand {
+    /* Left: Brand */
+    .brand-inline {
       display: flex;
       align-items: center;
       gap: var(--space-2);
       text-decoration: none;
-      color: var(--text-primary);
+      color: inherit;
       flex-shrink: 0;
     }
 
-    .brand-logo-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-md);
-      background: var(--color-pharmacy-bg);
-      color: var(--color-pharmacy);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-size-base);
-      border: 1px solid var(--color-pharmacy-border);
+    .brand-icon-subtle {
+      font-size: 20px;
     }
 
-    .brand-name-text {
+    .brand-name-subtle {
       font-size: var(--font-size-base);
       font-weight: var(--font-weight-bold);
-      line-height: 1.1;
-      white-space: nowrap;
-    }
-
-    .brand-sub-badge {
-      font-size: var(--font-size-xs);
-      color: var(--text-muted);
-      font-weight: var(--font-weight-regular);
-      display: block;
-    }
-
-    /* Unified Search and City Controls (Center) */
-    .header-center-tools {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      flex: 1;
-      max-width: 580px;
-      min-width: 220px;
-    }
-
-    .search-box-compact {
-      position: relative;
-      flex: 1;
-    }
-
-    .search-box-compact input {
-      width: 100%;
-      height: 36px;
-      padding: 0 var(--space-3) 0 32px;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-sm);
       color: var(--text-primary);
-      background-color: var(--bg-surface-subtle);
-      outline: none;
-      transition: all var(--transition-fast);
+      letter-spacing: -0.01em;
     }
 
-    .search-box-compact input:focus {
-      border-color: var(--border-focus);
-      background-color: var(--bg-surface);
-      box-shadow: 0 0 0 2px var(--color-pharmacy-border);
-    }
-
-    .search-lens-icon {
-      position: absolute;
-      left: var(--space-3);
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: var(--font-size-xs);
+    .brand-dot-sep {
       color: var(--text-muted);
-      pointer-events: none;
+      font-size: var(--font-size-xs);
     }
 
-    .city-picker-compact {
-      height: 36px;
-      padding: 0 var(--space-3);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      font-family: var(--font-family-primary);
+    .brand-city-label {
       font-size: var(--font-size-xs);
+      color: var(--text-secondary);
       font-weight: var(--font-weight-medium);
-      color: var(--text-secondary);
-      background-color: var(--bg-surface-subtle);
-      cursor: pointer;
-      outline: none;
-      flex-shrink: 0;
     }
 
-    /* Header Right Actions */
-    .header-right-actions {
+    /* Center: Search & City in Single Minimal Capsule */
+    .center-search-capsule {
+      flex: 1 1 360px;
+      max-width: 520px;
       display: flex;
       align-items: center;
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: var(--space-1) var(--space-3);
       gap: var(--space-2);
-      flex-shrink: 0;
-    }
-
-    .header-action-btn {
-      height: 36px;
-      padding: 0 var(--space-3);
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background-color: var(--bg-surface-subtle);
-      color: var(--text-secondary);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
       transition: all var(--transition-fast);
-      white-space: nowrap;
     }
 
-    .header-action-btn:hover {
+    .center-search-capsule:focus-within {
+      background: var(--bg-surface);
       border-color: var(--border-focus);
-      color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
     }
 
-    /* Sub-bar: Filter Segment & Status Chips */
-    .subfilter-bar {
-      background-color: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: var(--space-2) var(--space-4);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      flex-wrap: wrap;
+    .search-lens {
+      font-size: 13px;
+      opacity: 0.6;
     }
 
-    .segmented-filter {
-      display: flex;
-      background-color: var(--bg-surface-subtle);
-      border-radius: var(--radius-full);
-      padding: 2px;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .seg-chip {
+    .center-search-capsule input {
       border: none;
       background: transparent;
-      padding: var(--space-1) var(--space-3);
-      border-radius: var(--radius-full);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      transition: all var(--transition-fast);
-    }
-
-    .seg-chip.active {
-      background-color: var(--bg-surface);
+      outline: none;
+      font-size: var(--font-size-sm);
+      font-family: inherit;
       color: var(--text-primary);
-      font-weight: var(--font-weight-bold);
-      box-shadow: var(--shadow-card);
+      width: 100%;
     }
 
-    .quick-chips-group {
+    .city-dropdown-minimal {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-secondary);
+      outline: none;
+      cursor: pointer;
+      padding-left: var(--space-2);
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    /* Right: Integrated Compact Filter Chips in Header */
+    .header-chips-inline {
       display: flex;
       align-items: center;
       gap: var(--space-1);
-      flex-wrap: wrap;
+      flex-shrink: 0;
     }
 
-    .status-filter-chip {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      padding: 3px var(--space-3);
+    .chip-micro {
+      border: 1px solid transparent;
+      background: transparent;
+      font-family: inherit;
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-medium);
       color: var(--text-secondary);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      transition: all var(--transition-fast);
-    }
-
-    .status-filter-chip:hover {
-      border-color: var(--border-focus);
-    }
-
-    .status-filter-chip.active {
-      background-color: var(--color-pharmacy-bg);
-      border-color: var(--color-pharmacy);
-      color: var(--color-pharmacy-text);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    /* ==========================================================================
-       WORKSPACE LAYOUT: SPLIT-SCREEN (Desktop) & TOGGLE (Mobile)
-       ========================================================================== */
-    .workspace-split {
-      display: grid;
-      grid-template-columns: 55% 45%;
-      flex: 1;
-      height: calc(100vh - 140px);
-      overflow: hidden;
-      width: 100%;
-    }
-
-    @media (max-width: 1023px) {
-      .workspace-split {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-      }
-      .view-hidden-mobile {
-        display: none !important;
-      }
-    }
-
-    /* ==========================================================================
-       ADJUSTMENT 3: REALISTIC SIBIU MAP (Left Pane 55%)
-       ====================================================================== -->
-    .map-pane {
-      position: relative;
-      background-color: var(--map-bg);
-      border-right: 1px solid var(--border-subtle);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .map-canvas-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .sibiu-svg-map {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Map Navigation Controls */
-    .map-floating-controls {
-      position: absolute;
-      top: var(--space-3);
-      left: var(--space-3);
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
       gap: var(--space-1);
-    }
-
-    .map-tool-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-md);
-      background-color: var(--bg-surface);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-card);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-size-sm);
-      cursor: pointer;
-      font-weight: var(--font-weight-bold);
-    }
-
-    /* Pulsing Duty Halo Keyframe */
-    @keyframes pulse-duty {
-      0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.5;
-        transform: scale(1.2);
-      }
-    }
-
-    /* Map Pin Marker Styling */
-    .map-marker {
-      position: absolute;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -100%);
-      transition: transform var(--transition-fast), filter var(--transition-fast);
-      z-index: 30;
-    }
-
-    .map-marker:hover, .map-marker.active-marker {
-      transform: translate(-50%, -105%) scale(1.15);
-      z-index: 40;
-    }
-
-    .marker-label {
-      padding: 2px var(--space-2);
-      border-radius: var(--radius-sm);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
+      transition: all var(--transition-fast);
       white-space: nowrap;
-      box-shadow: var(--shadow-card);
-      border: 1px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 3px;
     }
 
-    .marker-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: var(--radius-full);
-      margin-top: -2px;
-      border: 2px solid var(--text-on-accent);
-      box-shadow: var(--shadow-card);
-    }
-
-    .marker-pulse .marker-dot {
-      animation: pulse-duty 2s infinite ease-in-out;
-    }
-
-    /* Active Tooltip / Mini-Card Popup */
-    .active-map-tooltip {
-      position: absolute;
-      z-index: 50;
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-focus);
-      border-radius: var(--radius-lg);
-      padding: var(--space-3);
-      box-shadow: var(--shadow-floating);
-      width: 250px;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-      pointer-events: auto;
-      transition: all var(--transition-fast);
-      transform: translate(-50%, -125%);
-    }
-
-    .tooltip-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .tooltip-title {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-
-    .tooltip-sub {
-      font-size: var(--font-size-xs);
-      color: var(--text-muted);
-    }
-
-    .tooltip-actions {
-      display: flex;
-      gap: var(--space-1);
-      margin-top: var(--space-1);
-    }
-
-    .tooltip-btn-call {
-      flex: 1;
-      padding: var(--space-1);
-      border-radius: var(--radius-sm);
-      background-color: var(--color-pharmacy);
-      color: var(--text-on-accent);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      text-align: center;
-      text-decoration: none;
-    }
-
-    .tooltip-btn-route {
-      padding: var(--space-1) var(--space-2);
-      border-radius: var(--radius-sm);
+    .chip-micro:hover {
       background-color: var(--bg-surface-subtle);
       color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      font-size: var(--font-size-xs);
-      text-decoration: none;
     }
 
-    .map-mini-legend {
-      position: absolute;
-      bottom: var(--space-3);
-      left: var(--space-3);
-      z-index: 20;
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: var(--space-1) var(--space-3);
-      font-size: var(--font-size-xs);
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      box-shadow: var(--shadow-card);
-    }
-
-    /* ==========================================================================
-       ADJUSTMENT 2: CLEAN, AERATED FACILITY CARDS (No clutter, single row meta)
-       ========================================================================== */
-    .list-pane {
-      background-color: var(--bg-app);
-      overflow-y: auto;
-      padding: var(--space-3) var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-
-    .list-count-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: var(--font-size-xs);
-      color: var(--text-muted);
-    }
-
-    .card-item {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-3) var(--space-4);
-      box-shadow: var(--shadow-card);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      position: relative;
-    }
-
-    .card-item:hover {
-      box-shadow: var(--shadow-card-hover);
-      border-color: var(--border-focus);
-    }
-
-    .card-item.selected-card {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 2px var(--color-pharmacy-border);
-    }
-
-    /* Domain 4px Accent Border */
-    .domain-accent-pharmacy {
-      border-left: 4px solid var(--color-pharmacy);
-    }
-
-    .domain-accent-vet {
-      border-left: 4px solid var(--color-vet);
-    }
-
-    /* Card Top Meta: Domain Badge + Semantic Status Badge + Favorite */
-    .card-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
-    }
-
-    .card-type-tag {
-      font-size: var(--font-size-xs);
+    .chip-micro.active {
+      background-color: var(--bg-surface-subtle);
+      border-color: var(--border-subtle);
+      color: var(--text-primary);
       font-weight: var(--font-weight-semibold);
-      letter-spacing: 0.2px;
-      padding: 1px var(--space-2);
-      border-radius: var(--radius-sm);
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
     }
 
-    .type-tag-pharm {
-      background-color: var(--color-pharmacy-bg);
-      color: var(--color-pharmacy-text);
-      border: 1px solid var(--color-pharmacy-border);
+    .chip-micro.active.duty-chip {
+      color: var(--status-duty-text);
+      background-color: var(--status-duty-bg);
+      border-color: var(--status-duty-border);
     }
 
-    .type-tag-vet {
-      background-color: var(--color-vet-bg);
-      color: var(--color-vet-text);
-      border: 1px solid var(--color-vet-border);
-    }
-
-    .semantic-badge {
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      padding: 1px var(--space-2);
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .badge-dot {
+    .status-dot-mini {
       width: 7px;
       height: 7px;
       border-radius: var(--radius-full);
+      display: inline-block;
     }
 
-    /* Badge Themes */
+    .pulse-dot {
+      animation: pulse-duty 2s infinite ease-in-out;
+    }
+
+    /* ==========================================================================
+       MAIN WORKSPACE: 40% LISTĂ STÂNGA / 60% HARTĂ DREAPTA
+       ========================================================================== */
+    .editorial-workspace {
+      max-width: 1540px;
+      margin: var(--space-4) auto var(--space-6);
+      padding: 0 var(--space-6);
+      width: 100%;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 40% 60%;
+      gap: var(--space-5);
+      min-height: calc(100vh - 150px);
+    }
+
+    /* ==========================================================================
+       STÂNGA (40%): LISTĂ AERISITĂ CU MAXIM 3 INFORMAȚII PE CARD
+       ========================================================================== */
+    .airy-list-pane {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+      padding-right: var(--space-2);
+    }
+
+    .list-meta-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--font-size-xs);
+      color: var(--text-muted);
+      font-weight: var(--font-weight-medium);
+      padding: 0 var(--space-1);
+    }
+
+    /* CARD AERISIT: Fără chenar gros, doar umbră foarte fină & colțuri rotunjite */
+    .clean-editorial-card {
+      background-color: var(--bg-surface);
+      border: 1px solid transparent;
+      border-radius: var(--radius-xl);
+      padding: var(--space-5) var(--space-6);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      cursor: pointer;
+      position: relative;
+      transition: all var(--transition-fast);
+      border-left: 4px solid transparent;
+    }
+
+    .clean-editorial-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-2px);
+      border-color: var(--border-subtle);
+    }
+
+    .clean-editorial-card.selected-card {
+      box-shadow: var(--shadow-card-hover);
+      border-color: var(--border-focus);
+      background-color: var(--bg-surface);
+    }
+
+    .clean-editorial-card.pharmacy-domain {
+      border-left-color: var(--color-pharmacy);
+    }
+
+    .clean-editorial-card.vet-domain {
+      border-left-color: var(--color-vet);
+    }
+
+    /* RÂNDUL 1 DIN CARD: Titlu + Badge status */
+    .card-info-row-1 {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .card-title-text {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      color: var(--text-primary);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .semantic-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 3px var(--space-2);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     .b-duty {
       background-color: var(--status-duty-bg);
       color: var(--status-duty-text);
       border: 1px solid var(--status-duty-border);
     }
-    .b-duty .badge-dot {
+    .b-duty .status-dot-mini {
       background-color: var(--status-duty-dot);
       animation: pulse-duty 2s infinite ease-in-out;
     }
@@ -868,7 +570,7 @@
       color: var(--status-open-text);
       border: 1px solid var(--status-open-border);
     }
-    .b-open .badge-dot {
+    .b-open .status-dot-mini {
       background-color: var(--status-open-dot);
     }
 
@@ -877,7 +579,7 @@
       color: var(--status-closing-text);
       border: 1px solid var(--status-closing-border);
     }
-    .b-closing .badge-dot {
+    .b-closing .status-dot-mini {
       background-color: var(--status-closing-dot);
     }
 
@@ -886,689 +588,566 @@
       color: var(--status-closed-text);
       border: 1px solid var(--status-closed-border);
     }
-    .b-closed .badge-dot {
+    .b-closed .status-dot-mini {
       background-color: var(--status-closed-dot);
     }
 
-    .card-fav-star {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: var(--font-size-base);
-      line-height: 1;
-      padding: 2px;
-    }
-    .card-fav-star.active {
-      color: var(--color-favorite);
-    }
-
-    /* Facility Name & Location Row */
-    .card-title-text {
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-bold);
-      color: var(--text-primary);
-      line-height: 1.25;
-    }
-
-    .card-address-row {
+    /* RÂNDUL 2 DIN CARD: Adresă + Distanță */
+    .card-info-row-2 {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: var(--font-size-xs);
+      font-size: var(--font-size-sm);
       color: var(--text-secondary);
       gap: var(--space-2);
     }
 
-    .distance-pill {
-      font-weight: var(--font-weight-semibold);
-      background-color: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      padding: 1px var(--space-2);
-      color: var(--text-primary);
-      white-space: nowrap;
-    }
-
-    /* Single Clean Row for Schedule */
-    .card-schedule-single-row {
-      font-size: var(--font-size-xs);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      white-space: nowrap;
+    .address-clean {
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    /* Exactly 2 Clean Primary Action Buttons */
-    .card-action-duo {
+    .distance-clean {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-pharmacy);
+      background: var(--bg-surface-subtle);
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .distance-clean.vet-distance {
+      color: var(--color-vet);
+    }
+
+    /* RÂNDUL 3 DIN CARD: Buton Apel rapid */
+    .card-info-row-3 {
       display: flex;
       align-items: center;
+      margin-top: var(--space-1);
+    }
+
+    .quick-call-pill {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       gap: var(--space-2);
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      min-height: 38px;
+    }
+
+    .quick-call-pill:hover {
+      background-color: var(--color-pharmacy);
+      color: var(--text-on-accent);
+      border-color: var(--color-pharmacy);
+      transform: translateY(-1px);
+    }
+
+    .quick-call-pill.vet-call:hover {
+      background-color: var(--color-vet);
+      border-color: var(--color-vet);
+    }
+
+    /* ==========================================================================
+       DREAPTA (60%): HARTA SIBIULUI
+       ========================================================================== */
+    .map-pane-sixty {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+      min-height: 540px;
+    }
+
+    .map-canvas-area {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: var(--map-bg);
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .map-svg-drawing {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Controls */
+    .map-floating-tools {
+      position: absolute;
+      top: var(--space-4);
+      right: var(--space-4);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-floating);
+      padding: var(--space-1);
+    }
+
+    .map-tool-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition-fast);
+    }
+
+    .map-tool-btn:hover {
+      background-color: var(--bg-surface-subtle);
+    }
+
+    /* Map Pins */
+    .editorial-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform var(--transition-fast);
+    }
+
+    .editorial-pin:hover {
+      transform: translate(-50%, -55%) scale(1.08);
+      z-index: 30;
+    }
+
+    .editorial-pin.active-pin {
+      transform: translate(-50%, -58%) scale(1.15);
+      z-index: 40;
+    }
+
+    .pin-pill-tag {
+      padding: 3px var(--space-2);
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: var(--font-weight-bold);
+      white-space: nowrap;
+      box-shadow: var(--shadow-card);
+      border: 1px solid;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .pin-dot-anchor {
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-full);
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
       margin-top: 2px;
     }
 
-    .btn-act-call {
-      flex: 1;
-      height: 36px;
-      background-color: var(--color-pharmacy);
-      color: var(--text-on-accent);
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      transition: opacity var(--transition-fast);
-    }
-
-    .btn-act-call.vet-btn {
-      background-color: var(--color-vet);
-    }
-
-    .btn-act-call:hover {
-      opacity: 0.92;
-    }
-
-    .btn-act-route {
-      height: 36px;
-      padding: 0 var(--space-3);
-      background-color: var(--bg-surface-subtle);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      transition: background-color var(--transition-fast);
-    }
-
-    .btn-act-route:hover {
-      background-color: var(--border-subtle);
-    }
-
-    /* ==========================================================================
-       MOBILE STICKY TOGGLE
-       ========================================================================== */
-    .mobile-bottom-switch {
-      display: none;
-      position: sticky;
-      bottom: 0;
-      z-index: 100;
-      background-color: var(--bg-surface);
-      border-top: 1px solid var(--border-subtle);
-      padding: var(--space-2) var(--space-4);
-      box-shadow: var(--shadow-floating);
-    }
-
-    @media (max-width: 1023px) {
-      .mobile-bottom-switch {
-        display: flex;
-        justify-content: center;
-      }
-    }
-
-    .mob-switch-container {
-      display: flex;
-      background-color: var(--bg-surface-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      padding: 2px;
-      width: 100%;
-      max-width: 280px;
-    }
-
-    .mob-switch-btn {
-      flex: 1;
-      padding: var(--space-2);
-      border: none;
-      background: transparent;
-      border-radius: var(--radius-full);
-      font-family: var(--font-family-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-1);
-    }
-
-    .mob-switch-btn.active {
-      background-color: var(--bg-surface);
-      color: var(--text-primary);
-      font-weight: var(--font-weight-bold);
-      box-shadow: var(--shadow-card);
-    }
-
-    /* ==========================================================================
-       STATES: LOADING, EMPTY, ERROR, LONG TEXT
-       ========================================================================== */
-    .view-state {
-      display: none;
-      flex-direction: column;
-      gap: var(--space-3);
-      width: 100%;
-    }
-
-    .view-state.active-state {
-      display: flex;
-    }
-
-    /* Loading Shimmer */
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .shimmer-block {
-      background: linear-gradient(90deg, var(--bg-surface-subtle) 25%, var(--border-subtle) 50%, var(--bg-surface-subtle) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: var(--radius-sm);
-    }
-
-    .skeleton-item {
+    /* Tooltip on Map */
+    .editorial-map-tooltip {
+      position: absolute;
+      z-index: 50;
       background-color: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-floating);
       padding: var(--space-3) var(--space-4);
-      display: flex;
+      width: 250px;
+      display: none;
       flex-direction: column;
       gap: var(--space-2);
+      transform: translate(-50%, -115%);
+      pointer-events: auto;
     }
 
-    /* Empty & Error State Boxes */
-    .state-banner-box {
-      background-color: var(--bg-surface);
-      border: 1px dashed var(--border-subtle);
+    .tt-title {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .tt-meta {
+      font-size: var(--font-size-xs);
+      color: var(--text-secondary);
+    }
+
+    .tt-call-btn {
+      background: var(--color-pharmacy);
+      color: var(--text-on-accent);
+      border-radius: var(--radius-full);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      text-decoration: none;
+      text-align: center;
+    }
+
+    /* States Management */
+    .view-state-block {
+      display: none;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .view-state-block.active-state {
+      display: flex;
+    }
+
+    .skeleton-box {
+      background: var(--bg-surface);
       border-radius: var(--radius-xl);
-      padding: var(--space-8) var(--space-4);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .shimmer-bar {
+      height: 14px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(90deg, var(--bg-surface-subtle) 25%, var(--border-subtle) 50%, var(--bg-surface-subtle) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .state-banner-clean {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-8) var(--space-6);
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: var(--space-2);
     }
+
+    /* Mobile Bottom Toggle */
+    .mobile-dock-switch {
+      display: none;
+      position: fixed;
+      bottom: var(--space-4);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-floating);
+      border-radius: var(--radius-full);
+      padding: var(--space-1);
+    }
+
+    .dock-btn {
+      border: none;
+      background: transparent;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .dock-btn.active {
+      background: var(--color-pharmacy);
+      color: var(--text-on-accent);
+    }
+
+    @media (max-width: 1024px) {
+      .editorial-workspace {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .mobile-dock-switch {
+        display: flex;
+      }
+      .map-pane-sixty.view-hidden-mobile,
+      .airy-list-pane.view-hidden-mobile {
+        display: none !important;
+      }
+      .header-chips-inline {
+        overflow-x: auto;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- ========================================================================
-       PREVIEW TOOLBAR (Top control strip for client validation)
+       TOP DEMO TOOLBAR: State Switcher, Themes & Mock Nav
        ======================================================================== -->
   <aside class="preview-bar">
     <div class="preview-meta">
-      <span class="status-badge-draft">Draft Mock</span>
-      <span><strong>DS-01</strong>: Explorer Sibiu (Header & Carduri Optimizate)</span>
+      <span class="variant-pill" style="background: var(--status-open-bg); color: var(--status-open-text); border-color: var(--status-open-border);">Approved Mock</span>
+      <span><strong>DS-01</strong>: Explorer Sibiu (Clean Editorial Minimalist)</span>
+      <span style="opacity: 0.6;">(Tokens din DESIGN.md)</span>
     </div>
-    
-    <div class="preview-controls">
-      <!-- Dark Mode Switcher -->
-      <button class="preview-btn" id="themeToggleBtn" onclick="toggleTheme()">
-        <span id="themeIcon">🌙</span> <span id="themeLabel">Dark Mode</span>
-      </button>
 
-      <!-- Viewport Toggle -->
-      <button class="preview-btn active" id="viewDesktopBtn" onclick="setViewport('desktop')">
-        💻 Desktop
-      </button>
-      <button class="preview-btn" id="viewMobileBtn" onclick="setViewport('mobile')">
-        📱 Mobil
-      </button>
-
+    <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
       <!-- State Previews -->
-      <button class="preview-btn active" id="btnStSuccess" onclick="switchState('success')">
-        ✅ Success (Real Sibiu)
-      </button>
-      <button class="preview-btn" id="btnStLoading" onclick="switchState('loading')">
-        ⏳ Loading
-      </button>
-      <button class="preview-btn" id="btnStEmpty" onclick="switchState('empty')">
-        📭 Empty
-      </button>
-      <button class="preview-btn" id="btnStError" onclick="switchState('error')">
-        ⚠️ Error
-      </button>
-      <button class="preview-btn" id="btnStLongText" onclick="switchState('long_text')">
-        📏 Long Text
+      <div class="switcher-cluster">
+        <button class="switcher-btn active" id="btnStSuccess" onclick="switchState('success')">Normal</button>
+        <button class="switcher-btn" id="btnStLoading" onclick="switchState('loading')">Încărcare</button>
+        <button class="switcher-btn" id="btnStEmpty" onclick="switchState('empty')">Gol</button>
+        <button class="switcher-btn" id="btnStError" onclick="switchState('error')">Eroare</button>
+        <button class="switcher-btn" id="btnStLongText" onclick="switchState('long_text')">Text Lung</button>
+      </div>
+
+      <!-- Viewport Simulation -->
+      <div class="switcher-cluster">
+        <button class="switcher-btn active" id="viewDesktopBtn" onclick="setViewport('desktop')">💻 Desktop</button>
+        <button class="switcher-btn" id="viewMobileBtn" onclick="setViewport('mobile')">📱 Mobil</button>
+      </div>
+
+      <!-- Light / Dark Mode -->
+      <button class="switcher-btn" style="background: var(--toolbar-btn-bg);" onclick="toggleTheme()">
+        <span id="themeIcon">🌓</span> <span id="themeLabel">Temă</span>
       </button>
     </div>
   </aside>
 
   <!-- ========================================================================
-       ADJUSTMENT 1: ULTRA-THIN EMERGENCY STRIP (<32px height)
+       HEADER PE UN SINGUR RÂND SUBȚIRE (Clean Single-Row)
        ======================================================================== -->
-  <div class="emergency-ribbon">
-    <div class="emergency-ribbon-left">
-      <span>🚨 <strong>Urgențe Sibiu:</strong></span>
-      <a href="tel:112" class="emergency-tag-link">📞 112 Ambulanță</a>
-      <a href="tel:0269223069" class="emergency-tag-link">🐾 0269 223 069 DSVSA Vet</a>
-      <a href="tel:0369991" class="emergency-tag-link">🚨 0369 991 Spital Vet 24/7</a>
-      <span style="color: var(--text-muted); font-size: 11px;">Colegiul Farmaciștilor Sibiu</span>
-    </div>
-    <div>
-      <span style="font-size: 11px; color: var(--text-secondary);">Europe/Bucharest • 11:58</span>
-    </div>
-  </div>
+  <header class="clean-header">
+    <div class="clean-header-inner">
+      
+      <!-- Left: Minimal Brand -->
+      <a href="#" class="brand-inline">
+        <span class="brand-icon-subtle">🏥</span>
+        <span class="brand-name-subtle">Sibiu Urgențe</span>
+        <span class="brand-dot-sep">•</span>
+        <span class="brand-city-label">Județul Sibiu</span>
+      </a>
 
-  <!-- ========================================================================
-       ADJUSTMENT 1: COMPACT UNIFIED SINGLE-ROW HEADER
-       (Logo, Search, City Selector, Favorites & Account in one line)
-       ======================================================================== -->
-  <header class="compact-header">
-    <!-- Brand -->
-    <a href="#" class="header-brand">
-      <div class="brand-logo-icon">🏥</div>
-      <div>
-        <div class="brand-name-text">Sibiu Urgențe</div>
-        <span class="brand-sub-badge">Medical & Vet P10</span>
+      <!-- Center: Search Capsule + City Selector -->
+      <div class="center-search-capsule">
+        <span class="search-lens">🔍</span>
+        <input type="text" id="liveSearchInput" placeholder="Caută farmacie de gardă, veterinar sau adresă..." oninput="handleFilterChange()">
+        <select class="city-dropdown-minimal" id="liveCitySelect" onchange="handleFilterChange()">
+          <option value="all">📍 Tot Județul</option>
+          <option value="Sibiu" selected>Sibiu</option>
+          <option value="Mediaș">Mediaș</option>
+          <option value="Cisnădie">Cisnădie</option>
+          <option value="Șelimbăr">Șelimbăr</option>
+          <option value="Avrig">Avrig</option>
+        </select>
       </div>
-    </a>
 
-    <!-- Center Search & City Picker -->
-    <div class="header-center-tools">
-      <div class="search-box-compact">
-        <span class="search-lens-icon">🔍</span>
-        <input type="text" id="liveSearchInput" placeholder="Caută farmacie, clinică vet, stradă..." oninput="handleFilterChange()">
+      <!-- Right: Integrated Filter Chips -->
+      <div class="header-chips-inline">
+        <button class="chip-micro active" id="segFilterAll" onclick="setDomain('all')">Toate (6)</button>
+        <button class="chip-micro" id="segFilterPharm" onclick="setDomain('PHARMACY')">💊 Farmacii (4)</button>
+        <button class="chip-micro" id="segFilterVet" onclick="setDomain('EMERGENCY_VET')">🐾 Vet (2)</button>
+        <span style="color: var(--border-subtle); margin: 0 2px;">|</span>
+        <button class="chip-micro active" id="chipOpenNow" onclick="toggleStatusFilter('open')">
+          <span class="status-dot-mini" style="background: var(--status-open-dot);"></span> Deschis
+        </button>
+        <button class="chip-micro active duty-chip" id="chipOnDuty" onclick="toggleStatusFilter('duty')">
+          <span class="status-dot-mini pulse-dot" style="background: var(--status-duty-dot);"></span> Gardă
+        </button>
+        <span style="color: var(--border-subtle); margin: 0 2px;">|</span>
+        <button class="chip-micro" id="btnEmergencyGuide" onclick="alert('Navighează spre ecranul DS-05: Ghid Urgențe Sibiu (112, DSVSA 0269 223 069, Spital Vet 24/7 0369 991)')" title="Ghid de urgențe județul Sibiu (/urgente)" style="background: var(--status-closing-bg); color: var(--status-closing-text); border: 1px solid var(--status-closing-border); font-weight: var(--font-weight-semibold);">
+          🚨 Urgențe Sibiu
+        </button>
       </div>
-      <select class="city-picker-compact" id="liveCitySelect" onchange="handleFilterChange()">
-        <option value="all">📍 Tot Județul Sibiu</option>
-        <option value="Sibiu" selected>Sibiu</option>
-        <option value="Mediaș">Mediaș</option>
-        <option value="Cisnădie">Cisnădie</option>
-        <option value="Șelimbăr">Șelimbăr</option>
-        <option value="Avrig">Avrig</option>
-      </select>
-    </div>
 
-    <!-- Right Actions -->
-    <div class="header-right-actions">
-      <button class="header-action-btn" onclick="alert('Navighează spre DS-04: Favoritele mele')">
-        ⭐ Favorite <span style="font-weight: bold; margin-left: 2px;">(2)</span>
-      </button>
-      <button class="header-action-btn" onclick="alert('Navighează spre DS-04: Autentificare')">
-        👤 Cont
-      </button>
     </div>
   </header>
 
-  <!-- Filter Sub-bar: Domain & Status Chips -->
-  <nav class="subfilter-bar">
-    <div class="segmented-filter">
-      <button class="seg-chip active" id="segFilterAll" onclick="setDomain('all')">
-        Toate <span id="countAll">(6)</span>
-      </button>
-      <button class="seg-chip" id="segFilterPharm" onclick="setDomain('PHARMACY')">
-        💊 Farmacii <span id="countPharm">(4)</span>
-      </button>
-      <button class="seg-chip" id="segFilterVet" onclick="setDomain('EMERGENCY_VET')">
-        🐾 Urgențe Vet <span id="countVet">(2)</span>
-      </button>
-    </div>
-
-    <div class="quick-chips-group">
-      <button class="status-filter-chip active" id="chipOpenNow" onclick="toggleStatusFilter('open')">
-        <span class="badge-dot" style="background: var(--status-open-dot);"></span> Deschis Acum
-      </button>
-      <button class="status-filter-chip active" id="chipOnDuty" onclick="toggleStatusFilter('duty')">
-        <span class="badge-dot" style="background: var(--status-duty-dot);"></span> De Gardă / 24/7
-      </button>
-      <button class="status-filter-chip" id="chipClosingSoon" onclick="toggleStatusFilter('closing')">
-        <span class="badge-dot" style="background: var(--status-closing-dot);"></span> Închide curând
-      </button>
-    </div>
-  </nav>
-
   <!-- ========================================================================
-       MAIN SPLIT WORKSPACE
+       EDITORIAL WORKSPACE: 40% LISTĂ STÂNGA / 60% HARTĂ DREAPTA
        ======================================================================== -->
-  <main class="workspace-split" id="workspaceMain">
+  <main class="editorial-workspace" id="workspaceMain">
 
-    <!-- ======================================================================
-         ADJUSTMENT 3: REALISTIC SIBIU MAP (Left Pane 55%)
-         ====================================================================== -->
-    <section class="map-pane" id="mapPaneSection">
-      <!-- Floating Map Zoom & GPS Tools -->
-      <div class="map-floating-controls">
-        <button class="map-tool-btn" title="Mărește">+</button>
-        <button class="map-tool-btn" title="Micșorează">&minus;</button>
-        <button class="map-tool-btn" title="Localizare GPS">🎯</button>
-      </div>
-
-      <div class="map-canvas-container" id="mapCanvas">
-        <!-- Stylized Realistic SVG Vector Map of Sibiu -->
-        <svg class="sibiu-svg-map" viewBox="0 0 650 550" preserveAspectRatio="none">
-          <!-- River Cibin Winding Path -->
-          <path d="M 0,200 C 120,160 220,280 380,240 S 550,210 650,230" fill="none" stroke="var(--map-water)" stroke-width="26" stroke-linecap="round"/>
-          <path d="M 0,200 C 120,160 220,280 380,240 S 550,210 650,230" fill="none" stroke="var(--border-subtle)" stroke-width="2" stroke-dasharray="6,4"/>
-          <text x="50" y="160" fill="var(--map-label)" font-size="11" font-weight="600" opacity="0.8">Râul Cibin</text>
-
-          <!-- Green Zones: Parcul Sub Arini & Dumbrava -->
-          <rect x="50" y="320" width="170" height="150" rx="20" fill="var(--map-park)" opacity="0.75"/>
-          <text x="70" y="400" fill="var(--map-label)" font-size="11" font-weight="600">Parcul Sub Arini</text>
-
-          <rect x="230" y="460" width="190" height="70" rx="16" fill="var(--map-park)" opacity="0.5"/>
-          <text x="250" y="500" fill="var(--map-label)" font-size="11">Pădurea Dumbrava</text>
-
-          <!-- Arterial Roads (Sibiu Grid) -->
-          <!-- Șoseaua Alba Iulia -->
-          <line x1="0" y1="180" x2="260" y2="250" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
-          <!-- Bulevardul Corneliu Coposu -->
-          <line x1="260" y1="250" x2="520" y2="210" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
-          <!-- Calea Dumbrăvii -->
-          <line x1="310" y1="270" x2="210" y2="550" stroke="var(--map-road-main)" stroke-width="10" stroke-linecap="round"/>
-          <!-- Bulevardul Mihai Viteazu -->
-          <line x1="320" y1="280" x2="480" y2="480" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
-          <!-- Strada Bâlea -->
-          <line x1="420" y1="220" x2="560" y2="380" stroke="var(--map-road-main)" stroke-width="9" stroke-linecap="round"/>
-          <!-- Strada Tribunei (Centru) -->
-          <line x1="270" y1="230" x2="350" y2="210" stroke="var(--map-road-sec)" stroke-width="6"/>
-
-          <!-- Bridges over Cibin -->
-          <line x1="160" y1="180" x2="170" y2="230" stroke="var(--map-bridge)" stroke-width="4"/>
-          <line x1="330" y1="230" x2="340" y2="265" stroke="var(--map-bridge)" stroke-width="4"/>
-
-          <!-- Area Labels -->
-          <text x="280" y="225" fill="var(--map-label)" font-size="13" font-weight="700">Piața Mare (Centru)</text>
-          <text x="380" y="360" fill="var(--map-label)" font-size="11" font-weight="500">B-dul Mihai Viteazu</text>
-          <text x="470" y="310" fill="var(--map-label)" font-size="10">Str. Bâlea</text>
-        </svg>
-
-        <!-- 6 REALISTIC PINS (Color-coded strictly by token) -->
-        <!-- Pin 1: Polisano M. Viteazu (ON_DUTY / Violet Pulsing) -->
-        <div class="map-marker marker-pulse" id="pin-polisano" style="top: 66%; left: 63%;" onclick="selectItem('fac-polisano')">
-          <div class="marker-label" style="background: var(--status-duty-bg); color: var(--status-duty-text); border-color: var(--status-duty-border);">
-            <span>💊 Polisano Non-Stop</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-duty-dot);"></div>
-        </div>
-
-        <!-- Pin 2: Spitalul Veterinar Transilvania (OPEN 24/7 / Emerald Green) -->
-        <div class="map-marker" id="pin-svt" style="top: 48%; left: 74%;" onclick="selectItem('fac-svt')">
-          <div class="marker-label" style="background: var(--status-open-bg); color: var(--status-open-text); border-color: var(--status-open-border);">
-            <span>🐾 Spital Vet 24/7</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-open-dot);"></div>
-        </div>
-
-        <!-- Pin 3: Farmacia San Marco Cisnadie (CLOSING_SOON / Amber) -->
-        <div class="map-marker" id="pin-sanmarco" style="top: 86%; left: 34%;" onclick="selectItem('fac-sanmarco')">
-          <div class="marker-label" style="background: var(--status-closing-bg); color: var(--status-closing-text); border-color: var(--status-closing-border);">
-            <span>💊 San Marco (&le;23m)</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-closing-dot);"></div>
-        </div>
-
-        <!-- Pin 4: Clinica VetHouse Sibiu (ON_DUTY / Indigo Vet) -->
-        <div class="map-marker" id="pin-vethouse" style="top: 56%; left: 82%;" onclick="selectItem('fac-vethouse')">
-          <div class="marker-label" style="background: var(--status-duty-bg); color: var(--status-duty-text); border-color: var(--status-duty-border);">
-            <span>🐾 VetHouse Urgențe</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-duty-dot);"></div>
-        </div>
-
-        <!-- Pin 5: Farmacia Adefarm Tribunei (OPEN / Green) -->
-        <div class="map-marker" id="pin-adefarm" style="top: 40%; left: 45%;" onclick="selectItem('fac-adefarm')">
-          <div class="marker-label" style="background: var(--status-open-bg); color: var(--status-open-text); border-color: var(--status-open-border);">
-            <span>💊 Adefarm Centru</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-open-dot);"></div>
-        </div>
-
-        <!-- Pin 6: Farmacia Richter Coposu (CLOSED / Muted Slate) -->
-        <div class="map-marker" id="pin-richter" style="top: 32%; left: 68%;" onclick="selectItem('fac-richter')">
-          <div class="marker-label" style="background: var(--status-closed-bg); color: var(--status-closed-text); border-color: var(--status-closed-border);">
-            <span>💊 Richter (Închis)</span>
-          </div>
-          <div class="marker-dot" style="background: var(--status-closed-dot);"></div>
-        </div>
-
-        <!-- Active Interactive Tooltip / Mini-Card Popup (Anchored dynamically) -->
-        <div class="active-map-tooltip" id="mapActiveTooltip" style="top: 66%; left: 63%;">
-          <div class="tooltip-header">
-            <span class="card-type-tag type-tag-pharm" id="ttType">💊 FARMACIE</span>
-            <span class="semantic-badge b-duty" id="ttBadge">
-              <span class="badge-dot"></span> <span id="ttStatus">DE GARDĂ</span>
-            </span>
-          </div>
-          <div class="tooltip-title" id="ttTitle">Farmacia Polisano Pharma Non-Stop</div>
-          <div class="tooltip-sub" id="ttAddress">📍 B-dul Mihai Viteazu nr. 11 • 📏 0.4 km</div>
-          <div class="tooltip-actions">
-            <a href="tel:0269420162" class="tooltip-btn-call" id="ttCallBtn">📞 Sună Acum</a>
-            <a href="https://maps.google.com" target="_blank" class="tooltip-btn-route">🗺️ Traseu</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Map Legend -->
-      <div class="map-mini-legend">
-        <span><strong style="color: var(--status-duty-dot);">●</strong> De Gardă (Puls)</span>
-        <span><strong style="color: var(--status-open-dot);">●</strong> Deschis</span>
-        <span><strong style="color: var(--status-closing-dot);">●</strong> Închide curând</span>
-        <span><strong style="color: var(--status-closed-dot);">●</strong> Închis</span>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         ADJUSTMENT 2: CLEAN, AERATED FACILITY CARDS (Right Pane 45%)
-         ====================================================================== -->
-    <section class="list-pane" id="listPaneSection">
+    <!-- STÂNGA (40%): LISTĂ AERISITĂ CU MAXIM 3 INFORMAȚII PE CARD -->
+    <section class="airy-list-pane" id="listPaneSection">
       
-      <!-- List Counter & Active Filter Tracker -->
-      <div class="list-count-row">
-        <span id="activeResultCount">Afișare: 6 unități în județul Sibiu</span>
-        <span>Sortat după: <strong>Proximitate (GPS)</strong></span>
+      <div class="list-meta-header">
+        <span id="activeResultCount">Afișare: 6 unități active</span>
+        <span>Ordonat după proximitate GPS (Haversine)</span>
       </div>
 
-      <!-- STATE: SUCCESS (Real Sibiu Facilities) -->
-      <div class="view-state active-state" id="view-state-success">
+      <!-- STATE: SUCCESS -->
+      <div class="view-state-block active-state" id="view-state-success">
 
         <!-- Card 1: Polisano Pharma (PHARMACY / ON_DUTY) -->
-        <article class="card-item domain-accent-pharmacy selected-card" id="fac-polisano" data-domain="PHARMACY" data-status="duty" onclick="selectItem('fac-polisano')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-pharm">💊 FARMACIE COMUNITARĂ</span>
-            <span class="semantic-badge b-duty">
-              <span class="badge-dot"></span> DE GARDĂ (NON-STOP)
+        <article class="clean-editorial-card pharmacy-domain selected-card" id="fac-polisano" data-domain="PHARMACY" data-status="duty" onclick="selectItem('fac-polisano')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Farmacia Polisano Pharma — Mihai Viteazu</h2>
+            <span class="semantic-status-badge b-duty">
+              <span class="status-dot-mini"></span> DE GARDĂ (NON-STOP)
             </span>
-            <button class="card-fav-star active" title="Elimină din favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">⭐</button>
           </div>
 
-          <div class="card-title-text">Farmacia Polisano Pharma — Mihai Viteazu</div>
-          
-          <div class="card-address-row">
-            <span>📍 B-dul Mihai Viteazu nr. 11, Sibiu</span>
-            <span class="distance-pill">📏 0.4 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 B-dul Mihai Viteazu nr. 11, Sibiu</span>
+            <span class="distance-clean">📏 0.4 km</span>
           </div>
 
-          <!-- Single clean row schedule -->
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span><strong>Deschis permanent</strong> • Rotație activă Colegiul Farmaciștilor Sibiu</span>
-          </div>
-
-          <!-- Exactly 2 primary action buttons -->
-          <div class="card-action-duo">
-            <a href="tel:0269420162" class="btn-act-call" onclick="event.stopPropagation();">
-              <span>📞</span> <span>Apelează: 0269 420 162</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0269420162" class="quick-call-pill" onclick="event.stopPropagation();">
+              <span>📞</span> <span>Apelează direct: 0269 420 162</span>
             </a>
           </div>
         </article>
 
         <!-- Card 2: Spitalul Veterinar Transilvania (EMERGENCY_VET / OPEN 24/7) -->
-        <article class="card-item domain-accent-vet" id="fac-svt" data-domain="EMERGENCY_VET" data-status="open" onclick="selectItem('fac-svt')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-vet">🐾 URGENȚĂ VETERINARĂ</span>
-            <span class="semantic-badge b-open">
-              <span class="badge-dot"></span> DESCHIS 24/7 (NON-STOP)
+        <article class="clean-editorial-card vet-domain" id="fac-svt" data-domain="EMERGENCY_VET" data-status="open" onclick="selectItem('fac-svt')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Spitalul Veterinar Transilvania</h2>
+            <span class="semantic-status-badge b-open">
+              <span class="status-dot-mini"></span> DESCHIS 24/7
             </span>
-            <button class="card-fav-star" title="Adaugă la favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">☆</button>
           </div>
 
-          <div class="card-title-text">Spitalul Veterinar Transilvania</div>
-          
-          <div class="card-address-row">
-            <span>📍 Str. Bâlea nr. 15, Sibiu</span>
-            <span class="distance-pill">📏 1.2 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 Str. Bâlea nr. 15, Sibiu</span>
+            <span class="distance-clean vet-distance">📏 1.2 km</span>
           </div>
 
-          <!-- Single clean row schedule -->
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span><strong>Non-Stop</strong> • Triaj, chirurgie de urgență și terapie intensivă</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0369991" class="btn-act-call vet-btn" onclick="event.stopPropagation();">
-              <span>📞</span> <span>Linia Roșie: 0369 991</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0369991" class="quick-call-pill vet-call" onclick="event.stopPropagation();">
+              <span>📞</span> <span>Linia Roșie Urgență: 0369 991</span>
             </a>
           </div>
         </article>
 
-        <!-- Card 3: Farmacia San Marco (PHARMACY / CLOSING_SOON) -->
-        <article class="card-item domain-accent-pharmacy" id="fac-sanmarco" data-domain="PHARMACY" data-status="closing" onclick="selectItem('fac-sanmarco')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-pharm">💊 FARMACIE COMUNITARĂ</span>
-            <span class="semantic-badge b-closing">
-              <span class="badge-dot"></span> ÎNCHIDE ÎN CURÂND (la 12:00 • 23 min)
+        <!-- Card 3: Farmacia San Marco Cisnadie (PHARMACY / CLOSING_SOON) -->
+        <article class="clean-editorial-card pharmacy-domain" id="fac-sanmarco" data-domain="PHARMACY" data-status="closing" onclick="selectItem('fac-sanmarco')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Farmacia San Marco — Cisnădie</h2>
+            <span class="semantic-status-badge b-closing">
+              <span class="status-dot-mini"></span> ÎNCHIDE ÎN 23 MIN
             </span>
-            <button class="card-fav-star" title="Adaugă la favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">☆</button>
           </div>
 
-          <div class="card-title-text">Farmacia San Marco — Cisnădie</div>
-          
-          <div class="card-address-row">
-            <span>📍 Str. Măgurii nr. 42, Cisnădie</span>
-            <span class="distance-pill">📏 8.5 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 Str. Măgurii nr. 42, Cisnădie</span>
+            <span class="distance-clean">📏 8.5 km</span>
           </div>
 
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span>Program azi: 08:00 - 12:00, 14:00 - 20:00 (Pauză la amiază)</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0269561220" class="btn-act-call" onclick="event.stopPropagation();">
-              <span>📞</span> <span>Apelează: 0269 561 220</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0269561220" class="quick-call-pill" onclick="event.stopPropagation();">
+              <span>📞</span> <span>Apelează direct: 0269 561 220</span>
             </a>
           </div>
         </article>
 
         <!-- Card 4: Clinica VetHouse Sibiu (EMERGENCY_VET / ON_DUTY) -->
-        <article class="card-item domain-accent-vet" id="fac-vethouse" data-domain="EMERGENCY_VET" data-status="duty" onclick="selectItem('fac-vethouse')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-vet">🐾 CLINICĂ VETERINARĂ</span>
-            <span class="semantic-badge b-duty">
-              <span class="badge-dot"></span> GARDĂ LA APEL TELEFONIC
+        <article class="clean-editorial-card vet-domain" id="fac-vethouse" data-domain="EMERGENCY_VET" data-status="duty" onclick="selectItem('fac-vethouse')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Clinica Veterinară VetHouse Sibiu</h2>
+            <span class="semantic-status-badge b-duty">
+              <span class="status-dot-mini"></span> GARDĂ LA APEL
             </span>
-            <button class="card-fav-star" title="Adaugă la favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">☆</button>
           </div>
 
-          <div class="card-title-text">Clinica Veterinară VetHouse Sibiu</div>
-          
-          <div class="card-address-row">
-            <span>📍 Str. Nicovalei nr. 26, Sibiu</span>
-            <span class="distance-pill">📏 1.8 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 Str. Nicovalei nr. 26, Sibiu</span>
+            <span class="distance-clean vet-distance">📏 1.8 km</span>
           </div>
 
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span>L-V 08:00 - 20:00 • În afara orelor: permanență telefonică</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0752210071" class="btn-act-call vet-btn" onclick="event.stopPropagation();">
-              <span>📞</span> <span>Sună Medicul: 0752 210 071</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0752210071" class="quick-call-pill vet-call" onclick="event.stopPropagation();">
+              <span>📞</span> <span>Sună Medic Gardă: 0752 210 071</span>
             </a>
           </div>
         </article>
 
-        <!-- Card 5: Farmacia Adefarm Tribunei (PHARMACY / OPEN) -->
-        <article class="card-item domain-accent-pharmacy" id="fac-adefarm" data-domain="PHARMACY" data-status="open" onclick="selectItem('fac-adefarm')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-pharm">💊 FARMACIE COMUNITARĂ</span>
-            <span class="semantic-badge b-open">
-              <span class="badge-dot"></span> DESCHIS ACUM
+        <!-- Card 5: Farmacia Adefarm Plus (PHARMACY / OPEN) -->
+        <article class="clean-editorial-card pharmacy-domain" id="fac-adefarm" data-domain="PHARMACY" data-status="open" onclick="selectItem('fac-adefarm')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Farmacia Adefarm Plus — Tribunei</h2>
+            <span class="semantic-status-badge b-open">
+              <span class="status-dot-mini"></span> DESCHIS ACUM
             </span>
-            <button class="card-fav-star" title="Adaugă la favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">☆</button>
           </div>
 
-          <div class="card-title-text">Farmacia Adefarm Plus — Tribunei</div>
-          
-          <div class="card-address-row">
-            <span>📍 Str. Tribunei nr. 1, Sibiu (Centru)</span>
-            <span class="distance-pill">📏 0.7 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 Str. Tribunei nr. 1, Sibiu (Centru)</span>
+            <span class="distance-clean">📏 0.7 km</span>
           </div>
 
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span>Program extins: Luni - Vineri 08:00 - 22:00, Sâmbătă 09:00 - 21:00</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0269708067" class="btn-act-call" onclick="event.stopPropagation();">
-              <span>📞</span> <span>Apelează: 0269 708 067</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0269708067" class="quick-call-pill" onclick="event.stopPropagation();">
+              <span>📞</span> <span>Apelează direct: 0269 708 067</span>
             </a>
           </div>
         </article>
 
-        <!-- Card 6: Farmacia Richter Coposu (PHARMACY / CLOSED) -->
-        <article class="card-item domain-accent-pharmacy" id="fac-richter" data-domain="PHARMACY" data-status="closed" onclick="selectItem('fac-richter')">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-pharm">💊 FARMACIE COMUNITARĂ</span>
-            <span class="semantic-badge b-closed">
-              <span class="badge-dot"></span> ÎNCHIS ACUM
+        <!-- Card 6: Farmacia Richter (PHARMACY / CLOSED) -->
+        <article class="clean-editorial-card pharmacy-domain" id="fac-richter" data-domain="PHARMACY" data-status="closed" onclick="selectItem('fac-richter')">
+          <!-- 1. Titlu + Badge status -->
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">Farmacia Richter — B-dul Coposu</h2>
+            <span class="semantic-status-badge b-closed">
+              <span class="status-dot-mini"></span> ÎNCHIS ACUM
             </span>
-            <button class="card-fav-star" title="Adaugă la favorite" onclick="event.stopPropagation(); this.classList.toggle('active')">☆</button>
           </div>
 
-          <div class="card-title-text">Farmacia Richter — B-dul Coposu</div>
-          
-          <div class="card-address-row">
-            <span>📍 B-dul Corneliu Coposu nr. 8, Sibiu</span>
-            <span class="distance-pill">📏 1.5 km</span>
+          <!-- 2. Adresă + Distanță -->
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 B-dul Corneliu Coposu nr. 8, Sibiu</span>
+            <span class="distance-clean">📏 1.5 km</span>
           </div>
 
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span>Închis la această oră • Deschide mâine dimineață la 08:00</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0269211333" class="btn-act-call" onclick="event.stopPropagation();" style="opacity: 0.6;">
+          <!-- 3. Buton Apel rapid -->
+          <div class="card-info-row-3">
+            <a href="tel:0269211333" class="quick-call-pill" onclick="event.stopPropagation();" style="opacity: 0.65;">
               <span>📞</span> <span>Apelează: 0269 211 333</span>
-            </a>
-            <a href="https://maps.google.com" target="_blank" class="btn-act-route" onclick="event.stopPropagation();">
-              <span>🗺️</span> <span>Traseu GPS</span>
             </a>
           </div>
         </article>
@@ -1576,116 +1155,194 @@
       </div>
 
       <!-- STATE: LOADING -->
-      <div class="view-state" id="view-state-loading">
-        <div class="skeleton-item">
-          <div class="shimmer-block" style="height: 16px; width: 40%;"></div>
-          <div class="shimmer-block" style="height: 20px; width: 70%;"></div>
-          <div class="shimmer-block" style="height: 14px; width: 50%;"></div>
-          <div class="shimmer-block" style="height: 36px; width: 100%; border-radius: var(--radius-md);"></div>
+      <div class="view-state-block" id="view-state-loading">
+        <div class="skeleton-box">
+          <div class="shimmer-bar" style="width: 55%; height: 18px;"></div>
+          <div class="shimmer-bar" style="width: 40%;"></div>
+          <div class="shimmer-bar" style="width: 100%; height: 38px; border-radius: var(--radius-full);"></div>
         </div>
-        <div class="skeleton-item">
-          <div class="shimmer-block" style="height: 16px; width: 40%;"></div>
-          <div class="shimmer-block" style="height: 20px; width: 70%;"></div>
-          <div class="shimmer-block" style="height: 14px; width: 50%;"></div>
-          <div class="shimmer-block" style="height: 36px; width: 100%; border-radius: var(--radius-md);"></div>
+        <div class="skeleton-box">
+          <div class="shimmer-bar" style="width: 55%; height: 18px;"></div>
+          <div class="shimmer-bar" style="width: 40%;"></div>
+          <div class="shimmer-bar" style="width: 100%; height: 38px; border-radius: var(--radius-full);"></div>
         </div>
       </div>
 
       <!-- STATE: EMPTY -->
-      <div class="view-state" id="view-state-empty">
-        <div class="state-banner-box">
+      <div class="view-state-block" id="view-state-empty">
+        <div class="state-banner-clean">
           <div style="font-size: 40px;">📭</div>
           <h3 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold);">Nicio unitate găsită</h3>
-          <p style="font-size: var(--font-size-xs); color: var(--text-muted); max-width: 320px;">
-            Nu există unități active care să corespundă filtrelor selectate în această zonă.
+          <p style="font-size: var(--font-size-sm); color: var(--text-muted); max-width: 300px;">
+            Nu există unități active care să corespundă filtrelor alese.
           </p>
-          <button class="btn-act-call" onclick="resetAllFilters()" style="max-width: 200px; margin-top: var(--space-2);">
+          <button class="quick-call-pill" onclick="resetAllFilters()" style="margin-top: var(--space-3); max-width: 200px;">
             Resetează filtrele
           </button>
         </div>
       </div>
 
       <!-- STATE: ERROR -->
-      <div class="view-state" id="view-state-error">
-        <div class="state-banner-box" style="border-color: var(--status-error); background-color: var(--status-error-bg);">
+      <div class="view-state-block" id="view-state-error">
+        <div class="state-banner-clean" style="border-color: var(--status-error); background-color: var(--status-error-bg);">
           <div style="font-size: 40px;">⚠️</div>
-          <h3 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); color: var(--status-error);">Eroare conexiune catalog Sibiu</h3>
-          <p style="font-size: var(--font-size-xs); color: var(--text-muted); max-width: 320px;">
-            Serverul nu a putut returna rotațiile în timp real (503 Service Unavailable).
+          <h3 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); color: var(--status-error);">Eroare catalog Sibiu</h3>
+          <p style="font-size: var(--font-size-sm); color: var(--text-muted); max-width: 300px;">
+            Nu s-a putut încărca programul în timp real (503 Service Unavailable).
           </p>
-          <button class="btn-act-call" onclick="switchState('success')" style="max-width: 200px; margin-top: var(--space-2);">
-            Reîncearcă interogarea
+          <button class="quick-call-pill" onclick="switchState('success')" style="margin-top: var(--space-3); max-width: 200px; background-color: var(--status-error); color: var(--text-on-accent);">
+            Reîncearcă
           </button>
         </div>
       </div>
 
       <!-- STATE: LONG TEXT -->
-      <div class="view-state" id="view-state-long_text">
-        <article class="card-item domain-accent-pharmacy">
-          <div class="card-top-row">
-            <span class="card-type-tag type-tag-pharm">💊 FARMACIE COMUNITARĂ CU CIRCUIT DESCHIS ȘI PUNCT DE RECEPTURĂ MAGISTRALĂ SPECIALĂ</span>
-            <span class="semantic-badge b-duty">
-              <span class="badge-dot"></span> DE GARDĂ SPECIALĂ ACTIVĂ
+      <div class="view-state-block" id="view-state-long_text">
+        <article class="clean-editorial-card pharmacy-domain">
+          <div class="card-info-row-1">
+            <h2 class="card-title-text">
+              Societatea Farmaceutică Sanitas Farma SRL Sibiu Punct de Lucru Hipodrom Bulevardul Mihai Viteazu colț cu Calea Dumbrăvii Bloc 104 Scara A Parter Comercial
+            </h2>
+            <span class="semantic-status-badge b-duty">
+              <span class="status-dot-mini"></span> DE GARDĂ SPECIALĂ ACTIVĂ
             </span>
           </div>
 
-          <div class="card-title-text">
-            Societatea Farmaceutică Sanitas Farma SRL Sibiu Punct de Lucru Hipodrom Bulevardul Mihai Viteazu colț cu Calea Dumbrăvii Bloc 104 Scara A Parter Comercial
+          <div class="card-info-row-2">
+            <span class="address-clean">📍 Bulevardul Mihai Viteazu nr. 104, Cartier Hipodrom III, Sibiu</span>
+            <span class="distance-clean">📏 14.85 km</span>
           </div>
 
-          <div class="card-address-row">
-            <span>📍 Bulevardul Mihai Viteazu nr. 104, Tronson Intersecție Calea Dumbrăvii, Cartier Hipodrom III, Municipiul Sibiu, Județul Sibiu</span>
-            <span class="distance-pill">📏 14.85 km</span>
-          </div>
-
-          <div class="card-schedule-single-row">
-            <span>🕒</span>
-            <span>Program extins aprobat temporar prin sesizarea comunitară #104 cu 8 confirmări: Deschis Luni-Vineri 07:30 - 22:30</span>
-          </div>
-
-          <div class="card-action-duo">
-            <a href="tel:0269123456" class="btn-act-call">
+          <div class="card-info-row-3">
+            <a href="tel:0269123456" class="quick-call-pill">
               <span>📞</span> <span>Apelează Dispecerat: 0269 123 456</span>
-            </a>
-            <a href="#" class="btn-act-route">
-              <span>🗺️</span> <span>Navighează GPS</span>
             </a>
           </div>
         </article>
       </div>
 
     </section>
+
+    <!-- DREAPTA (60%): HARTA SIBIULUI -->
+    <section class="map-pane-sixty" id="mapPaneSection">
+      
+      <!-- Floating Map Tools -->
+      <div class="map-floating-tools">
+        <button class="map-tool-btn" title="Mărește" onclick="alert('Zoom In')">+</button>
+        <button class="map-tool-btn" title="Micșorează" onclick="alert('Zoom Out')">&minus;</button>
+        <button class="map-tool-btn" title="GPS" onclick="alert('Centrare GPS Sibiu Centru')">🎯</button>
+      </div>
+
+      <div class="map-canvas-area" id="mapCanvas">
+        <svg class="map-svg-drawing" viewBox="0 0 650 550" preserveAspectRatio="none">
+          <!-- River Cibin Winding Path -->
+          <path d="M 0,200 C 120,160 220,280 380,240 S 550,210 650,230" fill="none" stroke="var(--map-water)" stroke-width="26" stroke-linecap="round"/>
+          <path d="M 0,200 C 120,160 220,280 380,240 S 550,210 650,230" fill="none" stroke="var(--border-subtle)" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="50" y="160" fill="var(--map-label)" font-size="11" font-weight="600" opacity="0.8">Râul Cibin</text>
+
+          <!-- Parks -->
+          <rect x="50" y="320" width="170" height="150" rx="20" fill="var(--map-park)" opacity="0.75"/>
+          <text x="70" y="400" fill="var(--map-label)" font-size="11" font-weight="600">Parcul Sub Arini</text>
+
+          <rect x="230" y="460" width="190" height="70" rx="16" fill="var(--map-park)" opacity="0.5"/>
+          <text x="250" y="500" fill="var(--map-label)" font-size="11">Pădurea Dumbrava</text>
+
+          <!-- Roads -->
+          <line x1="0" y1="180" x2="260" y2="250" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
+          <line x1="260" y1="250" x2="520" y2="210" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
+          <line x1="310" y1="270" x2="210" y2="550" stroke="var(--map-road-main)" stroke-width="10" stroke-linecap="round"/>
+          <line x1="320" y1="280" x2="480" y2="480" stroke="var(--map-road-main)" stroke-width="12" stroke-linecap="round"/>
+          <line x1="420" y1="220" x2="560" y2="380" stroke="var(--map-road-main)" stroke-width="9" stroke-linecap="round"/>
+          <line x1="270" y1="230" x2="350" y2="210" stroke="var(--map-road-sec)" stroke-width="6"/>
+
+          <!-- Bridges -->
+          <line x1="160" y1="180" x2="170" y2="230" stroke="var(--map-bridge)" stroke-width="4"/>
+          <line x1="330" y1="230" x2="340" y2="265" stroke="var(--map-bridge)" stroke-width="4"/>
+
+          <!-- Labels -->
+          <text x="280" y="225" fill="var(--map-label)" font-size="13" font-weight="700">Piața Mare</text>
+          <text x="380" y="360" fill="var(--map-label)" font-size="11" font-weight="500">B-dul Mihai Viteazu</text>
+          <text x="470" y="310" fill="var(--map-label)" font-size="10">Str. Bâlea</text>
+        </svg>
+
+        <!-- 6 INTERACTIVE REALISTIC PINS -->
+        <div class="editorial-pin active-pin" id="pin-polisano" style="top: 66%; left: 63%;" onclick="selectItem('fac-polisano')">
+          <div class="pin-pill-tag b-duty">
+            <span>💊 Polisano Non-Stop</span>
+          </div>
+          <div class="pin-dot-anchor pulse-dot" style="background: var(--status-duty-dot);"></div>
+        </div>
+
+        <div class="editorial-pin" id="pin-svt" style="top: 48%; left: 74%;" onclick="selectItem('fac-svt')">
+          <div class="pin-pill-tag b-open">
+            <span>🐾 Spital Vet 24/7</span>
+          </div>
+          <div class="pin-dot-anchor" style="background: var(--status-open-dot);"></div>
+        </div>
+
+        <div class="editorial-pin" id="pin-sanmarco" style="top: 86%; left: 34%;" onclick="selectItem('fac-sanmarco')">
+          <div class="pin-pill-tag b-closing">
+            <span>💊 San Marco (&le;23m)</span>
+          </div>
+          <div class="pin-dot-anchor" style="background: var(--status-closing-dot);"></div>
+        </div>
+
+        <div class="editorial-pin" id="pin-vethouse" style="top: 56%; left: 82%;" onclick="selectItem('fac-vethouse')">
+          <div class="pin-pill-tag b-duty">
+            <span>🐾 VetHouse Urgențe</span>
+          </div>
+          <div class="pin-dot-anchor pulse-dot" style="background: var(--status-duty-dot);"></div>
+        </div>
+
+        <div class="editorial-pin" id="pin-adefarm" style="top: 40%; left: 45%;" onclick="selectItem('fac-adefarm')">
+          <div class="pin-pill-tag b-open">
+            <span>💊 Adefarm Tribunei</span>
+          </div>
+          <div class="pin-dot-anchor" style="background: var(--status-open-dot);"></div>
+        </div>
+
+        <div class="editorial-pin" id="pin-richter" style="top: 32%; left: 68%;" onclick="selectItem('fac-richter')">
+          <div class="pin-pill-tag b-closed">
+            <span>💊 Richter Coposu</span>
+          </div>
+          <div class="pin-dot-anchor" style="background: var(--status-closed-dot);"></div>
+        </div>
+
+        <!-- Tooltip -->
+        <div class="editorial-map-tooltip" id="mapActiveTooltip">
+          <div class="tt-title" id="ttTitle">Farmacia Polisano Pharma Non-Stop</div>
+          <div class="tt-meta" id="ttAddress">📍 B-dul Mihai Viteazu nr. 11 • 📏 0.4 km</div>
+          <a href="tel:0269420162" class="tt-call-btn" id="ttCallBtn">📞 Sună Direct</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ========================================================================
        STICKY BOTTOM MOBILE SWITCHER (< 1024px)
        ======================================================================== -->
-  <nav class="mobile-bottom-switch">
-    <div class="mob-switch-container">
-      <button class="mob-switch-btn active" id="mobBtnList" onclick="toggleMobileView('list')">
-        📋 Listă (<span id="mobCountLabel">6</span>)
-      </button>
-      <button class="mob-switch-btn" id="mobBtnMap" onclick="toggleMobileView('map')">
-        🗺️ Hartă
-      </button>
-    </div>
+  <nav class="mobile-dock-switch">
+    <button class="dock-btn active" id="mobBtnList" onclick="toggleMobileView('list')">
+      📋 Listă (<span id="mobCountLabel">6</span>)
+    </button>
+    <button class="dock-btn" id="mobBtnMap" onclick="toggleMobileView('map')">
+      🗺️ Hartă Sibiu
+    </button>
   </nav>
 
   <!-- ========================================================================
-       ADJUSTMENT 4: INTERACTIVE JAVASCRIPT (Real-time filtering & sync)
+       INTERACTIVE JAVASCRIPT: BIDIRECTIONAL SYNC & LIVE FILTERS
        ======================================================================== -->
   <script>
-    // State Tracker
     const filterState = {
       domain: 'all',          // 'all' | 'PHARMACY' | 'EMERGENCY_VET'
       openNow: true,
       onDuty: true,
-      closingSoon: false,
       search: '',
       city: 'Sibiu'
     };
 
-    // Item Meta Directory for Tooltip and Synchronization
     const facilitiesMeta = {
       'fac-polisano': {
         pinId: 'pin-polisano',
@@ -1693,11 +1350,7 @@
         left: '63%',
         name: 'Farmacia Polisano Pharma Non-Stop',
         address: '📍 B-dul Mihai Viteazu nr. 11 • 📏 0.4 km',
-        phone: 'tel:0269420162',
-        typeText: '💊 FARMACIE',
-        typeClass: 'type-tag-pharm',
-        badgeClass: 'b-duty',
-        badgeText: 'DE GARDĂ'
+        phone: 'tel:0269420162'
       },
       'fac-svt': {
         pinId: 'pin-svt',
@@ -1705,11 +1358,7 @@
         left: '74%',
         name: 'Spitalul Veterinar Transilvania',
         address: '📍 Str. Bâlea nr. 15 • 📏 1.2 km',
-        phone: 'tel:0369991',
-        typeText: '🐾 URGENȚĂ VET',
-        typeClass: 'type-tag-vet',
-        badgeClass: 'b-open',
-        badgeText: 'DESCHIS 24/7'
+        phone: 'tel:0369991'
       },
       'fac-sanmarco': {
         pinId: 'pin-sanmarco',
@@ -1717,11 +1366,7 @@
         left: '34%',
         name: 'Farmacia San Marco — Cisnădie',
         address: '📍 Str. Măgurii nr. 42 • 📏 8.5 km',
-        phone: 'tel:0269561220',
-        typeText: '💊 FARMACIE',
-        typeClass: 'type-tag-pharm',
-        badgeClass: 'b-closing',
-        badgeText: 'ÎNCHIDE &le;23m'
+        phone: 'tel:0269561220'
       },
       'fac-vethouse': {
         pinId: 'pin-vethouse',
@@ -1729,11 +1374,7 @@
         left: '82%',
         name: 'Clinica Veterinară VetHouse Sibiu',
         address: '📍 Str. Nicovalei nr. 26 • 📏 1.8 km',
-        phone: 'tel:0752210071',
-        typeText: '🐾 URGENȚĂ VET',
-        typeClass: 'type-tag-vet',
-        badgeClass: 'b-duty',
-        badgeText: 'GARDĂ LA APEL'
+        phone: 'tel:0752210071'
       },
       'fac-adefarm': {
         pinId: 'pin-adefarm',
@@ -1741,11 +1382,7 @@
         left: '45%',
         name: 'Farmacia Adefarm Plus — Tribunei',
         address: '📍 Str. Tribunei nr. 1 (Centru) • 📏 0.7 km',
-        phone: 'tel:0269708067',
-        typeText: '💊 FARMACIE',
-        typeClass: 'type-tag-pharm',
-        badgeClass: 'b-open',
-        badgeText: 'DESCHIS ACUM'
+        phone: 'tel:0269708067'
       },
       'fac-richter': {
         pinId: 'pin-richter',
@@ -1753,54 +1390,39 @@
         left: '68%',
         name: 'Farmacia Richter — Coposu',
         address: '📍 B-dul Corneliu Coposu nr. 8 • 📏 1.5 km',
-        phone: 'tel:0269211333',
-        typeText: '💊 FARMACIE',
-        typeClass: 'type-tag-pharm',
-        badgeClass: 'b-closed',
-        badgeText: 'ÎNCHIS ACUM'
+        phone: 'tel:0269211333'
       }
     };
 
-    // Item Selection & Card/Pin Interactive Synchronization
     function selectItem(facId) {
       const meta = facilitiesMeta[facId];
       if (!meta) return;
 
-      // 1. Highlight Card
-      document.querySelectorAll('.card-item').forEach(card => card.classList.remove('selected-card'));
+      // 1. Highlight card
+      document.querySelectorAll('.clean-editorial-card').forEach(c => c.classList.remove('selected-card'));
       const activeCard = document.getElementById(facId);
       if (activeCard) {
         activeCard.classList.add('selected-card');
         activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
-      // 2. Highlight Pin on Map
-      document.querySelectorAll('.map-marker').forEach(pin => pin.classList.remove('active-marker'));
+      // 2. Highlight pin
+      document.querySelectorAll('.editorial-pin').forEach(p => p.classList.remove('active-pin'));
       const activePin = document.getElementById(meta.pinId);
       if (activePin) {
-        activePin.classList.add('active-marker');
+        activePin.classList.add('active-pin');
       }
 
-      // 3. Move & Update Map Active Tooltip
+      // 3. Tooltip
       const tt = document.getElementById('mapActiveTooltip');
       tt.style.top = meta.top;
       tt.style.left = meta.left;
       tt.style.display = 'flex';
-
       document.getElementById('ttTitle').textContent = meta.name;
       document.getElementById('ttAddress').textContent = meta.address;
       document.getElementById('ttCallBtn').href = meta.phone;
-
-      const ttType = document.getElementById('ttType');
-      ttType.textContent = meta.typeText;
-      ttType.className = 'card-type-tag ' + meta.typeClass;
-
-      const ttBadge = document.getElementById('ttBadge');
-      ttBadge.className = 'semantic-badge ' + meta.badgeClass;
-      document.getElementById('ttStatus').innerHTML = meta.badgeText;
     }
 
-    // Domain Filtering (Toate / Farmacii / Veterinari)
     function setDomain(domainKey) {
       filterState.domain = domainKey;
       document.getElementById('segFilterAll').classList.toggle('active', domainKey === 'all');
@@ -1809,7 +1431,6 @@
       applyFilters();
     }
 
-    // Status Filter Toggling
     function toggleStatusFilter(statusKey) {
       if (statusKey === 'open') {
         filterState.openNow = !filterState.openNow;
@@ -1817,23 +1438,18 @@
       } else if (statusKey === 'duty') {
         filterState.onDuty = !filterState.onDuty;
         document.getElementById('chipOnDuty').classList.toggle('active', filterState.onDuty);
-      } else if (statusKey === 'closing') {
-        filterState.closingSoon = !filterState.closingSoon;
-        document.getElementById('chipClosingSoon').classList.toggle('active', filterState.closingSoon);
       }
       applyFilters();
     }
 
-    // Search and City Filter Handler
     function handleFilterChange() {
       filterState.search = document.getElementById('liveSearchInput').value.toLowerCase().trim();
       filterState.city = document.getElementById('liveCitySelect').value;
       applyFilters();
     }
 
-    // Core Filter Execution Logic
     function applyFilters() {
-      const cards = document.querySelectorAll('#view-state-success .card-item');
+      const cards = document.querySelectorAll('#view-state-success .clean-editorial-card');
       let visibleCount = 0;
       let firstVisibleId = null;
 
@@ -1848,12 +1464,11 @@
         let matchSearch = !filterState.search || textContent.includes(filterState.search);
         
         let matchStatus = false;
-        if (!filterState.openNow && !filterState.onDuty && !filterState.closingSoon) {
-          matchStatus = true; // No filter active means show all
+        if (!filterState.openNow && !filterState.onDuty) {
+          matchStatus = true;
         } else {
-          if (filterState.openNow && status === 'open') matchStatus = true;
+          if (filterState.openNow && (status === 'open' || status === 'closing')) matchStatus = true;
           if (filterState.onDuty && status === 'duty') matchStatus = true;
-          if (filterState.closingSoon && status === 'closing') matchStatus = true;
         }
 
         const isVisible = matchDomain && matchSearch && matchStatus;
@@ -1866,7 +1481,7 @@
         }
       });
 
-      document.getElementById('activeResultCount').textContent = `Afișare: ${visibleCount} unități găsite`;
+      document.getElementById('activeResultCount').textContent = `Afișare: ${visibleCount} unități active`;
       document.getElementById('mobCountLabel').textContent = visibleCount;
 
       const tt = document.getElementById('mapActiveTooltip');
@@ -1881,7 +1496,6 @@
       filterState.domain = 'all';
       filterState.openNow = true;
       filterState.onDuty = true;
-      filterState.closingSoon = false;
       filterState.search = '';
       document.getElementById('liveSearchInput').value = '';
       document.getElementById('liveCitySelect').value = 'Sibiu';
@@ -1891,13 +1505,11 @@
       document.getElementById('segFilterVet').classList.remove('active');
       document.getElementById('chipOpenNow').classList.add('active');
       document.getElementById('chipOnDuty').classList.add('active');
-      document.getElementById('chipClosingSoon').classList.remove('active');
 
       switchState('success');
       applyFilters();
     }
 
-    // State Switcher (Success, Loading, Empty, Error, Long Text)
     function switchState(stateName) {
       const states = ['success', 'loading', 'empty', 'error', 'long_text'];
       states.forEach(s => {
@@ -1918,7 +1530,6 @@
       if (activeBtn) activeBtn.classList.add('active');
     }
 
-    // Theme Switcher Logic
     function toggleTheme() {
       const html = document.documentElement;
       const current = html.getAttribute('data-theme');
@@ -1929,7 +1540,6 @@
       document.getElementById('themeLabel').textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
     }
 
-    // Viewport Simulation Logic
     function setViewport(mode) {
       const main = document.getElementById('workspaceMain');
       const deskBtn = document.getElementById('viewDesktopBtn');
@@ -1937,7 +1547,7 @@
 
       if (mode === 'mobile') {
         main.style.maxWidth = '460px';
-        main.style.margin = '0 auto';
+        main.style.margin = 'var(--space-2) auto';
         main.style.display = 'flex';
         main.style.flexDirection = 'column';
         main.style.boxShadow = 'var(--shadow-floating)';
@@ -1945,10 +1555,10 @@
         deskBtn.classList.remove('active');
         toggleMobileView('list');
       } else {
-        main.style.maxWidth = '100%';
-        main.style.margin = '0';
+        main.style.maxWidth = '1540px';
+        main.style.margin = 'var(--space-4) auto var(--space-6)';
         main.style.display = 'grid';
-        main.style.gridTemplateColumns = '55% 45%';
+        main.style.gridTemplateColumns = '40% 60%';
         main.style.boxShadow = 'none';
         deskBtn.classList.add('active');
         mobBtn.classList.remove('active');
@@ -1957,7 +1567,6 @@
       }
     }
 
-    // Mobile Switcher: List vs Map
     function toggleMobileView(view) {
       const map = document.getElementById('mapPaneSection');
       const list = document.getElementById('listPaneSection');
@@ -1977,7 +1586,6 @@
       }
     }
 
-    // Initialize Default Selection on Load
     window.addEventListener('DOMContentLoaded', () => {
       selectItem('fac-polisano');
     });
