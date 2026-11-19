@@ -670,3 +670,38 @@ Fără nicio dată pre-completată fictiv, și consemnarea acțiunii în `AI_LOG
 * **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`JavaScript syntax is 100% valid!`**.
 * **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
 * **Controlul Versiunilor:** Rulat `git status` — conform și curat.
+
+---
+
+# Sesiunea 18 — Generare și Aprobare Plan UI/UX pentru Toate Cele 5 Ecrane (DS-01 .. DS-05) (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. Elaborarea unui plan structurat conform procedurii din `.claude/skills/plan/SKILL.md` dedicat **EXCLUSIV designului UI/UX pentru toate cele 5 ecrane**:
+   - `DS-01`: Explorer Map & List (split-screen desktop, comutator mobil, carduri cu acțiuni integrate pe rândul 3, pini colorați CartoDB).
+   - `DS-02`: Facility Details & Community Status Reports cu mecanism adaptiv de confirmare (4 confirmări pentru pauze scurte neanunțate vs. 8 confirmări pentru orar general conform **D-001**).
+   - `DS-03`: Emergency Guide (Ghid de Urgență Sibiu cu numere critice 1-tap: 112, DSVSA 0269 223 069, Colegiul Farmaciștilor, Spital Vet 24/7 0369 991 și acordeoane de triaj).
+   - `DS-04`: Authentication & User Favorites (ecran curat direct de favorite pentru utilizatori autentificați, prompt de conectare pentru anonimi, modal dedicat cu reluare acțiune în așteptare `pendingAuthAction`).
+   - `DS-05`: Admin Moderation & Guard-Duty Schedule Panel (coadă moderare sesizări cu progres 4 vs. 8 confirmări și modul import CSV rotații gardă conform **C-004**).
+2. Salvarea planului complet direct în `docs/plans/01-design-screens.md`, incluzând toate secțiunile obligatorii din skill: `Size`, `Approach`, `Files`, `Tests`, `Sequencing`, `Design`, `Risks`, `Out of scope`, `Knowledge used` și `Gate`.
+3. Stop înainte de scrierea oricărui cod de aplicație și așteptarea confirmării formale a utilizatorului.
+4. Confirmarea utilizatorului pentru toate intrările din Knowledge used, marcarea planului ca **`APPROVED`** și consemnarea sesiunii în `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **`docs/plans/01-design-screens.md`**:
+  - Creat și marcat ca **`APPROVED`** (`> **Status:** APPROVED (approved by user on 2026-11-19)`).
+  - Include specificația completă pe cele 10 secțiuni din skill, integrând secțiunea detaliată `## Design` cu descrierea amănunțită a fiecăruia dintre cele 5 ecrane, a ciclului de recalculare status la 60s în `Europe/Bucharest` și a token-urilor din `DESIGN.md`.
+* **Actualizare Registre de Cunoștințe (Knowledge Ledgers)** conform regulilor din `AGENTS.md`:
+  - `DECISIONS.md`: Adăugată linia `- **Confirmed:** 2026-11-19` pentru `D-001` (8 confirmări comunitare cu rafinament adaptiv 4 vs. 8), `D-002` (delimitare strictă out-of-scope comerț/telemedicină) și `D-003` (cerință autentificare pentru favorite și sesizări).
+  - `CONTRACTS.md`: Adăugată linia `- **Confirmed:** 2026-11-19` pentru `C-003` (API corecții orar) și `C-004` (API import CSV rotații de gardă).
+  - `OPEN-QUESTIONS.md`: `Q-004` (importul CSV de rotații) a fost marcat ca `answered` cu `- **Confirmed:** 2026-11-19` (panou securizat cu dropzone, previzualizare și validare per linie); `Q-007` (rol unificat `ADMIN`) a primit linia `- **Confirmed:** 2026-11-19`.
+* **Zero cod de aplicație scris:** Niciun fișier de implementare din `frontend/src/` sau `backend/src/` nu a fost atins; structura este pregătită pentru începerea etapei de construcție (`/build`).
+
+## 3. Verificări
+* **Integritate Registre (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Fișier Plan:** Verificat [01-design-screens.md](file:///home/andrezidu26/proiect-web2/docs/plans/01-design-screens.md) — conține toate secțiunile cerute și antetul de aprobare.
+* **Controlul Versiunilor:** Rulat `git status` — modificările sunt strict conforme cerințelor.
+
+*Notă Sesiunea 19:* Planul `docs/plans/01-design-screens.md` a fost simplificat direct în limba română (Size: M, căi relative, puncte cheie per ecran pentru laborator) păstrând statusul APPROVED.
+Integritatea a fost re-validată prin `ledger-lint`.
+
+
