@@ -318,3 +318,355 @@ Fără nicio dată pre-completată fictiv, și consemnarea acțiunii în `AI_LOG
 ## 3. Verificări
 * `python3 docs/agents/tools/ledger-lint.py` — `✓ ledger ok`.
 * Verificare integritate fișier `FIELD.md` — zero date simulate, structură pregătită pentru date reale.
+
+---
+
+# Sesiunea 10 — Creare Prototip HTML Complet Interactiv Multi-Ecran (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. Citirea atentă a documentelor: `AGENTS.md`, `docs/design/DESIGN.md`, `docs/design/registry.yaml` și `docs/design/mocks/ds-01-home.html`.
+2. Crearea unui prototip HTML multi-ecran complet și interactiv la `docs/design/mocks/full-site-prototype.html`, care să conecteze toate cele 5 ecrane aprobate:
+   * **DS-01**: Explorer (Hartă interactivă Sibiu & listă unități deschise/de gardă, căutare text, selector oraș, filtre rapide).
+   * **DS-02**: Facility Details & Community Correction (Orar complet, pauze de masă, crossesMidnight, excepții sărbători, servicii medicale autorizate, apel direct, navigație GPS, salvare favorite și formular de sesizare orar eronat).
+   * **DS-03**: Unified ADMIN Panel & CSV Import (Coada de moderare sesizări cu vizualizare progres vot, aprobare/respingere manuală și import CSV conform contractului C-004 cu parsare și previzualizare tabelară).
+   * **DS-04**: Auth & Favorites (Gestionare favorite salvate cu re-evaluare deterministică a statusului live și formular securizat de autentificare conform D-003).
+   * **DS-05**: Sibiu Emergency Guide (Linii directe 1-tap: 112, DSVSA Sibiu, Colegiul Farmaciștilor Sibiu, Spitalul Veterinar Transilvania 24/7 și ghiduri interactive de triaj & prim-ajutor).
+3. Păstrarea **complet intactă** a fișierului aprobat `ds-01-home.html`.
+4. Utilizarea **strictă** a token-urilor din `DESIGN.md` (tipografie Plus Jakarta Sans, tabular-nums, paletă semantice 5 stări cu pulse dot pentru ON_DUTY, temă duală Light / Dark Midnight Slate `#0B0F19`, grilă de spațiere 4px și raze rotunjite).
+5. Implementarea tuturor interacțiunilor: butoane funcționale, taburi de navigare, filtre (oraș, domeniu, openNow, onCall), pini interactivi sincronizați pe harta SVG Sibiu, regula celor 8 confirmări comunitare (**D-001**) cu auto-aprobare live la atingerea pragului, comutator temă Light/Dark, comutator viewport Desktop/Mobil și switcher stări de previzualizare (Success, Loading, Empty, Error).
+6. Înregistrarea prototipului în `docs/design/registry.yaml`.
+7. Consemnarea în `AI_LOG.md` și validarea integrității prin `python3 docs/agents/tools/ledger-lint.py --fix`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - Aplicație prototip interactivă de sine stătătoare, fără dependențe externe de build.
+  - Conectare bidirecțională completă între toate cele 5 ecrane (`DS-01` .. `DS-05`).
+  - Bară de control superioară (Top Demo Toolbar) cu navigare directă pe ecrane, comutator de roluri demonstrativ (`USER`, `ADMIN`, `Vizitator Anonim`), comutator Light/Dark mode, simulare viewport Desktop/Mobil și selector stări (Normal, Încărcare cu skeleton shimmer, Fără rezultate, Eroare 503).
+  - Ceas live în fusul orar oficial `Europe/Bucharest` (conform deciziei **D-004**).
+  - Filtrare dinamică în DS-01 pe baza localității (Sibiu, Mediaș, Cisnădie, Șelimbăr, Avrig), domeniului (`PHARMACY`, `EMERGENCY_VET`), căutării libere și stărilor (`openNow`, `onCall`), sincronizată cu lista de carduri și pinii hărții.
+  - Hartă interactivă SVG a Sibiului cu Râul Cibin, Parcul Sub Arini, Pădurea Dumbrava și pini cu indicatori de stare (inclusiv animație `pulse-duty`), tooltips cu apel direct și acces către detaliile unității.
+  - Vizualizare completă DS-02 pentru unitatea selectată: tabel orar săptămânal cu evidențierea zilei curente („Azi”), pauze de prânz, servicii medicale și formular de sesizare orar comunitate.
+  - Implementarea regulii celor 8 confirmări (**D-001**): în DS-03 și DS-02, utilizatorul poate vota confirmarea sesizărilor (`+1`); la atingerea a 8 confirmări, sesizarea trece automat în status `APPROVED (Auto-aprobat de comunitate)` și actualizează în timp real disponibilitatea unității în catalog.
+  - Modulul complet de import CSV din DS-03 conform **C-004**, cu parsare sintactică, validare de coloane, previzualizare tabelară și alertă de succes.
+  - Sistem de notificări Toast pentru toate acțiunile (vot D-001, adăugare/eliminare favorite, import CSV, comutare temă).
+  - Păstrarea **complet intactă** a fișierului `ds-01-home.html`.
+* **`docs/design/registry.yaml`**:
+  - Actualizat pentru a referenția `full-site-prototype.html` la ecranele DS-02, DS-03, DS-04, DS-05.
+  - Adăugată secțiunea `prototypes` cu intrarea `PROTO-FULL`.
+* **`AI_LOG.md`**:
+  - Documentarea detaliată a cerințelor, livrabilelor și verificărilor.
+
+## 3. Verificări
+* **Integritate `ds-01-home.html`:** Fișierul a rămas nemodificat (`git diff docs/design/mocks/ds-01-home.html` este gol).
+* **Validare sintaxă JavaScript:** Testat prin Node.js (`new Function(...)` fără erori de sintaxă).
+* **Validare integritate registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul versiunilor:** Rulat `git status` — doar fișierele solicitate au fost create sau modificate.
+
+---
+
+# Sesiunea 11 — Rafinare Prototip Multi-Ecran: Header, Auth/Role Separation (D-003 & Q-007), Rând 2 Controale și Acțiuni Carduri & Hartă (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Header Principal (Top Header):**
+   - Brand în stânga: *"Sibiu Urgențe Medicale & Vet"* cu subtitlu orientativ.
+   - Taburi de navigare curate în dreapta: *"Explorer"*, *"Favorite"*, *"Ghid Urgențe"*, plus *"Panou Admin"* vizibil **EXCLUSIV** când utilizatorul este autentificat ca `ADMIN` (conform **Q-007**).
+   - Control clar de Autentificare/Cont în extrema dreaptă:
+     - Când este deconectat (`Vizitator` / `ANON`): buton prominent *"Conectare / Cont"* ce deschide ecranul/modalul DS-04 cu butoane 1-click demonstrative (*"Intră ca USER"* și *"Intră ca ADMIN"*).
+     - Când este conectat: afișează insigna utilizatorului activ (*"Andreea · USER"* sau *"Admin Sibiu · ADMIN"*) și un buton de *"Deconectare"*.
+2. **Separare Comportamentală a Rolurilor (D-003 & Q-007):**
+   - Vizitatorii anonimi pot naviga liber pe DS-01, consulta detaliile DS-02 și apela direct unitățile; salvarea la favorite sau trimiterea/votarea unei sesizări interceptează acțiunea și deschide modalul/ecranul de autentificare DS-04.
+   - Utilizatorii `USER` pot salva/elimina favorite (DS-04), trimite sesizări de orar și vota în cadrul regulii celor 8 confirmări (**D-001**) direct din ecranul de detalii DS-02 și din panoul administrativ.
+   - Administratorii `ADMIN` au acces deblocat la tabul *"Panou Admin"* (DS-03) pentru moderare manuală și import CSV rotații de gardă conform contractului **C-004**.
+3. **Al Doilea Rând de Controale pe DS-01:**
+   - Căutare unificată + selector oraș dropdown (*"Sibiu"*, *"Mediaș"*, *"Cisnădie"*, *"Toate"*) în stânga.
+   - Chips de filtrare rapidă (*"Toate"*, *"Farmacii"*, *"Vet"*, *"Deschis Acum"*, *"De Gardă"*) în dreapta.
+4. **Workspace Split-Screen pe DS-01:**
+   - Coloana stângă (40%): carduri rotunjite aerisite cu Titlu + pill status semantic, Adresă + distanță km, rând de acțiuni cu buton primar *"Apelează"*, buton clar *"📋 Detalii & Sesizare"* (navigare directă la DS-02 pentru unitatea respectivă) și steluță comutare favorit.
+   - Coloana dreaptă (60%): hartă interactivă Sibiu cu pini semantici și card plutitor pe pin ce oferă butoanele *"📞 Sună Direct"* și *"📋 Detalii & Sesizare"*.
+5. **Cerințe suplimentare:**
+   - Menținere comutator Light/Dark mode și switcher stări de previzualizare.
+   - Păstrarea **complet intactă** a fișierului `ds-01-home.html`.
+   - Utilizarea exclusivă a token-urilor din `DESIGN.md`.
+   - Înregistrare în `docs/design/registry.yaml`, documentare în `AI_LOG.md` și validare prin `python3 docs/agents/tools/ledger-lint.py --fix`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **Top Header refăcut**: Brand *"Sibiu Urgențe Medicale & Vet"*, taburi *"Explorer"*, *"Favorite"*, *"Ghid Urgențe"*, tab *"🛡️ Panou Admin"* ascuns dinamic pentru anonimi/USER și afișat exclusiv pentru `ADMIN`. Control de cont în dreapta cu buton *"👤 Conectare / Cont"* (pentru vizitatori) sau badge activ (*"👤 Andreea · USER"* / *"🛡️ Admin Sibiu · ADMIN"*) și buton *"Deconectare"*.
+  - **Auth Modal & 1-Click Demo**: Dialog modal interactiv (`#authModalBackdrop`) cu butoane rapide 1-click (*"👤 Intră ca USER (Andreea)"*, *"🛡️ Intră ca ADMIN (Admin Sibiu)"*), taburi de conectare și înregistrare cu validare, interceptând automat acțiunile protejate de **D-003** (favorite, sesizare orar, vot confirmare).
+  - **Control row 2 pe DS-01**: Căutare liberă combinată cu selector dropdown de oraș (*"Sibiu"*, *"Mediaș"*, *"Cisnădie"*, *"Toate"*), sincronizată cu chipsurile tematice de filtrare (*"Toate"*, *"Farmacii"*, *"Vet"*, *"Deschis Acum"*, *"De Gardă"* cu indicator pulse dot).
+  - **Carduri DS-01 (40% stânga)**: Structură cu 3 zone: Titlu + badge status semantic, Adresă + distanță km, și rând de acțiuni cu buton primar *"📞 Apelează"*, buton explicit *"📋 Detalii & Sesizare"* și buton steluță favorit (`★` / `☆`).
+  - **Hartă Sibiu (60% dreapta)**: Pini dinamici și card plutitor (tooltip) cu acțiunile *"📞 Sună Direct"* și *"📋 Detalii & Sesizare"*.
+  - **DS-02 Detalii & Sesizare**: Adăugat modulul de sesizări active ale comunității cu bară de progres a celor 8 confirmări (**D-001**) și buton de votare live (*"👍 +1 Confirmă și tu această sesizare"*); la atingerea pragului de 8 voturi, statusul se transformă automat în `APPROVED` și actualizează disponibilitatea unității în catalog.
+  - **Păstrare neschimbată**: `ds-01-home.html` nu a suferit nicio modificare.
+
+## 3. Verificări
+* **Integritate `ds-01-home.html`:** Verificat prin `git diff docs/design/mocks/ds-01-home.html` — fără modificări.
+* **Sintaxă JavaScript:** Verificat prin Node.js — parsare completă fără erori (`Script syntax: OK`).
+* **Verificare Ledger Lint:** `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul versiunilor:** Rulat `git status` — toate fișierele sunt conforme.
+
+---
+
+# Sesiunea 12 — Rafinare Header Nativ: Comutator Temă Integrat & Controale Demo Pliabile (Bottom-Right FAB) în Prototip (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Comutator Temă Light / Dark Nativ în Header:**
+   - Adăugarea unui buton dedicat pentru comutarea temei Light / Dark direct în interiorul header-ului principal al aplicației (`.main-app-header`), situat între taburile de navigare și controlul de cont/autentificare, permițând utilizatorilor reali să comute aspectul vizual în mod nativ.
+2. **Curățarea Părții Superioare a Paginii & Controale Demo Pliabile:**
+   - Mutarea barei negre de unelte a prototipului (`.prototype-bar`) din fluxul superior al paginii într-un buton plutitor compact *"⚙️ Controale Demo"* situat în colțul din dreapta-jos.
+   - Panoul de controale demo trebuie să fie pliat în mod implicit (`collapsed by default`), lăsând partea superioară a paginii 100% curată, aerisită și conformă layout-ului editorial.
+3. **Constrângeri:**
+   - Păstrarea **complet intactă** a fișierului `docs/design/mocks/ds-01-home.html`.
+   - Utilizarea exclusivă a token-urilor din `docs/design/DESIGN.md`.
+   - Documentarea completă în `AI_LOG.md` și validarea integrității prin `python3 docs/agents/tools/ledger-lint.py --fix`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **Header Superior Curățat Nativ (`top: 0`)**: Eliminată complet bara fixă `.prototype-bar` de la marginea de sus a paginii. Elementul `<header class="main-app-header">` este acum ancorat direct la `position: sticky; top: 0; z-index: 1000;`, oferind aspectul autentic de aplicație web modernă fără zgomot vizual administrativ la deschidere.
+  - **Comutator Temă Nativ în Header (`#hdrThemeToggleBtn`)**: Adăugat un buton stil pill cu token-uri din sistemul de design (`background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-full);`) în grupul `.header-right-group`. Butonul include pictogramă și etichetă dinamică (`🌙 Întunecat` când tema este luminoasă, `☀️ Luminos` când tema este întunecată) și apelează funcția `toggleTheme()`.
+  - **Buton Plutitor FAB pentru Controale Demo (`#demoFabTrigger`)**: Poziționat fix în colțul din dreapta-jos (`bottom: 24px; right: 24px; z-index: 1500;`) cu un design elegant din sticlă întunecată (Dark Midnight Slate `#0F172A`, umbră accentuată și text clar *"⚙️ Controale Demo"* cu badge de versiune *"P10"*).
+  - **Sertar Pliabil de Simulare Demo (`#demoFloatingDrawer`)**:
+    - Ascuns în mod implicit (`display: none;`), se deschide instantaneu la click pe butonul FAB și include un antet cu titlu, insignă de simulare și buton de închidere `✕`.
+    - Suport pentru închidere automată la click în exterior (outside-click listener) pentru o ergonomie fluidă.
+    - Grupează toate simulările esențiale:
+      1. *Navigare Ecrane Prototip*: taburile DS-01 (Explorer), DS-02 (Detalii & Sesizare), DS-03 (Admin Panel), DS-04 (Favorite & Cont), DS-05 (Ghid Urgențe).
+      2. *Stare Date UI*: Normal, Încărcare (shimmer skeleton), Gol (zero rezultate), Eroare 503 (server indisponibil).
+      3. *Simulare Viewport*: Desktop (1540px grid) și Mobil (<1024px container).
+      4. *Simulare Rol Autentificare (D-003 & Q-007)*: 1-click switcher între `Vizitator (Anonim)`, `USER (Andreea)` și `ADMIN (Admin Sibiu)`.
+      5. *Footer*: Ceas live `Europe/Bucharest` sincronizat secundă cu secundă (D-004) și comutator temă backup.
+  - **Optimizare Responsivă pe Mobil**: În cadrul query-ului `@media (max-width: 1024px)`, butonul FAB a fost repoziționat la `bottom: 76px; right: 14px;`, astfel încât să plutească elegant deasupra comutatorului dock mobil centrat (`.mobile-dock-switch`) fără nicio coliziune tactilă.
+  - **Păstrare neschimbată**: `docs/design/mocks/ds-01-home.html` a rămas strict nemodificat.
+
+## 3. Verificări
+* **Integritate `ds-01-home.html`:** Verificat prin `git diff docs/design/mocks/ds-01-home.html` — fără nicio modificare (fișierul inițial este intact).
+* **Validare Structurală HTML:** Rulat parser strict recursiv peste `full-site-prototype.html` — rezultat: **`All tags matched perfectly!`** (toate elementele `<div>`, `<section>`, `<main>`, `<header>`, `<body>` și `<html>` sunt corect imbricate și închise).
+* **Validare Sintaxă JavaScript:** Testat prin compilatorul intern Node.js `new Function(...)` — rezultat: **`Script syntax: OK!`**.
+* **Validare Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — confirmă status curat al workspace-ului.
+
+---
+
+# Sesiunea 13 — Rafinare Stil Butoane Navigare Header & Praguri Adaptive de Auto-Aprobare în DS-02 (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Stil Butoane Navigare Header:**
+   - Aplicarea unor umpleri de fundal și contururi subtile, ușor nuanțate conform token-urilor din `DESIGN.md`.
+   - Nuanță pală verde/teal (`--color-pharmacy-bg`, `--color-pharmacy-border`, `--color-pharmacy-text`) pentru taburile de navigare standard (*"Explorer"*, *"Favorite"*, *"Panou Admin"*).
+   - Nuanță pală roșu/coral (`--emergency-nav-bg`, `--emergency-nav-border`, `--emergency-nav-text`) pentru butonul *"Ghid Urgențe"*, evidențiindu-l subtil ca secțiune de urgență în timp ce rămâne perfect armonios atât în modul Light, cât și în modul Dark.
+2. **Prag Adaptiv de Auto-Aprobare în DS-02 (4 vs. 8 confirmări):**
+   - Adăugarea opțiunii specifice *"Pauză scurtă neanunțată (30–60 min)"* în selectorul dropdown *"Tipul Modificării Observate"*, necesitând doar 4 confirmări pentru auto-aprobare temporară rapidă, menținând opțiunea *"Orar diferit de cel afișat în aplicație"* (modificări permanente/generale) la 8 confirmări (**D-001**).
+   - Actualizarea dinamică a căsuței de informare (`.correction-banner-info`) la schimbarea selecției din dropdown (afișând regula celor 4 confirmări pentru pauze scurte vs. 8 confirmări pentru orar general).
+   - Actualizarea sesizării active existente *"Pauză tehnică dezinfectare"* pentru a afișa *"4 din 4 (100%)"* confirmări (prag: 4 pentru pauză scurtă).
+   - Adăugarea unei a doua sesizări active demonstrative pentru modificare generală de orar cu progres către 8 confirmări (*"5 din 8"*), permițând utilizatorului să apese live butonul *"Confirmă"* pentru a o incrementa progresiv până la 8/8 și a declanșa auto-aprobarea.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **Token-uri Cromatice pentru Urgență**: Definite variabilele `--emergency-nav-bg` (`#FEF2F2` în Light, `rgba(248, 113, 113, 0.15)` în Dark), `--emergency-nav-border` (`#FECACA` în Light, `rgba(248, 113, 113, 0.32)` în Dark) și `--emergency-nav-text` (`#DC2626` în Light, `#FCA5A5` în Dark).
+  - **Stilizare Taburi Header**:
+    - Taburile standard (*"Explorer"*, *"Favorite"*, *"Panou Admin"*) au primit fundal discret verde/teal pal cu contur fin rotunjit (`--radius-full`), efect hover elevat și stare activă clară (`background: var(--color-pharmacy); color: var(--text-on-accent);`).
+    - Tabul *"🚨 Ghid Urgențe"* (`#hdrNavDS05`) a primit clasa `.header-nav-emergency`, conferindu-i o nuanță discretă roșu/coral de alertă calmă, cu stare activă roșie dedicată (`#EF4444`).
+  - **Selector Dropdown & Info Box Dinamic (DS-02)**:
+    - Adăugată opțiunea `<option value="short_break">Pauză scurtă neanunțată (30–60 min)</option>` în `#corrTypeSelect`.
+    - Implementată funcția `updateCorrectionThresholdInfo()`, care modifică dinamic textul și stilul căsuței `#corrThresholdInfoBox` (comutând între explicația pragului adaptiv de 4 confirmări rapide și regula celor 8 confirmări din D-001).
+  - **Carduri Sesizări Active cu Prag Adaptiv**:
+    - Sesizarea `CORR-003` (*"Pauză tehnică dezinfectare"*) configurată cu `threshold: 4` și `confirmations: 4`, afișând starea *"4 din 4 (100%)"* și insigna *"🎉 Auto-aprobat (Prag 4)"*.
+    - Adăugată sesizarea `CORR-004` (*"Orar diferit de cel afișat în aplicație"*) pentru `FAC-PHARM-002`, cu `threshold: 8` și `confirmations: 5` (*"5 din 8 (63%)"*), buton activ *"👍 +1 Confirmă și tu această sesizare"* și etichetă dinamică *"Mai sunt necesare 3 voturi"*.
+    - La fiecare click, votul este incrementat live (6/8, 7/8, 8/8), iar la atingerea pragului de 8 voturi sesizarea se auto-aprobă instantaneu conform **D-001**, afișând mesajul de confirmare și actualizând disponibilitatea unității în catalog.
+  - **Suport în Panoul Admin (DS-03)**: Funcția `renderAdminModerationQueue()` reflectă de asemenea pragul individual (`4` vs `8`) cu insigne vizuale distincte (`⚡ Prag 4` vs `📋 Prag 8`).
+
+## 3. Verificări
+* **Integritate fișiere:** [ds-01-home.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/ds-01-home.html) este **complet intact** (`git diff` gol).
+* **Validare Structurală HTML:** Parser strict recursiv executat peste [full-site-prototype.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/full-site-prototype.html) — rezultat: **`All tags matched perfectly!`**.
+* **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`Script syntax: OK!`**.
+* **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — doar fișierele solicitate sunt atinse.
+
+---
+
+# Sesiunea 14 — Redesign Complet al Vizualizării Mobile: Header 2-Row, Navigare Scrollabilă, Carduri Adaptive și Simulare 440px (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Redesign Complet al Vizualizării Mobile:**
+   - Reproiectarea completă a experienței pe dispozitive mobile — activă atât la comutarea pe *"📱 Mobil"* în Controalele Demo, cât și nativ pe ecrane reale prin `@media (max-width: 768px)`.
+   - Eliminarea oricărui element înghesuit, decupat sau care produce overflow/clipping orizontal pe ecrane înguste (320px–460px).
+2. **Constrângeri:**
+   - Păstrarea **complet intactă** a fișierului `docs/design/mocks/ds-01-home.html`.
+   - Respectarea strictă a token-urilor din `docs/design/DESIGN.md`.
+   - Documentarea completă în `AI_LOG.md` și validarea integrității prin `python3 docs/agents/tools/ledger-lint.py --fix`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **Header Mobil Nativ în 2 Rânduri (CSS Grid & `display: contents`)**:
+    - *Rândul 1*: Brand-ul pe stânga (*"🏥 Sibiu Urgențe"*, subtitlu ascuns pentru economie verticală), comutatorul de temă compactat la icon (`🌙` / `☀️`) și butonul de autentificare/cont pe dreapta.
+    - *Rândul 2*: Taburile de navigare (*"Explorer"*, *"Favorite (2)"*, *"🚨 Ghid Urgențe"*, *"🛡️ Panou Admin"*) grupate într-un rând orizontal fluid cu derulare touch/swipe (`overflow-x: auto; scrollbar-width: none;`), prevenind orice overflow orizontal.
+  - **Controale DS-01 pe Mobil**:
+    - Căutare unificată și selector de oraș extinse la 100% lățime cu padding optimizat pentru tastatură mobilă.
+    - Chipsuri tematice de filtrare (*"Toate"*, *"💊 Farmacii"*, *"🐾 Vet"*, *"🟢 Deschis Acum"*, *"🔴 De Gardă"*) într-o bandă orizontală swipable cu spațiere generoasă pentru atingeri precise.
+  - **Carduri de Facilități Redesenate (DS-01)**:
+    - *Antet card*: Titlul unității și eticheta semantică de stare se stivuiesc vertical, prevenind comprimarea denumirilor lungi.
+    - *Rândul de acțiuni în grilă 2x1*:
+      - Linia 1: Buton primar de apelare (*"📞 Apelează"* cu număr vizibil complet) + Buton steluță favorit (`★` / `☆`).
+      - Linia 2: Buton secundar pe întreaga lățime (*"📋 Detalii & Sesizare"*), asigurând ținte tactile confortabile (min. 36px–44px).
+  - **Hartă Sibiu & Tooltip Plutitor**:
+    - Harta ocupă înălțime optimizată pe mobil (`calc(100vh - 190px)`).
+    - Cardul flotant pe pin (`.active-pin-card-floating`) se ancorează pe mobil la baza ecranului (`left: 8px; right: 8px; bottom: 8px; width: auto;`), oferind butoanele *"Sună Direct"* și *"Detalii & Sesizare"* fără a depăși marginile viewport-ului.
+  - **Adaptare Completă a Ecranelor DS-02, DS-03, DS-04, DS-05**:
+    - *DS-02 (Detalii)*: Cardul Hero, butoanele de apel/GPS/favorit și formularul de sesizare ocupă 100% lățime; tabelul de program are padding compactat.
+    - *DS-03 (Admin)*: Grilele de statistici și acțiunile de aprobare/respingere trec la 1 coloană; tabelul de import CSV are scroll orizontal fluid.
+    - *DS-04 (Auth & Favorite)*: Formularele de autentificare și lista de favorite se succed fluid pe o singură coloană.
+    - *DS-05 (Ghid Urgențe)*: Cardurile numerelor de urgență (112, Ambulanță, etc.) devin butoane de apel rapide pe toată lățimea.
+  - **Simulare Viewport Mobil în Controale Demo (`body.is-mobile-sim`)**:
+    - La selectarea opțiunii *"📱 Mobil"* din Demo Controls, se activează clasa `is-mobile-sim` pe `body`, încadrând întregul prototip (inclusiv header-ul, corpul paginii și dock-ul mobil) într-un container realist de 440px centrat pe ecran cu umbră adâncă, comutatorul flotant de jos (`.mobile-dock-switch`) activându-se instantaneu pentru schimbarea între Listă și Hartă.
+
+## 3. Verificări
+* **Integritate fișiere:** [ds-01-home.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/ds-01-home.html) este **complet intact** (`git diff` gol).
+* **Validare Structurală HTML:** Rulat parser strict recursiv peste [full-site-prototype.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/full-site-prototype.html) — rezultat: **`All tags matched perfectly!`**.
+* **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`Script syntax: OK!`**.
+* **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — curat și conform.
+
+---
+
+# Sesiunea 15 — Layout Mobil Single-Column pe 100% Lățime: Stivuire Căutare & Oraș, Comutator Segmentat Inline, Carduri de Facilități cu Rând Unificat de Acțiuni și Bottom Sheet pe Hartă (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Layout Mobil Single-Column pe 100% Lățime (Zero Overflow Orizontal):**
+   - Stivuirea curată pe verticală a barei de căutare și a selectorului de oraș pe mobil în capsule de 100% lățime.
+   - Păstrarea cipurilor de filtrare derulabile orizontal într-un singur rând curat prin swipe tactil.
+2. **Comutator de Vizualizare Segmentat Dedicat Mobil, Plasat Sub Filtre:**
+   - Adăugarea unui comutator segmentat exclusiv mobil chiar sub rândul filtrelor: *"📋 Listă (N)"* vs. *"🗺️ Hartă"*.
+   - Comportament implicit pe mobil: deschidere pe *"Listă"*, permițând cardurilor să ocupe 100% din lățime fără comprimare.
+3. **Carduri de Facilități Mobile (100% Lățime):**
+   - Plasarea etichetei semantice de status (*"DE GARDĂ"*, *"DESCHIS ACUM"*) pe propriul rând dedicat fără clipping.
+   - Afișarea adresei complete și a insignei de distanță în km fără trunchiere.
+   - Așezarea unui rând complet de acțiuni la baza cardului cu *"Apelează"* (primar), *"Detalii & Sesizare"* și butonul steluță pentru favorite.
+4. **Vizualizare Hartă Mobilă (100% Lățime la Comutare):**
+   - Canvas de hartă pe întreaga lățime cu un card compact tip bottom sheet (încadrat 100% în cadrul mobil cu padding adecvat, fără butoane decupate) pentru pinul selectat.
+5. **Layout-uri Single-Column pe Ecranele DS-02, DS-03, DS-04 și DS-05:**
+   - Asigurarea că toate ecranele secundare se stivuiesc pe o singură coloană mobilă cu inputuri și butoane extinse la 100% lățime.
+   - Păstrarea intactă a fișierului `docs/design/mocks/ds-01-home.html`.
+   - Documentare în `AI_LOG.md` și validare `ledger-lint`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **1. Controale Căutare & Filtre Stivuite pe Mobil (Zero Overflow)**:
+    - Structură `.explorer-search-city-group` adaptivă: pe desktop arată ca o singură capsulă elegantă cu separator vertical fin; pe mobil (`@media (max-width: 768px)` și `body.is-mobile-sim`) se stivuiește automat în două controale rotunjite full-width (Bara de căutare cu lupă 🔍 sus, Selectorul de oraș cu pin 📍 jos).
+    - Cipurile de filtrare `.filter-chips-cluster` oferă derulare orizontală fină prin atingere (`-webkit-overflow-scrolling: touch; scrollbar-width: none; white-space: nowrap;`).
+  - **2. Comutator Segmentat Inline Mobil Sub Filtre**:
+    - Container `.mobile-segmented-view-toggle` plasat direct sub bara de filtre, ascuns pe desktop și afișat exclusiv pe mobil (`display: flex`).
+    - Două segmente comutabile: `📋 Listă (<span id="mobCountLabel">8</span>)` și `🗺️ Hartă`.
+    - Eliminat dock-ul plutitor legacy de jos, eliberând ecranul de suprapuneri.
+    - La inițializare pe ecrane mobile (`<=768px`) se activează automat vederea `list`, iar la comutarea desktop ambele coloane (40% / 60%) redevin vizibile simultan.
+  - **3. Carduri Facilități Mobile cu Rând de Acțiuni Unificat la Bază**:
+    - `.card-info-row-1`: Titlul unității și eticheta semantică de status sunt separate pe rânduri proprii (`align-self: flex-start;`), eliminând suprapunerea chiar și pentru cele mai lungi denumiri.
+    - `.card-info-row-2`: Adresa completă este afișată pe rând liber fără `ellipsis`, alături de insigna rotunjită de distanță km.
+    - `.card-info-row-3`: Rând complet de acțiuni la baza cardului format din butonul primar solid *"📞 Apelează"* (`.quick-call-pill`), butonul *"📋 Detalii & Sesizare"* (`.card-action-btn-detail`) și butonul pătrat rotunjit de 38x38px pentru favorite (`★` / `☆`). Textul numărului de telefon este adaptat inteligent (`.call-btn-text-desktop` vs. `.call-btn-text-mobile`).
+  - **4. Vizualizare Hartă Mobilă cu Bottom Sheet Card Compact**:
+    - La comutarea pe *"🗺️ Hartă"*, canvasul ocupă întreaga lățime a ecranului.
+    - Elementul `#mapActiveTooltip` este reconfigurat pe mobil ca un bottom sheet ancorat la baza hărții (`left: 12px; right: 12px; bottom: 12px; width: auto; max-width: calc(100% - 24px);`).
+    - Butoanele *"📞 Sună Direct"* și *"📋 Detalii & Sesizare ›"* ocupă fiecare câte 50% din lățimea cardului cu înălțime confortabilă de 38px, fără decupaje.
+  - **5. Single-Column pe DS-02, DS-03, DS-04 și DS-05**:
+    - *DS-02 (Detalii & Corecții)*: Grilele pe două coloane (`.details-split-grid`, `.time-inputs-grid`) trec la 1 coloană; butoanele de acțiune și formularul de sesizare devin full-width; casetele de sesizări active (`.community-corrections-block`) și butonul de vot sunt optimizate pentru touch.
+    - *DS-03 (Panou Admin)*: Antetul dispeceratului, subtab-urile de navigare (`.admin-subnav-pills`), statisticile (`.stat-cards-grid`), acțiunile CSV (`.csv-actions-group`) și butoanele de decizie moderare trec în layout-uri stivuite full-width.
+    - *DS-04 (Favorite & Autentificare)*: Antetul favoritelor (`.favorites-header-wrap`), butoanele de conectare demonstrativă 1-click (`.auth-demo-buttons-wrap`), tab-urile login/register și formularele devin 100% lățime cu inputuri de 42px.
+    - *DS-05 (Ghid Urgențe Sibiu)*: Bannerul hero, cardurile celor 4 numere critice (`.emergency-grid-4`), butoanele de apel direct mare și caseta de salt rapid în catalog (`.emergency-quick-jump-box`) trec pe o singură coloană completă.
+
+## 3. Verificări
+* **Integritate fișiere:** [ds-01-home.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/ds-01-home.html) este **complet intact** (`git diff` gol).
+* **Validare Structurală HTML:** Rulat parser strict recursiv peste [full-site-prototype.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/full-site-prototype.html) — rezultat: **`All tags matched perfectly!`**.
+* **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`JS syntax: OK`**.
+* **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — doar fișierele aprobate sunt modificate.
+
+---
+
+# Sesiunea 16 — Stare Implicită Vizitator Anonim (ANON) & Flux Complet Favorite / Autentificare (D-003, Q-007) (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+În `docs/design/mocks/full-site-prototype.html`, actualizarea stării implicite de autentificare și a fluxului de Favorite / Autentificare conform deciziilor de arhitectură **D-003** și **Q-007**:
+1. Starea inițială la încărcarea paginii trebuie să fie **`ANON`** (Vizitator Anonim, fără sesiune activă, listă de favorite inițial goală).
+2. Header-ul principal de sus trebuie să afișeze butonul de acțiune **`👤 Conectare / Cont`** în mod implicit; tab-ul *"🛡️ Panou Admin"* (`#hdrNavDS03`) trebuie să fie ascuns (vizibil doar la conectare ca `ADMIN` conform **Q-007**); contorul `#hdrFavCount` din header trebuie să înceapă de la `0`.
+3. În sertarul plutitor de Controale Demo, butonul de simulare a rolului `btnRoleAnon` trebuie să fie selectat activ în mod implicit, cu textul de stare indicând modul de căutare liberă.
+4. Fluxul de Favorite & Autentificare conform **D-003**:
+   - Apăsarea pe steluța de favorit (`★` / `☆`) din cardurile de facilități (DS-01) sau din ecranul detaliat (DS-02) când utilizatorul este `ANON` afișează toast-ul de avertizare `⚠️ Autentificare cerută (D-003): Conectează-te pentru a salva favorite!` și deschide automat modalul de autentificare, salvând acțiunea în așteptare (`pendingAuthAction: { reason: 'favorite', contextId: facId }`).
+   - În DS-02, funcția `toggleDetailFavorite()` aplică poarta de verificare pentru `role === 'ANON'`.
+   - Conectarea utilizatorului (fie prin butoanele demonstrative 1-click `loginDemo`, fie prin formularul modal de login `handleModalLogin` sau register `handleModalRegister`) reia acțiunea în așteptare: salvează automat unitatea la favorite, actualizează steluța la `★`, incrementează contorul din header și afișează toast-ul de confirmare `⭐ Unitatea a fost salvată automat la favorite după conectare!`.
+   - Conectarea directă ca `USER` sau `ADMIN` fără o unitate în așteptare populează automat favorite demonstrative pentru previzualizare imediată în DS-04.
+   - Accesarea ecranului DS-04 în modul `ANON` afișează bannerul dedicat `#favsAnonBanner` (*"Autentificare Necesară pentru Favorite (D-003)"*) cu acțiuni rapide de testare 1-click.
+   - Deconectarea (`logoutUser()`) resetează starea la `ANON`, golește lista de favorite, resetează contorul din header la `0`, restaurează butonul "Conectare / Cont", ascunde tab-ul Panou Admin și redirecționează utilizatorul la DS-01 dacă se afla pe DS-03.
+5. Păstrarea fișierului `docs/design/mocks/ds-01-home.html` complet neatins, folosirea exclusivă a token-urilor din `DESIGN.md` și validare prin `ledger-lint`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **1. Stare Inițială Implicită Anonimă (`appState.currentUser`)**:
+    - `currentUser: { role: 'ANON', name: 'Vizitator Anonim', email: '' }`.
+    - `favorites: []`.
+    - `pendingAuthAction: null`.
+    - `#hdrFavCount` inițializat la `0` în HTML și în runtime.
+    - `#authFavsCountLabel` din DS-04 inițializat la `0`.
+    - `#hdrAuthControl` randează nativ butonul `<button class="auth-cta-btn" onclick="openAuthModal('general')"><span>👤</span> <span>Conectare / Cont</span></button>`.
+    - `#hdrNavDS03` (*"Panou Admin"*) ascuns implicit (`style="display: none;"`).
+    - În sertarul de controale demo: `btnRoleAnon` marcat ca `.switcher-btn.active`.
+  - **2. Poartă de Verificare D-003 în DS-02 (`toggleDetailFavorite`)**:
+    - Adăugată verificarea `if (appState.currentUser.role === 'ANON')` înainte de comutarea stării de favorit.
+    - Declanșează toast-ul explicativ D-003 și deschide `#authModalBackdrop` cu contextul unității curente.
+  - **3. Reluare Automată a Acțiunilor în Așteptare (`pendingAuthAction`)**:
+    - În toate cele 3 căi de autentificare (`loginDemo`, `handleModalLogin`, `handleModalRegister`), starea `pendingAuthAction` este evaluată înainte de închiderea modalului.
+    - Dacă motivul este `'favorite'`, unitatea țintă este inserată automat în `appState.favorites`, steluța devine `★`, contorul crește, și se afișează confirmarea toast.
+    - Dacă utilizatorul se conectează fără acțiune în așteptare, se populează setul demonstrativ (`['FAC-PHARM-002', 'FAC-VET-001']`) pentru a menține interfața DS-04 utilă la testare.
+  - **4. Deconectare Completă (`logoutUser`)**:
+    - Resetează `currentUser` la `ANON`, `favorites` la `[]`, `pendingAuthAction` la `null` și `#hdrFavCount` la `0`.
+    - Afișează toast-ul de confirmare a revenirii la modul vizitator liber.
+    - Redirecționează utilizatorul de pe DS-03 la DS-01 și actualizează vederile curente.
+
+## 3. Verificări
+* **Integritate fișiere:** [ds-01-home.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/ds-01-home.html) este **complet intact** (`git diff` gol).
+* **Validare Structurală HTML:** Rulat parser strict recursiv peste [full-site-prototype.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/full-site-prototype.html) — rezultat: **`HTML tag structure is completely balanced and valid!`**.
+* **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`JavaScript syntax is 100% valid!`**.
+* **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — conform și curat.
+
+---
+
+# Sesiunea 17 — Ecran Curat Favorite Fără Subtab-uri Redundante & Vedere Dedicată Autentificare (2026-11-19)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Stare Inițială Implicită = Vizitator (Deconectat)**:
+   - La încărcarea inițială a paginii, utilizatorul TREBUIE să pornească neautentificat (`Vizitator`), NU conectat ca ADMIN.
+   - În această stare implicită:
+     - Tab-ul *"Panou Admin"* din header este ascuns.
+     - În colțul din dreapta-sus al header-ului apare butonul *"Conectare / Cont"*.
+2. **Vedere Dedicată de Autentificare ("Conectare / Cont")**:
+   - Apăsarea pe *"Conectare / Cont"* din header deschide ecranul/modalul dedicat de Login & Înregistrare (cu tab-uri funcționale de Login și Register pe email/parolă, plus butoane demonstrative de conectare 1-click: *"Intră ca USER"* și *"Intră ca ADMIN"*).
+   - Odată conectat, header-ul se actualizează pentru a afișa insigna rolului activ al utilizatorului și un buton *"Deconectare"* (care readuce utilizatorul la starea de Vizitator).
+3. **Ecran Curat de Favorite (Eliminarea Subtab-urilor Redundante de Autentificare)**:
+   - În interiorul vederii tab-ului *"Favorite"* (DS-04), eliminarea completă a sub-tab-urilor redundante *"Favoritele Mele"* / *"Autentificare & Cont"*.
+   - Când este conectat (`USER` sau `ADMIN`), *"Favorite"* afișează DIRECT și EXCLUSIV lista de unități favorite salvate, cu numărul strict sincronizat cu insigna din header.
+   - Când este deconectat (`Vizitator`), *"Favorite"* afișează un prompt curat (*"Conectează-te pentru a salva și vizualiza unitățile tale favorite"*) cu un buton care deschide vederea de Login/Înregistrare.
+4. Consemnare în `AI_LOG.md` și verificare `ledger-lint`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - **1. Confirmare Stare Implicită Vizitator (`ANON`)**:
+    - `#hdrNavDS03` (*"Panou Admin"*) ascuns implicit (`style="display: none;"`).
+    - `#hdrAuthControl` randează nativ butonul curat `👤 Conectare / Cont`.
+    - Contorul `#hdrFavCount` din header este inițializat la `0`.
+    - `appState.currentUser` setat pe `{ role: 'ANON', name: 'Vizitator Anonim', email: '' }` și `favorites: []`.
+  - **2. Modal Dedicat de Autentificare ("Conectare / Cont")**:
+    - Declanșat prin `openAuthModal('general')` din header sau `openAuthModal('favorites')` din prompt-ul de favorite.
+    - Tab-uri funcționale de Login (`#modalLoginForm`) și Înregistrare (`#modalRegisterForm`).
+    - Butoane rapide 1-click: *"👤 Intră ca USER (Andreea)"* și *"🛡️ Intră ca ADMIN (Admin Sibiu)"*.
+    - După autentificare, header-ul afișează insigna utilizatorului activ (`Andreea · USER` sau `Admin Sibiu · ADMIN`) și butonul de *"Deconectare"*.
+    - La deconectare (`logoutUser()`), sesiunea revine instantaneu la starea de Vizitator Anonim.
+  - **3. Curățare Completă a Ecranului de Favorite (DS-04)**:
+    - Eliminate definitiv sub-tab-urile `.auth-tab-switch-bar` (*"Favoritele Mele"* / *"Autentificare & Cont"*) și containerul duplicat de formulare `#subtabAuthView`.
+    - Pentru utilizatori conectați (`USER` / `ADMIN`): afișare directă a antetului `#favoritesHeaderWrap` și a grilei `#favoritesGridContainer`, cu numărul din badge-ul titlului `#authFavsCountLabel` sincronizat strict și bidirecțional cu insigna `#hdrFavCount` din header. Dacă nu există favorite, se afișează starea `#favsEmptyBanner`.
+    - Pentru vizitatori anonimi (`Vizitator`): afișare prompt curat `#favsAnonBanner` centrat pe mesajul *"Conectează-te pentru a salva și vizualiza unitățile tale favorite"*, buton primar *"👤 Conectare / Înregistrare"* ce deschide modalul dedicat, plus comenzi rapide 1-click pentru testare.
+    - Curățate din JavaScript funcțiile neutilizate (`switchAuthSubtab`, `switchScreenAuthTab`, `handleScreenLogin`, `handleScreenRegister`).
+
+## 3. Verificări
+* **Integritate fișiere:** [ds-01-home.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/ds-01-home.html) este **complet intact** (`git diff` gol).
+* **Validare Structurală HTML:** Rulat parser recursiv peste [full-site-prototype.html](file:///home/andrezidu26/proiect-web2/docs/design/mocks/full-site-prototype.html) — rezultat: **`HTML tag structure is completely balanced and valid!`**.
+* **Validare Sintaxă JavaScript:** Rulat test de compilare Node.js — rezultat: **`JavaScript syntax is 100% valid!`**.
+* **Integritate Registru (Ledger Lint):** Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — rezultat: **`✓ ledger ok`**.
+* **Controlul Versiunilor:** Rulat `git status` — conform și curat.

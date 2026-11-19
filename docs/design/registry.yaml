@@ -26,6 +26,7 @@ screens:
       - FacilityCard (Semantic status badge, distance tag, direct call button, favorite toggle)
       - MobileStickyViewToggle (Map / List switch)
     mock_file: "docs/design/mocks/ds-01-home.html"
+    prototype_file: "docs/design/mocks/full-site-prototype.html#ds01"
     mock_status: "approved"
 
   - id: DS-02
@@ -51,6 +52,8 @@ screens:
       - ServicesList (Rețete compensate, receptură, analize vet etc.)
       - ActionButtonGroup (Call direct, Google Maps/Waze, Add to Favorites)
       - ScheduleCorrectionForm (Propunere notă, orar modificat, override închis temporar)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds02"
+    mock_status: "ready_for_review"
 
   - id: DS-03
     name: "Panou Admin pentru moderare sesizări și import CSV gardă"
@@ -75,6 +78,8 @@ screens:
       - CsvDropzone & FileUploader
       - CsvPreviewTable (Validare coloane: facilityId, date, ore, telefon gardă)
       - ImportFeedbackAlert (Statistici rânduri importate / erori)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds03"
+    mock_status: "ready_for_review"
 
   - id: DS-04
     name: "Autentificare și Favoritele mele"
@@ -97,6 +102,8 @@ screens:
       - FavoritesHeader & QuickFilter
       - FavoriteFacilityCards (Re-evaluare status live, buton ștergere favorit, apel rapid)
       - EmptyFavoritesState (Ghid și buton de explorare unități Sibiu)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds04"
+    mock_status: "ready_for_review"
 
   - id: DS-05
     name: "Ghid de Urgență și Numere Utile (Județul Sibiu)"
@@ -117,3 +124,26 @@ screens:
       - QuickCallButtons (Apelare imediată cu 1-tap)
       - TriageGuidanceAccordions (Pași recomandați în caz de urgență nocturnă)
       - DirectLinks (Legături rapide către farmacii de gardă sau spitale vet non-stop)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds05"
+    mock_status: "ready_for_review"
+
+prototypes:
+  - id: PROTO-FULL
+    name: "Prototip Complet Interactiv Multi-Ecran (DS-01 .. DS-05)"
+    status: ready_for_review
+    file: "docs/design/mocks/full-site-prototype.html"
+    screens_covered:
+      - DS-01
+      - DS-02
+      - DS-03
+      - DS-04
+      - DS-05
+    key_features:
+      - "Conectare bidirecțională între toate cele 5 ecrane aprobate"
+      - "Filtrare activă: localitate (Sibiu, Mediaș, Cisnădie etc.), domeniu (PHARMACY / EMERGENCY_VET), deschis acum, de gardă/24-7"
+      - "Hartă interactivă Sibiu cu pini sincronizați, acțiuni rapide și tooltips"
+      - "Regula celor 8 confirmări comunitare (D-001) complet funcțională cu auto-aprobare live"
+      - "Modul de import CSV rotații lunare conform contractului C-004 cu parsare și validare"
+      - "Comutator dual temă Light / Dark (Midnight Slate #0B0F19 conform DESIGN.md)"
+      - "Comutator de stări de previzualizare: Normal (Success), Încărcare (Loading), Gol (Empty), Eroare (Error 503)"
+      - "Simulare roluri utilizator: USER (favorit/sesizare), ADMIN (moderare/CSV) și Anonim (D-003)"
