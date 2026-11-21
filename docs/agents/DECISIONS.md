@@ -12,7 +12,7 @@
 - D-003 · 4-Role hierarchy (ANON, USER, MODERATOR, ADMIN) and server-side RBAC rules
 - D-004 · Timezone calculation strictly anchored to Europe/Bucharest
 - D-005 · Haversine distance formula with client-side coordinates for sorting
-- D-006 · Modern Healthcare Minimalist design tokens and semantic status palette
+- D-006 · Warm Editorial Minimalist design tokens and semantic status palette
 
 ---
 
@@ -66,9 +66,9 @@
 
 ---
 
-## D-006 · Modern Healthcare Minimalist design tokens and semantic status palette
+## D-006 · Warm Editorial Minimalist design tokens and semantic status palette
 - **Status:** approved
-- **Confirmed:** 2026-11-18
-- **Rule:** Aplicația P10 utilizează exclusiv sistemul de design tokens documentat în `docs/design/DESIGN.md`: fontul `Plus Jakarta Sans` cu cifre tabulare (`tabular-nums`), temă duală Light și Dark (Midnight Slate `#0B0F19`), diferențiere cromatică de domeniu (Verde Teal `#0D9488` pentru `PHARMACY` și Indigo `#6366F1` pentru `EMERGENCY_VET` cu bordură de accent 4px) și semnalistică pentru cele 5 stări de status (`ON_DUTY` cu pulse dot, `OPEN`, `CLOSING_SOON`, `CLOSED`, `UNKNOWN`).
-- **Why:** Asigură consecvență vizuală, lizibilitate optimă în situații nocturne de urgență (contrast WCAG AAA) și diferențiere imediată a tipului și disponibilității unităților medicale din județul Sibiu.
-- **Evidence:** Decis în interviul de stil P10 și aprobat formal de utilizator; documentat în `docs/design/DESIGN.md`.
+- **Confirmed:** 2026-11-21
+- **Rule:** Aplicația P10 utilizează exclusiv sistemul de design tokens documentat în `docs/design/DESIGN.md` (estetica caldă Warm Editorial Minimalist, inspirată din Originle): fontul `Plus Jakarta Sans` cu cifre tabulare (`tabular-nums`), paletă de culori pe bază de Warm Alabaster (`#FAF7F4`) în Light Mode și Warm Obsidian (`#141210`) în Dark Mode, carduri generoase cu geometrie rotunjită (`24px`), borduri ultra-fine (`1px solid rgba(226, 218, 208, 0.85)`), umbre difuze calde, accente de teracotă caldă (`#C25E34`) pentru numere de index și micro-labels, carduri pe suprafață cărbune inversată (`#1C1917`) pentru atenționare critică în urgențe, diferențiere cromatică de domeniu (Herbal Teal `#0E7465` pentru `PHARMACY` și Royal Indigo `#5548A8` pentru `EMERGENCY_VET`) și semnalistică pentru cele 5 stări de status (`ON_DUTY` cu pulse dot teracotă, `OPEN`, `CLOSING_SOON`, `CLOSED`, `UNKNOWN`).
+- **Why:** Asigură consecvență vizuală, un ton calmant și umanist pentru cetățeni în situații nocturne de alertă, lizibilitate optimă și contrast de accesibilitate WCAG AAA, permițând diferențierea imediată a tipului și disponibilității unităților medicale din județul Sibiu.
+- **Evidence:** Decis în interviul de stil și revizuirea vizuală Originle aprobată formal de utilizator la 2026-11-21; documentat în `docs/design/DESIGN.md` și prototipat în `docs/design/mocks/full-site-prototype.html`.

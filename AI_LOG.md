@@ -756,5 +756,40 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Sintaxă Prototip:** Compilat scriptul JS din `full-site-prototype.html` cu motorul V8/Node.js — **valid 100% fără erori**.
 * **Control Versiuni:** `git status` — modificările respectă strict regulile din `AGENTS.md`.
 
+---
+
+# Sesiunea 21 — Redesenare Vizuală Completă (Warm Editorial Minimalist / Originle Aesthetic) și Aprobare Oficială (2026-11-21)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Analiza Referințelor Vizuale Originle:**
+   - Extragerea esteticii vizuale din capturile de ecran din https://originle.app/: paletă cromatică caldă (alabastru `#FAF7F4`, obsidian `#141210`), carduri generoase de `24px` cu gradient intern discret, borduri ultra-fine (`1px solid rgba(226, 218, 208, 0.85)`), umbre difuze, accente de teracotă (`#C25E34`), numere mari de index (`01`, `029`), micro-labels (`● RULES` / `● GHID DE URGENȚĂ`) și carduri pe suprafață cărbune inversată (`#1C1917`) pentru atenționare de urgență maximă.
+2. **Actualizarea Sistemului de Design (`docs/design/DESIGN.md`):**
+   - Redefinirea completă a token-urilor vizuale (culori, fonturi, borduri, umbre, spațiere, temă duală Light/Dark) pentru aplicația P10 Sibiu.
+3. **Rescrierea Prototipului (`docs/design/mocks/full-site-prototype.html`):**
+   - Implementarea de la zero folosind strict noile token-uri, acoperind toate ecranele și cele 4 roluri (`ANON`, `USER`, `MODERATOR`, `ADMIN`).
+   - Ajustări specifice cerute de utilizator:
+     - Ascunderea completă a filei „Panou Admin” din antet pentru vizitatori (`ANON`) și utilizatori standard (`USER`), afișând-o exclusiv pentru `MODERATOR` și `ADMIN` (D-003).
+     - Repoziționarea numerelor de telefon de urgență (112, Spitalul Vet Transilvania 24/7, Colegiul Farmaciștilor, DSVSA) chiar în partea de sus a ecranului Ghid de Urgență (`DS-03`), direct vizibile fără scroll (*above the fold*).
+     - Adăugarea unei pagini dedicate pentru Sesizări Comunitare (`DS-06`), cu flux de vot live spre pragul de 8 confirmări (D-001) și formular de raportare pentru orice unitate din Sibiu.
+     - Eliminarea restricției de înălțime internă (`max-height` / `overflow-y`) de pe lista de farmacii din ecranul Explorer (`DS-01`), permițând derularea continuă și firească a listei, cu harta fixată (*sticky*) pe dreapta.
+4. **Confirmare și Finalizare Aprobare:**
+   - Utilizatorul a confirmat și aprobat oficial noul design și prototipul UI.
+   - Actualizarea registrului `docs/design/registry.yaml` cu status `approved` pentru toate ecranele și prototipul interactiv.
+   - Actualizarea deciziei `D-006` și a modelului `PATTERN-002` în `DECISIONS.md` și `PATTERNS.md` cu `- **Confirmed:** 2026-11-21`.
+   - Rularea `python3 docs/agents/tools/ledger-lint.py --fix` și validarea fără erori.
+   - Oprirea înainte de orice operațiune de `git commit` sau `push`.
+
+## 2. Ce S-a Livrat
+* **`docs/design/DESIGN.md`**: Actualizat în status **`APPROVED`** (2026-11-21), definind complet token-urile Warm Editorial Minimalist.
+* **`docs/design/mocks/full-site-prototype.html`**: Prototip rescris integral conform noilor token-uri, cu 6 ecrane interactive (`DS-01` .. `DS-06`), simulare a celor 4 roluri, comutator nativ temă Light/Dark, derulare fluidă și drawer demonstrativ flotant.
+* **`docs/design/registry.yaml`**: Toate ecranele și prototipul `PROTO-FULL` marcate formal cu `status: approved` și `mock_status: approved`.
+* **`docs/agents/DECISIONS.md`**: Decizia `D-006` redenumită la `Warm Editorial Minimalist design tokens and semantic status palette`, marcată `approved` și confirmată la data de `2026-11-21`.
+* **`docs/agents/PATTERNS.md`**: Modelul `PATTERN-002` actualizat pentru a documenta implementarea noii estetici calde și a token-urilor CSS.
+* **`AI_LOG.md`**: Jurnalul sesiunii actualizat.
+
+## 3. Verificări
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py --fix` urmat de `python3 docs/agents/tools/ledger-lint.py` — rezultat: **`✓ ledger ok`** (zero erori).
+* **Control Versiuni:** `git status` — doar fișierele solicitate sunt modificate, fără operațiuni neautorizate de commit sau push.
+
 
 

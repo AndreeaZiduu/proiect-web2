@@ -1,141 +1,147 @@
 # Registry of Design Screens (DS-) — P10 Sibiu
-# Status: APPROVED (approved by user on 2026-11-18)
-# Reference: README.md (Scope) and SPEC.md (Requirements)
+# Status: APPROVED (confirmed and approved by user on 2026-11-21)
+# Reference: README.md (Scope), SPEC.md (Requirements), and DESIGN.md (Originle Aesthetic)
 
 screens:
   - id: DS-01
-    name: "Ecran principal (Explorer) — Hartă interactivă și listă unități deschise acum / de gardă"
+    name: "Ecran principal (Explorer) — Hartă interactivă și catalog unități deschise / gardă"
     status: approved
     route: "/"
     type: page
     description: >
-      Vizualizare de bază cu split-screen pe desktop (hartă Leaflet stânga, listă carduri derulabilă dreapta)
-      și comutator sticky pe mobil (Hartă ⟷ Listă). Include bara de filtrare (Toate, Farmacii, Urgențe Veterinare),
-      filtre rapide chips (Deschis Acum, De Gardă / Non-Stop, Închidere în curând), selector dropdown de localitate
-      (Sibiu, Mediaș, Cisnădie, Șelimbăr etc.) și căutare text după nume/adresă. Cardurile afișează badge-ul semantic
-      de status, distanța GPS calculată prin Haversine, buton de apel direct și salvare la favorite.
+      Vizualizare de bază cu split-screen 42/58 pe desktop (hartă stânga, listă carduri derulabilă dreapta)
+      și comutator pe mobil (Listă ⟷ Hartă). Include bara de filtrare (Toate, Farmacii, Urgențe Veterinare),
+      filtre rapide chips (Deschis Acum, De Gardă / Non-Stop), selector dropdown de localitate
+      (Sibiu, Mediaș, Cisnădie, Șelimbăr etc.) și căutare text. Cardurile sunt stilizate conform esteticii
+      Originle (Screenshot 3) cu index mare, badge semantic, distanță GPS, buton apel rapid și favorite.
     scope_ref:
       - "README.md: 1.2 (pct. 1, 2, 3)"
       - "SPEC.md: Secțiunea 4 (Ecranul 1)"
-      - "PATTERNS.md: PATTERN-001 (Split-screen & mobile toggle), PATTERN-002 (Modern Healthcare Minimalist)"
+      - "PATTERNS.md: PATTERN-001 (Split-screen & mobile toggle), PATTERN-002 (Warm Editorial Minimalist)"
     key_components:
-      - FilterBar & SearchInput
-      - CitySelectorDropdown
-      - InteractiveLeafletMap (CartoDB tiles, custom status pins)
-      - FacilityCardList (Infinite scroll / responsive grid)
-      - FacilityCard (Semantic status badge, distance tag, direct call button, favorite toggle)
-      - MobileStickyViewToggle (Map / List switch)
-    mock_file: "docs/design/mocks/ds-01-home.html"
-    prototype_file: "docs/design/mocks/full-site-prototype.html#ds01"
+      - SearchCityCapsule (Input căutare și dropdown oraș unificat)
+      - DomainAndStatusFilterChips
+      - InteractiveSibiuMap (Pini custom, tooltip flotant)
+      - FacilityCardsList (Originle catalog style, index num, call pill, favorite button)
+      - MobileViewToggle (Listă ⟷ Hartă)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds01"
     mock_status: "approved"
 
   - id: DS-02
-    name: "Panou / Modal detalii unitate și raportare program greșit"
+    name: "Panou detalii unitate și sesizare orar specific"
     status: approved
     route: "/facility/:id"
     type: modal_or_drawer
     description: >
-      Vedere detaliată a unității selectate (modal pe desktop, bottom sheet / drawer pe mobil).
-      Prezintă adresa completă, coordonatele GPS, programul săptămânal pe zile cu pauze de masă și ture
-      peste miezul nopții (crossesMidnight), excepțiile de sărbători legale (HolidaySchedule) și lista completă
-      de servicii medicale sau veterinare autorizate. Conține butoane mari de acțiune directă (Apelează unitatea,
-      Deschide navigație în Google Maps/Waze, Salvează la favorite) și formularul de sesizare a programului
-      eronat de către comunitate (ScheduleCorrection).
+      Vedere detaliată a unității selectate. Hero card cu date de contact, distanță GPS de la Piața Mare,
+      acțiuni 1-tap (Apelează direct, Traseu Google Maps, Salvează la favorite), tabel program săptămânal
+      cu pauze și ore de gardă, etichete servicii medicale sau veterinare autorizate și lista sesizărilor
+      active raportate pentru acea unitate cu buton de confirmare (D-001).
     scope_ref:
       - "README.md: 1.2 (pct. 3, 4)"
       - "SPEC.md: Secțiunea 4 (Ecranul 2)"
       - "DECISIONS.md: D-001 (8 Confirmări comunitare), D-003 (Auth required for reporting)"
     key_components:
-      - FacilityHeader (Nume, tipologie 💊/🐾, status badge)
+      - FacilityHeroCard (Nume, tipologie 💊/🐾, status badge)
       - WeeklyScheduleTable (Luni–Duminică, pauze de prânz, ture nocturne)
-      - HolidayScheduleList (Excepții sărbători legale)
-      - ServicesList (Rețete compensate, receptură, analize vet etc.)
-      - ActionButtonGroup (Call direct, Google Maps/Waze, Add to Favorites)
-      - ScheduleCorrectionForm (Propunere notă, orar modificat, override închis temporar)
+      - ServicesTagsGroup (Rețete compensate, receptură, analize vet etc.)
+      - FacilityActiveCorrectionsList (Confirmare vot live către pragul de 8)
+      - ScheduleCorrectionForm (Propunere orar modificat sau pauză)
     mock_file: "docs/design/mocks/full-site-prototype.html#ds02"
-    mock_status: "ready_for_review"
+    mock_status: "approved"
 
   - id: DS-03
-    name: "Panou Moderare & Administrare — Coadă sesizări/conflicte și import CSV gardă"
+    name: "Ghid de Urgență și Numere Utile Sibiu (Above-the-Fold Hotlines)"
+    status: approved
+    route: "/urgente"
+    type: page
+    description: >
+      Ghid de urgență și triaj cu numerele critice de asistență situate chiar în partea de sus a paginii,
+      vizibile imediat fără scroll (Above the fold): Numărul unic 112 (card inversat cu urgență maximă),
+      Spitalul Veterinar Transilvania 24/7 (0369 991), Colegiul Farmaciștilor Sibiu (0269 211 333) și DSVSA Sibiu
+      (0269 223 069). Sub numerele de urgență sunt prezentate cardurile stat hero și grila 3x2 cu cei 6 pași
+      numerotați de triaj nocturn (stil Originle Screenshot 1 & 2).
+    scope_ref:
+      - "README.md: 1.2 (pct. 7)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 6)"
+    key_components:
+      - TopEmergencyHotlinesGrid (112, Spital Vet Transilvania 24/7, Colegiul Farmaciștilor, DSVSA)
+      - HeroStatCards (24/7 servicii, 8 confirmări comunitare, 4 linii oficiale)
+      - NumberedTriageStepsGrid (01–06, pasul 04 pe suprafață cărbune inversată)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds03"
+    mock_status: "approved"
+
+  - id: DS-04
+    name: "Favoritele mele și Autentificare"
+    status: approved
+    route: "/auth & /favorites"
+    type: page_or_modal
+    description: >
+      Pagină dedicată unităților salvate de utilizator:
+      1) Pentru vizitatori (ANON): afișează un banner explicativ și butoane de conectare rapidă 1-Click
+         (USER, MODERATOR, ADMIN) conform regulilor RBAC (D-003).
+      2) Pentru utilizatori autentificați: afișează grila de carduri de unități favorite, cu calcul live al
+         statusului în fusul orar Europe/Bucharest și acțiune de apel rapid.
+    scope_ref:
+      - "README.md: 1.2 (pct. 6)"
+      - "SPEC.md: Secțiunea 4 (Ecranele 3 și 4)"
+      - "DECISIONS.md: D-003 (Ierarhie 4 roluri: ANON, USER, MODERATOR, ADMIN)"
+    key_components:
+      - AnonAuthPromptBox (1-Click demo logins)
+      - FavoritesCatalogGrid (Carduri favorite cu apel rapid și ștergere)
+      - EmptyFavoritesBanner
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds04"
+    mock_status: "approved"
+
+  - id: DS-05
+    name: "Panou Moderare & Administrare (Restricționat: MODERATOR & ADMIN Only)"
     status: approved
     route: "/admin"
     type: page
     description: >
-      Panou securizat de gestiune adaptiv în funcție de rolul utilizatorului (RBAC conform D-003):
-      1) Vedere MODERATOR („Panou Moderare”): Afișează exclusiv Coada de moderare a corecțiilor de orar
-         și rezolvare a rapoartelor conflictuale (status PENDING și CONFLICT), contor progres spre pragul
-         de confirmări comunitare (D-001) și decizii rapide (Aprobă/Respinge/Rezolvă). Taburile administrative
-         de Gestiune Unități și Import CSV sunt ascunse/dezactivate.
-      2) Vedere ADMIN („Panou Admin”): Acces nerestricționat la toate modulele: Coada de moderare & conflicte,
-         Gestiune Unități (adăugare, modificare, ștergere) și Modulul de import CSV pentru rotațiile lunare
-         de gardă (OnCallRotation conform C-004), cu parser, validare sintactică și previzualizare tabelară.
+      Panou de gestiune securizat complet ascuns din navigație pentru ANON și USER conform D-003:
+      1) MODERATOR: vede fila de Coadă de Moderare sesizări/conflicte, contor progres 8 confirmări (D-001)
+         și decizii rapide (Aprobă/Respinge). Taburile de Gestiune Unități și Import CSV sunt dezactivate.
+      2) ADMIN: acces nerestricționat la toate modulele: Coada de moderare, Gestiune Unități (adăugare/editare)
+         și Importul tabelar CSV pentru rotațiile lunare de gardă (C-004) cu parser și validare live.
     scope_ref:
       - "README.md: 1.2 (pct. 4, 5)"
       - "SPEC.md: Secțiunea 4 (Ecranul 5)"
       - "DECISIONS.md: D-001 (8 Confirmări), D-003 (Ierarhie 4 roluri: ANON, USER, MODERATOR, ADMIN)"
       - "CONTRACTS.md: C-003 (Corrections API), C-004 (CSV Import API)"
     key_components:
-      - AdminNavigationTabs (Coadă Moderare & Conflicte, Gestiune Unități [Admin], Import CSV Gardă [Admin])
-      - CorrectionsReviewQueue (Carduri sesizări & conflicte, contor confirmări, butoane Aprobă/Respinge/Rezolvă)
+      - AdminRoleProtectionGuard (Complet ascuns în meniu pentru ANON și USER)
+      - CorrectionsReviewQueue (Carduri sesizări, contor confirmări, butoane decizie)
       - FacilityManagementPanel (Tabel unități, acțiuni editare/ștergere, doar ADMIN)
-      - CsvDropzone & FileUploader (Doar ADMIN)
-      - CsvPreviewTable (Validare coloane: facilityId, date, ore, telefon gardă)
-      - ImportFeedbackAlert (Statistici rânduri importate / erori)
-    mock_file: "docs/design/mocks/full-site-prototype.html#ds03"
-    mock_status: "ready_for_review"
+      - CsvDropzone & TablePreview (Validare coloane rotație gardă, doar ADMIN)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds05"
+    mock_status: "approved"
 
-  - id: DS-04
-    name: "Autentificare și Favoritele mele"
+  - id: DS-06
+    name: "Pagina de Sesizări Comunitare și Orar Real (Regula celor 8 confirmări)"
     status: approved
-    route: "/auth & /favorites"
-    type: page_or_modal
-    description: >
-      Modul unificat pentru gestionarea contului de utilizator și acces rapid la facilitățile preferate:
-      1) Formular securizat de Autentificare și Înregistrare cont nou (JWT auth, validare email/parolă,
-         mesaj explicativ de redirecționare când un anonim încearcă să adauge la favorite sau să raporteze).
-         Include butoane demonstrative rapide 1-Click pentru USER, MODERATOR și ADMIN.
-      2) Pagina „Favoritele Mele” cu lista unităților salvate de utilizator, cu re-calculare deterministică a
-         statusului în timp real la deschiderea ecranului (esențial pentru acces nocturn instantaneu).
-    scope_ref:
-      - "README.md: 1.2 (pct. 6)"
-      - "SPEC.md: Secțiunea 4 (Ecranele 3 și 4)"
-      - "DECISIONS.md: D-003 (Ierarhie 4 roluri: ANON, USER, MODERATOR, ADMIN)"
-    key_components:
-      - AuthFormToggle (Comutare Login ⟷ Register)
-      - DemoLoginButtons (1-Click USER, MODERATOR, ADMIN)
-      - AuthInputs (Email, Parolă, Nume, butoane submit)
-      - FavoritesHeader & QuickFilter
-      - FavoriteFacilityCards (Re-evaluare status live, buton ștergere favorit, apel rapid)
-      - EmptyFavoritesState (Ghid și buton de explorare unități Sibiu)
-    mock_file: "docs/design/mocks/full-site-prototype.html#ds04"
-    mock_status: "ready_for_review"
-
-  - id: DS-05
-    name: "Ghid de Urgență și Numere Utile (Județul Sibiu)"
-    status: approved
-    route: "/urgente"
+    route: "/sesizari"
     type: page
     description: >
-      Secțiune informativă de triaj rapid și asistență critică în județul Sibiu.
-      Afișează într-un format aerisit și contrastant numerele de telefon de urgență cu apelare la un singur tap:
-      Numărul unic național 112, Dispecerat DSVSA Sibiu (0269 223 069), Colegiul Farmaciștilor Sibiu
-      (informații rotații oficiale de noapte) și linia roșie de gardă Spitalul Veterinar Transilvania 24/7 (0369 991).
-      Include scurte instrucțiuni de prim-ajutor și triaj pentru oameni și animale până la sosirea la unitate.
+      Pagină publică dedicată transparenței orarelor din județul Sibiu. Permite oricărui cetățean să vadă
+      sesizările active de program (pauze neanunțate, închideri temporare, modificări ture), progresul voturilor
+      spre pragul de 8 confirmări (D-001) și să confirme (+1 Vot) o sesizare observată pe teren. Include formularul
+      deschis pentru trimiterea unei noi sesizări pentru orice unitate medicală sau veterinară din catalog.
     scope_ref:
-      - "README.md: 1.2 (pct. 7)"
-      - "SPEC.md: Secțiunea 4 (Ecranul 6)"
+      - "README.md: 1.2 (pct. 4)"
+      - "SPEC.md: Secțiunea 4 (Ecranul 2 și 5)"
+      - "DECISIONS.md: D-001 (Regula celor 8 confirmări comunitare)"
     key_components:
-      - EmergencyPhoneCards (112, DSVSA Sibiu, Colegiul Farmaciștilor, Spitalul Veterinar Transilvania)
-      - QuickCallButtons (Apelare imediată cu 1-tap)
-      - TriageGuidanceAccordions (Pași recomandați în caz de urgență nocturnă)
-      - DirectLinks (Legături rapide către farmacii de gardă sau spitale vet non-stop)
-    mock_file: "docs/design/mocks/full-site-prototype.html#ds05"
-    mock_status: "ready_for_review"
+      - CommunityReportsHeader & RuleBanner (Explicație regulă 8 confirmări D-001)
+      - ActiveCorrectionsFeed (Carduri sesizări, bară progres x/8, vot live, status temporar aprobat)
+      - NewCorrectionForm (Selector unitate Sibiu, tip modificare, notă, ore propuse)
+    mock_file: "docs/design/mocks/full-site-prototype.html#ds06"
+    mock_status: "approved"
 
 prototypes:
   - id: PROTO-FULL
-    name: "Prototip Complet Interactiv Multi-Ecran (DS-01 .. DS-05)"
-    status: ready_for_review
+    name: "Prototip Complet Interactiv Multi-Ecran (DS-01 .. DS-06)"
+    status: approved
     file: "docs/design/mocks/full-site-prototype.html"
     screens_covered:
       - DS-01
@@ -143,14 +149,10 @@ prototypes:
       - DS-03
       - DS-04
       - DS-05
+      - DS-06
     key_features:
-      - "Conectare bidirecțională între toate cele 5 ecrane aprobate"
-      - "Filtrare activă: localitate (Sibiu, Mediaș, Cisnădie etc.), domeniu (PHARMACY / EMERGENCY_VET), deschis acum, de gardă/24-7"
-      - "Hartă interactivă Sibiu cu pini sincronizați, acțiuni rapide și tooltips"
-      - "Regula celor 8 confirmări comunitare (D-001) complet funcțională cu auto-aprobare live"
-      - "Modul de import CSV rotații lunare conform contractului C-004 cu parsare și validare"
-      - "Comutator dual temă Light / Dark (Midnight Slate #0B0F19 conform DESIGN.md)"
-      - "Comutator de stări de previzualizare: Normal (Success), Încărcare (Loading), Gol (Empty), Eroare (Error 503)"
-      - "Simulare completă a celor 4 roluri (D-003): ANON (vizitator liber), USER (favorit/sesizare), MODERATOR (coadă moderare sesizări & conflicte) și ADMIN (gestiune completă: moderare, facilități, import CSV)"
-      - "Buton 1-click demo login pentru MODERATOR în modalul de autentificare, drawer-ul demo și ecranul de favorite"
-      - "Comutare dinamică a antetului: link 'Panou Moderare' pentru MODERATOR vs 'Panou Admin' pentru ADMIN"
+      - "Estetică Warm Editorial Minimalist (inspirată din Originle)"
+      - "Numere de urgență critice (112, 0369 991, 0269 211 333, 0269 223 069) plasate în partea superioară a ecranului DS-03 fără scroll"
+      - "Fila Panou Admin complet ascunsă din antet pentru utilizatorii ANON și USER (D-003)"
+      - "Pagină dedicată de Sesizări Comunitare (DS-06) cu vot live pentru atingerea a 8 confirmări (D-001) și trimitere sesizări noi"
+      - "Conectare bidirecțională între toate ecranele și comutare dinamică temă Light / Dark"

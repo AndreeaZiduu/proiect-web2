@@ -7,7 +7,7 @@
 
 ## Index
 - PATTERN-001 · Responsive split-screen desktop and toggle mobile view · candidate
-- PATTERN-002 · Modern Healthcare Minimalist styling and semantic status palette · candidate
+- PATTERN-002 · Warm Editorial Minimalist styling and semantic status palette · candidate
 
 ---
 
@@ -19,8 +19,8 @@
 
 ---
 
-## PATTERN-002 · Modern Healthcare Minimalist styling and semantic status palette
+## PATTERN-002 · Warm Editorial Minimalist styling and semantic status palette
 - **Status:** candidate
-- **Confirmed:** 2026-11-18
-- **How:** Adopt a clean, reassuring Modern Healthcare Minimalist aesthetic (Apple Health / Doctolib inspired) using Plus Jakarta Sans typography, rounded card geometry, full Light/Dark theme support, and CartoDB Voyager/Positron map tiles. Distinct color-coding separates facility types (Emerald/Teal for PHARMACY 💊 vs Indigo/Violet for EMERGENCY_VET 🐾), while real-time status follows a rich 4-state indicator (Green for OPEN, Indigo/Violet for ON_DUTY, Amber for CLOSING_SOON, Muted Red/Gray for CLOSED).
-- **Example:** `frontend/src/index.css` defining CSS custom properties (`--font-main: 'Plus Jakarta Sans'`, `--color-pharmacy`, `--color-vet`, `--status-open`, `--status-oncall`, `--status-closing`, `--status-closed`) with dual `@media (prefers-color-scheme)` or `[data-theme]` tokens.
+- **Confirmed:** 2026-11-21
+- **How:** Adopt a warm, reassuring Warm Editorial Minimalist aesthetic (Originle inspired) using Plus Jakarta Sans typography, tabular figures, 24px rounded card geometry with subtle warm gradients (Warm Alabaster #FAF7F4 and Warm Obsidian #141210), soft diffuse shadows, terracotta (#C25E34) accents for numbers/badges, and inverted dark surface cards (#1C1917) for high-urgency focal points (112, emergency hotlines). Color-coding separates facility types (Herbal Teal #0E7465 for PHARMACY 💊 vs Royal Indigo #5548A8 for EMERGENCY_VET 🐾), while real-time operational status follows a 5-state WCAG AAA indicator system (ON_DUTY with pulse dot, OPEN, CLOSING_SOON, CLOSED, UNKNOWN).
+- **Example:** `frontend/src/index.css` defining CSS custom properties (`--font-family-primary: 'Plus Jakarta Sans'`, `--color-pharmacy: #0E7465`, `--color-vet: #5548A8`, `--accent-terracotta: #C25E34`, `--bg-app`, `--bg-surface-gradient`, `--status-duty-bg`, `--status-open-bg`, `--status-closing-bg`, `--status-closed-bg`) with dual `[data-theme="light"]` and `[data-theme="dark"]` tokens.
