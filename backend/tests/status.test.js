@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getFacilityStatus } from '../src/status.js';
+import { getFacilityStatus, shouldAutoApproveCorrection } from '../src/status.js';
 
 const basePharmacy = {
   id: 'fac-1',
@@ -261,5 +261,41 @@ describe('getFacilityStatus - 5 surse de adevăr (Europe/Bucharest)', () => {
     expect(res.code).toBe('CLOSED');
     expect(res.source).toBe('HOLIDAY_SCHEDULE');
     expect(res.label).toContain('Crăciun');
+  });
+
+  describe('D-001: Praguri confirmare comunitară (4 voturi pauză / 8 voturi orar general)', () => {
+    it('20. Corecție pauză/închidere temporară (isClosedOverride) necesită 4 confirmări pentru auto-aprobare', () => {
+      const pauseCorrection = {
+        isClosedOverride: true,
+        confirmations: 3
+      };
+      expect(shouldAutoApproveCorrection(pauseCorrection)).toBe(false);
+
+      pauseCorrection.confirmations = 4;
+      expect(shouldAutoApproveCorrection(pauseCorrection)).toBe(true);
+
+      pauseCorrection.confirmations = 6;
+      expect(shouldAutoApproveCorrection(pauseCorrection)).toBe(true);
+    });
+
+    it('21. Corecție orar general necesită 8 confirmări pentru auto-aprobare', () => {
+      const generalCorrection = {
+        isClosedOverride: false,
+        confirmations: 7
+      };
+      expect(shouldAutoApproveCorrection(generalCorrection)).toBe(false);
+
+      generalCorrection.confirmations = 8;
+      expect(shouldAutoApproveCorrection(generalCorrection)).toBe(true);
+
+      generalCorrection.confirmations = 10;
+      expect(shouldAutoApproveCorrection(generalCorrection)).toBe(true);
+    });
+
+    it('22. Corecție invalidă sau fără confirmări nu se auto-aprobă', () => {
+      expect(shouldAutoApproveCorrection(null)).toBe(false);
+      expect(shouldAutoApproveCorrection({})).toBe(false);
+      expect(shouldAutoApproveCorrection({ confirmations: 0 })).toBe(false);
+    });
   });
 });

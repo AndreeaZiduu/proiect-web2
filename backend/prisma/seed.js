@@ -232,12 +232,12 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'moderator@sibiu.ro' },
-    update: { passwordHash: devPasswordHash, role: 'ADMIN', name: 'Moderator Sibiu (Admin)' },
+    update: { passwordHash: devPasswordHash, role: 'MODERATOR', name: 'Moderator Sibiu' },
     create: {
       email: 'moderator@sibiu.ro',
-      name: 'Moderator Sibiu (Admin)',
+      name: 'Moderator Sibiu',
       passwordHash: devPasswordHash,
-      role: 'ADMIN'
+      role: 'MODERATOR'
     }
   });
 

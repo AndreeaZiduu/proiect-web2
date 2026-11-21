@@ -36,6 +36,7 @@ model User {
   favorites            Favorite[]
   submittedCorrections ScheduleCorrection[] @relation("SubmittedBy")
   reviewedCorrections  ScheduleCorrection[] @relation("ReviewedBy")
+  confirmations        ReportConfirmation[]
 }
 
 model Facility {
@@ -121,6 +122,27 @@ model ScheduleCorrection {
   confirmations    Int              @default(1)
   status           CorrectionStatus @default(PENDING)
   createdAt        DateTime         @default(now())
+
+  userConfirmations ReportConfirmation[]
+}
+
+model ReportConfirmation {
+  id           String             @id @default(cuid())
+  correctionId String
+  correction   ScheduleCorrection @relation(fields: [correctionId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime           @default(now())
+
+  @@unique([correctionId, userId])
+}
+
+model GeocodeCache {
+  id        String   @id @default(cuid())
+  query     String   @unique
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
 }
 
 model Favorite {

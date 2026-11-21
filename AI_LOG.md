@@ -815,3 +815,41 @@ Integritatea a fost re-validată prin `ledger-lint`.
 ## 3. Verificări
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
 * **Stare Proces:** Sistemul este oprit la nivel de planificare aprobată, gata pentru pasul următor când utilizatorul dorește să înceapă execuția (`/build`).
+
+
+# Sesiunea 23 — Alinierea și Verificarea Backend & Bază de Date (2026-11-21)
+
+## 1. Ce a Cerut Utilizatorul
+1. Fără modificări pe `frontend/` în această etapă (focus exclusiv pe backend și baza de date pas cu pas).
+2. Verificarea `backend/prisma/schema.prisma`, `backend/prisma/seed.js` și `backend/src/server.js` în raport cu `docs/plans/01-master-plan.md`:
+   - Asigurarea celor 4 roluri (`ANON`, `USER`, `MODERATOR`, `ADMIN`).
+   - Respectarea pragului de voturi conform `D-001` (4 voturi pentru pauză/închidere temporară și 8 confirmări pentru orar general).
+   - Import CSV idempotent pentru rotațiile de gardă (`C-004`), fără multiplicarea înregistrărilor la reîncărcare.
+   - Toate rutele necesare funcționale.
+3. Actualizarea testelor din `backend/tests/` și rularea completă a suitei de teste (`npm test --prefix backend`).
+4. Înregistrarea unui rezumat scurt în `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **`backend/prisma/schema.prisma`**:
+  - Adăugate modelele `ReportConfirmation` (pentru voturi unice utilizatori per sesizare) și `GeocodeCache` (pentru salvarea coordonatelor GPS), completând structura de 9 tabele relaționale planificată.
+  - Rulat `npx prisma generate` pentru regenerarea tipurilor Prisma Client.
+* **`backend/prisma/seed.js`**:
+  - Corectat rolul contului `moderator@sibiu.ro` la `MODERATOR` (era setat din greșeală ca `ADMIN`).
+* **`backend/src/status.js`**:
+  - Exportată funcția pură `shouldAutoApproveCorrection(correction)` conform `D-001` (prag 4 voturi dacă `isClosedOverride: true`, respectiv 8 voturi pentru modificări generale).
+* **`backend/src/geocode.js`**:
+  - Creat modulul de geocodare Nominatim cu cache permanent în tabelă și limitare la 1 cerere pe secundă conform politicii OpenStreetMap.
+* **`backend/src/server.js`**:
+  - Actualizată logica de confirmări în `handleCreateCorrection`, suportând atât `POST /api/facilities/:id/corrections`, cât și `POST /api/corrections`.
+  - Adăugată ruta `POST /api/corrections/:id/confirm` (C-003, D-001), incrementând voturile și auto-aprobând la 4 sau 8 confirmări, cu actualizarea automată a `lastVerifiedAt` pe unitate.
+  - Implementat parserul CSV robust și idempotent în `POST /api/rotations/import` (C-004), cu detecția rotațiilor existente și contorizarea duplicatelor ignorate (`skippedDuplicates`).
+* **`backend/tests/`**:
+  - `status.test.js`: extinse la 22 de teste pentru validarea pragurilor de auto-aprobare (4 vs 8 voturi).
+  - `rbac.test.js`: extinse la 18 teste acoperind crearea și confirmarea sesizărilor de către `USER`, auto-aprobarea și importul idempotent de către `ADMIN`.
+  - `csv-import.test.js`: 3 teste dedicate pentru importul CSV, idempotență și raportarea conflictelor.
+  - `geocode.test.js`: 2 teste pentru geocodare Nominatim și servire directă din cache.
+
+## 3. Verificări
+* **Teste Backend:** `npm test --prefix backend` — **45 teste trecute din 45 (100% succes)** pe toate cele 4 fișiere de test (`status.test.js`, `rbac.test.js`, `csv-import.test.js`, `geocode.test.js`).
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Protecție Frontend:** Niciun fișier din `frontend/` nu a fost atins.

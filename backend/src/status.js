@@ -35,6 +35,12 @@ function formatMinutes(totalMin) {
   return `${h}:${m}`;
 }
 
+export function shouldAutoApproveCorrection(correction) {
+  if (!correction) return false;
+  const threshold = correction.isClosedOverride ? 4 : 8;
+  return (correction.confirmations || 0) >= threshold;
+}
+
 export function getFacilityStatus(facility, momentInput = new Date()) {
   const moment = momentInput instanceof Date ? momentInput : new Date(momentInput);
   const nowMs = moment.getTime();

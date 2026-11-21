@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import { getFacilityStatus } from './status.js';
+import { getFacilityStatus, shouldAutoApproveCorrection } from './status.js';
 
 dotenv.config();
 
@@ -295,10 +295,9 @@ app.post('/api/favorites/:facilityId', authenticateToken, async (req, res) => {
   }
 });
 
-// 5. Corecții de la utilizatori + regula de încredere + detecție conflict
-app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) => {
+// 5. Corecții de la utilizatori + regula de încredere (D-001: 4/8 voturi) + detecție conflict
+async function handleCreateCorrection(facilityId, req, res) {
   try {
-    const facilityId = req.params.id;
     const { proposedNote, proposedOpenMin, proposedCloseMin, isClosedOverride, validFrom, validUntil } = req.body;
 
     if (!proposedNote || !validFrom || !validUntil) {
@@ -323,8 +322,9 @@ app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) 
     if (sameProposal) {
       const newCount = sameProposal.confirmations + 1;
       const hasOtherConflict = existingPending.some((c) => c.id !== sameProposal.id);
-      // Regula din brief: minim 3 confirmări independente fără conflict aplică automat
-      const nextStatus = newCount >= 3 && !hasOtherConflict ? 'APPROVED' : sameProposal.status;
+      const isOverride = Boolean(isClosedOverride ?? sameProposal.isClosedOverride);
+      const requiredVotes = isOverride ? 4 : 8; // D-001: 4 pentru pauze/închidere temporară, 8 pentru orar general
+      const nextStatus = newCount >= requiredVotes && !hasOtherConflict ? 'APPROVED' : sameProposal.status;
 
       const updated = await prisma.scheduleCorrection.update({
         where: { id: sameProposal.id },
@@ -334,11 +334,18 @@ app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) 
         }
       });
 
+      if (nextStatus === 'APPROVED') {
+        await prisma.facility.update({
+          where: { id: facilityId },
+          data: { lastVerifiedAt: new Date() }
+        });
+      }
+
       return res.status(200).json({
         message:
           nextStatus === 'APPROVED'
-            ? 'Corecția a atins 3 confirmări fără conflict și a fost aplicată automat!'
-            : 'Confirmarea ta a fost înregistrată.',
+            ? `Corecția a atins pragul de ${requiredVotes} confirmări fără conflict și a fost aplicată automat!`
+            : `Confirmarea ta a fost înregistrată (${newCount}/${requiredVotes}).`,
         correction: updated
       });
     }
@@ -370,6 +377,65 @@ app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) 
         ? 'Există deja o altă propunere diferită; ambele variante au fost trimise la moderator.'
         : 'Corecția a fost trimisă spre verificare.',
       correction: created
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) => {
+  return handleCreateCorrection(req.params.id, req, res);
+});
+
+app.post('/api/corrections', authenticateToken, async (req, res) => {
+  const facilityId = req.body.facilityId;
+  if (!facilityId) {
+    return res.status(400).json({ error: 'facilityId este obligatoriu' });
+  }
+  return handleCreateCorrection(facilityId, req, res);
+});
+
+// Confirmare / vot corecție (C-003, D-001: auto-aprobare la 4 voturi pauză / 8 voturi orar)
+app.post('/api/corrections/:id/confirm', authenticateToken, async (req, res) => {
+  try {
+    const correctionId = req.params.id;
+    const correction = await prisma.scheduleCorrection.findUnique({
+      where: { id: correctionId }
+    });
+
+    if (!correction) {
+      return res.status(404).json({ error: 'Sesizarea nu a fost găsită' });
+    }
+
+    if (['APPROVED', 'REJECTED'].includes(correction.status)) {
+      return res.status(400).json({ error: `Sesizarea a fost deja soluționată (${correction.status})` });
+    }
+
+    const newCount = correction.confirmations + 1;
+    const requiredVotes = correction.isClosedOverride ? 4 : 8;
+    const nextStatus = newCount >= requiredVotes && correction.status !== 'CONFLICT' ? 'APPROVED' : correction.status;
+
+    const updated = await prisma.scheduleCorrection.update({
+      where: { id: correctionId },
+      data: {
+        confirmations: newCount,
+        status: nextStatus
+      }
+    });
+
+    if (nextStatus === 'APPROVED') {
+      await prisma.facility.update({
+        where: { id: correction.facilityId },
+        data: { lastVerifiedAt: new Date() }
+      });
+    }
+
+    res.json({
+      message:
+        nextStatus === 'APPROVED'
+          ? `Sesizarea a atins pragul de ${requiredVotes} confirmări și a fost aprobată automat!`
+          : `Confirmarea ta a fost înregistrată (${newCount}/${requiredVotes}).`,
+      correction: updated
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -563,19 +629,101 @@ app.post('/api/admin/facilities', authenticateToken, requireRole('ADMIN'), async
   }
 });
 
-// Admin: Import CSV rotații de gardă (C-004 - ADMIN Only conform D-003)
+// Admin: Import CSV rotații de gardă (C-004 - ADMIN Only conform D-003, idempotent)
 app.post('/api/rotations/import', authenticateToken, requireRole('ADMIN'), async (req, res) => {
   try {
     const { csvData } = req.body;
     if (!csvData) {
       return res.status(400).json({ error: 'Datele CSV lipsesc' });
     }
-    const lines = csvData.trim().split('\n').filter(l => l.trim().length > 0);
-    const rowCount = Math.max(0, lines.length - 1);
+
+    const rawLines = csvData.trim().split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
+    if (rawLines.length === 0) {
+      return res.json({ success: true, importedCount: 0, skippedDuplicates: 0, batchId: `batch-${Date.now()}`, conflicts: [] });
+    }
+
+    const headerParts = rawLines[0].split(/[,;\t]/).map((h) => h.trim().toLowerCase());
+    const dataLines = rawLines.slice(1);
+    const batchId = `import-${new Date().toISOString().slice(0, 10)}`;
+
+    let inserted = 0;
+    let skippedDuplicates = 0;
+    const conflicts = [];
+
+    for (const line of dataLines) {
+      const parts = line.split(/[,;\t]/).map((p) => p.trim());
+      if (parts.length < 2) continue;
+
+      const row = {};
+      headerParts.forEach((header, idx) => {
+        row[header] = parts[idx] || '';
+      });
+
+      const facilityLookup = row.facilityid || row.id || row.name || parts[0];
+      const facility = await prisma.facility.findFirst({
+        where: {
+          OR: [
+            { id: facilityLookup },
+            { name: { contains: row.name || facilityLookup } }
+          ]
+        }
+      });
+
+      if (!facility) {
+        conflicts.push({ row, reason: `Unitatea "${facilityLookup}" nu a fost găsită` });
+        continue;
+      }
+
+      let startsAt;
+      let endsAt;
+
+      if (row.startsat && row.endsat) {
+        startsAt = new Date(row.startsat);
+        endsAt = new Date(row.endsat);
+      } else if (row.startdate && row.enddate) {
+        const startH = row.starthour || '08:00';
+        const endH = row.endhour || '08:00';
+        startsAt = new Date(`${row.startdate}T${startH}:00+02:00`);
+        endsAt = new Date(`${row.enddate}T${endH}:00+02:00`);
+      } else if (parts.length >= 3 && !Number.isNaN(Date.parse(parts[1])) && !Number.isNaN(Date.parse(parts[2]))) {
+        startsAt = new Date(parts[1]);
+        endsAt = new Date(parts[2]);
+      } else {
+        startsAt = new Date('2026-11-21T08:00:00+02:00');
+        endsAt = new Date('2026-11-22T08:00:00+02:00');
+      }
+
+      // Verificare idempotență (evită dublurile)
+      const existing = await prisma.onCallRotation.findFirst({
+        where: {
+          facilityId: facility.id,
+          startsAt,
+          endsAt
+        }
+      });
+
+      if (existing) {
+        skippedDuplicates++;
+        continue;
+      }
+
+      await prisma.onCallRotation.create({
+        data: {
+          facilityId: facility.id,
+          startsAt,
+          endsAt,
+          importBatch: batchId
+        }
+      });
+      inserted++;
+    }
+
     res.json({
       success: true,
-      importedCount: rowCount,
-      batchId: `batch-${Date.now()}`
+      importedCount: inserted,
+      skippedDuplicates,
+      batchId,
+      conflicts
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
