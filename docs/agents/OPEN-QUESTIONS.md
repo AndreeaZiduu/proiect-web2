@@ -65,9 +65,10 @@
 
 ## Q-006 · Should the application implement turn-by-turn navigation or rely on external map links?
 - **Status:** answered
+- **Confirmed:** 2026-11-21
 - **Blocks:** Map routing engine, GPS tracking services, and navigation buttons in the UI.
 - **Who answers:** Project owner
-- **Answer:** External deep links to Google Maps / Waze / Apple Maps using facility latitude and longitude (`https://www.google.com/maps/dir/?api=1&destination={lat},{lng}`). (Answered: 2026-11-18)
+- **Answer:** Traseu stradal integrat desenat direct pe hartă prin serviciul OSRM (cu afișare durată estimată în minute și distanță pe străzi), alături de buton de rezervă pentru lansare externă în Google Maps / Waze (`https://www.google.com/maps/dir/?api=1&destination={lat},{lng}`). (Answered: 2026-11-21)
 
 ---
 

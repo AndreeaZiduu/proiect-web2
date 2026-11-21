@@ -793,3 +793,25 @@ Integritatea a fost re-validată prin `ledger-lint`.
 
 
 
+
+# Sesiunea 22 — Crearea și Aprobarea Master Planului Unificat P10 Sibiu (2026-11-21)
+
+## 1. Ce a Cerut Utilizatorul
+1. Unificarea documentelor de planificare: ștergerea planurilor vechi fragmentate (`01-design-screens.md`, `02-db-schema.md`) și crearea unui singur plan curat în `docs/plans/01-master-plan.md`.
+2. Redactarea în stil minimalist și limba română simplă, curată, directă, ușor de susținut în fața profesorilor/comisiei.
+3. Acoperirea celor 5 cerințe fundamentale din catalogul P10:
+   - Bază de date cu 9 tabele relaționale în Docker Compose și geocodare Nominatim în cache (cu pauză 1s).
+   - Motor pur de status în `Europe/Bucharest` cu orare nocturne (`22:00-06:00`), sărbători legale, gărzi lunare CSV și sesizări comunitare (4 vs 8 voturi).
+   - API REST pe server pentru 4 roluri (`vizitator`, `utilizator`, `moderator`, `admin`).
+   - Interfață React 19 pe cele 5 ecrane (`DS-01` .. `DS-05`), cu rutare stradală OSRM desenată direct pe hartă (timp estimat și distanță) + fallback extern Google Maps/Waze și suport offline PWA (Service Worker + Manifest).
+   - Suită de teste automate (unitare pe status, integrare pe roluri și import CSV fără duplicate).
+4. Aprobarea formală a planului de către utilizator, cu oprire înainte de faza `/build`.
+
+## 2. Ce S-a Livrat
+* **`docs/plans/01-master-plan.md`**: Master Plan unificat complet, marcat în status **`APPROVED`** (2026-11-21).
+* **`docs/agents/OPEN-QUESTIONS.md`**: `Q-006` actualizat și confirmat cu traseul integrat OSRM pe hartă și link-uri externe de rezervă.
+* **Curățare `docs/plans/`**: Planurile vechi fragmentate au fost eliminate.
+
+## 3. Verificări
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Stare Proces:** Sistemul este oprit la nivel de planificare aprobată, gata pentru pasul următor când utilizatorul dorește să înceapă execuția (`/build`).
