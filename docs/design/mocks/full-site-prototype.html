@@ -799,6 +799,18 @@
       color: var(--text-primary);
     }
 
+    .user-active-badge.badge-moderator {
+      background-color: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      color: #0369A1;
+    }
+
+    [data-theme="dark"] .user-active-badge.badge-moderator {
+      background-color: rgba(14, 165, 233, 0.18);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38BDF8;
+    }
+
     .user-active-badge.badge-admin {
       background-color: var(--color-vet-bg);
       border: 1px solid var(--color-vet-border);
@@ -4291,27 +4303,30 @@
     <section class="screen-view" id="view-ds03">
       <div class="admin-container">
         
-        <!-- Admin Dashboard Header -->
+        <!-- Admin Dashboard Header (Dynamically adapts for MODERATOR vs ADMIN per D-003) -->
         <div class="admin-header-card">
           <div class="admin-title-wrap">
-            <span style="font-size: 32px;">🛡️</span>
+            <span id="adminHeaderIcon" style="font-size: 32px;">🛡️</span>
             <div>
-              <h1 style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">
+              <h1 id="adminHeaderTitle" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">
                 Panou Unificat de Administrare & Dispecerat
               </h1>
-              <p style="font-size: var(--font-size-xs); color: var(--text-muted);">
+              <p id="adminHeaderDesc" style="font-size: var(--font-size-xs); color: var(--text-muted);">
                 Gestionează moderarea sesizărilor comunitare (D-001) și importul rotațiilor CSV de gardă (C-004)
               </p>
             </div>
           </div>
 
-          <!-- Subnav Pills -->
+          <!-- Subnav Pills: Moderation queue (All) + Facility Management (Admin) + CSV Import (Admin) -->
           <div class="admin-subnav-pills">
             <button class="admin-subnav-btn active" id="btnAdminTabMod" onclick="switchAdminSubtab('moderation')">
-              📋 Coada de Moderare (<span id="adminPendingBadge">2</span>)
+              📋 Coada de Moderare & Conflicte (<span id="adminPendingBadge">2</span>)
+            </button>
+            <button class="admin-subnav-btn" id="btnAdminTabFacilities" onclick="switchAdminSubtab('facilities')">
+              🏢 Gestiune Unități <span class="admin-only-tag" style="font-size: 10px; background: rgba(99, 102, 241, 0.15); color: #4F46E5; padding: 2px 6px; border-radius: 9999px; margin-left: 4px;">Admin</span>
             </button>
             <button class="admin-subnav-btn" id="btnAdminTabCsv" onclick="switchAdminSubtab('csv')">
-              📥 Import CSV Gardă
+              📥 Import CSV Gardă <span class="admin-only-tag" style="font-size: 10px; background: rgba(99, 102, 241, 0.15); color: #4F46E5; padding: 2px 6px; border-radius: 9999px; margin-left: 4px;">Admin</span>
             </button>
           </div>
         </div>
@@ -4352,7 +4367,49 @@
           </div>
         </div>
 
-        <!-- Subtab 2: CSV Import Module (C-004) -->
+        <!-- Subtab 2: Facility Management Module (Admin Only - D-003) -->
+        <div class="admin-tab-content" id="adminTabFacilities">
+          <div class="csv-panel-card">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap;">
+              <div>
+                <h2 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); display: flex; align-items: center; gap: var(--space-2);">
+                  <span>🏢 Gestiune Unități Medicale & Veterinare</span>
+                  <span style="font-size: 11px; font-weight: var(--font-weight-medium); background: var(--color-vet-bg); color: var(--color-vet-text); padding: 2px 8px; border-radius: var(--radius-full); border: 1px solid var(--color-vet-border);">Exclusiv ADMIN (D-003)</span>
+                </h2>
+                <p style="font-size: var(--font-size-xs); color: var(--text-secondary); margin-top: 4px;">
+                  Catalogul unităților din județul Sibiu. Administratorii pot adăuga, edita sau șterge facilități din baza de date MySQL.
+                </p>
+              </div>
+
+              <div class="csv-actions-group" style="display: flex; gap: var(--space-2);">
+                <button class="hero-action-btn hero-btn-primary" onclick="showToast('ℹ️ Formularul de adăugare unitate este disponibil în interfața completă de management.');">
+                  ➕ Adaugă Unitate Nouă
+                </button>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto; margin-top: var(--space-4);">
+              <table class="csv-table-preview" id="adminFacilitiesTable">
+                <thead>
+                  <tr>
+                    <th>ID Unitate</th>
+                    <th>Nume Unitate</th>
+                    <th>Tip</th>
+                    <th>Localitate</th>
+                    <th>Adresă</th>
+                    <th>Telefon</th>
+                    <th>Acțiuni Admin</th>
+                  </tr>
+                </thead>
+                <tbody id="adminFacilitiesTbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subtab 3: CSV Import Module (Admin Only - C-004) -->
         <div class="admin-tab-content" id="adminTabCsv">
           <div class="csv-panel-card">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap;">
@@ -4470,6 +4527,9 @@
             <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: center;">
               <button class="quick-call-pill" onclick="loginDemo('USER')" style="font-size: 11px;">
                 👤 1-Click: Intră ca USER (Andreea)
+              </button>
+              <button class="quick-call-pill" onclick="loginDemo('MODERATOR')" style="font-size: 11px; border-color: #38BDF8; color: #0284C7; background: #F0F9FF;">
+                ⚖️ 1-Click: Intră ca MODERATOR (Tudor)
               </button>
               <button class="quick-call-pill vet-call" onclick="loginDemo('ADMIN')" style="font-size: 11px;">
                 🛡️ 1-Click: Intră ca ADMIN (Admin Sibiu)
@@ -4639,10 +4699,13 @@
         </span>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
           <button class="quick-call-pill" style="font-size: 11px; padding: 6px 12px; flex: 1;" onclick="loginDemo('USER')">
-            <span>👤</span> <span>Intră ca USER (Andreea)</span>
+            <span>👤</span> <span>Intră ca USER</span>
+          </button>
+          <button class="quick-call-pill" style="font-size: 11px; padding: 6px 12px; flex: 1; border-color: #38BDF8; color: #0284C7; background: #F0F9FF;" onclick="loginDemo('MODERATOR')">
+            <span>⚖️</span> <span>Intră ca MODERATOR</span>
           </button>
           <button class="quick-call-pill vet-call" style="font-size: 11px; padding: 6px 12px; flex: 1;" onclick="loginDemo('ADMIN')">
-            <span>🛡️</span> <span>Intră ca ADMIN (Admin Sibiu)</span>
+            <span>🛡️</span> <span>Intră ca ADMIN</span>
           </button>
         </div>
       </div>
@@ -4770,13 +4833,14 @@
         </div>
       </div>
 
-      <!-- Simulare Rol Autentificare (D-003 & Q-007) -->
+      <!-- Simulare Rol Autentificare (D-003: 4 Roluri) -->
       <div class="demo-drawer-group">
-        <div class="demo-drawer-label">Simulare Rol Autentificare (D-003 & Q-007)</div>
-        <div class="switcher-cluster" style="width: 100%; justify-content: flex-start;">
+        <div class="demo-drawer-label">Simulare Rol Autentificare (D-003: ANON, USER, MODERATOR, ADMIN)</div>
+        <div class="switcher-cluster" style="width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 4px;">
           <button class="switcher-btn active" id="btnRoleAnon" onclick="loginDemo('ANON')" title="Simulează vizitator anonim (D-003)">👤 Vizitator (Anonim)</button>
           <button class="switcher-btn" id="btnRoleUser" onclick="loginDemo('USER')" title="Simulează utilizator autentificat USER">🧑 USER (Andreea)</button>
-          <button class="switcher-btn" id="btnRoleAdmin" onclick="loginDemo('ADMIN')" title="Simulează administrator autentificat ADMIN (Q-007)">🛡️ ADMIN (Admin Sibiu)</button>
+          <button class="switcher-btn" id="btnRoleModerator" onclick="loginDemo('MODERATOR')" title="Simulează moderator autentificat MODERATOR (D-003)">⚖️ MODERATOR</button>
+          <button class="switcher-btn" id="btnRoleAdmin" onclick="loginDemo('ADMIN')" title="Simulează administrator autentificat ADMIN (D-003)">🛡️ ADMIN (Admin Sibiu)</button>
         </div>
       </div>
 
@@ -5083,6 +5147,19 @@
         confirmations: 5,
         status: 'PENDING',
         createdAt: 'Azi, 10:15'
+      },
+      {
+        id: 'CORR-005',
+        facilityId: 'FAC-PHARM-001',
+        facilityName: 'Farmacia Adefarm Plus — Tribunei',
+        type: 'Raport orar contradictoriu (Conflict)',
+        proposedNote: 'Utilizatorul raportează farmacia deschisă la ghișeu, în contradicție directă cu sesizarea CORR-001 de inventar',
+        proposedHours: 'Deschis 14:00 - 16:00',
+        reporter: 'bogdan.petrov@gmail.com',
+        threshold: 8,
+        confirmations: 4,
+        status: 'CONFLICT',
+        createdAt: 'Azi, 10:30'
       }
     ];
 
@@ -5097,9 +5174,9 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
        2. SCREEN NAVIGATION SYSTEM
        ======================================================================== */
     function switchScreen(screenId, params = {}) {
-      // Role protection gate for DS-03 (Admin) per Q-007
-      if (screenId === 'ds03' && appState.currentUser.role !== 'ADMIN') {
-        showToast('⚠️ Acces restricționat: Panoul Admin este rezervat administratorilor (Q-007). Autentifică-te ca ADMIN!');
+      // Role protection gate for DS-03 (Admin & Moderation) per D-003
+      if (screenId === 'ds03' && appState.currentUser.role !== 'ADMIN' && appState.currentUser.role !== 'MODERATOR') {
+        showToast('⚠️ Acces restricționat (D-003): Panoul de moderare/administrare este rezervat moderatorilor și administratorilor. Conectează-te ca MODERATOR sau ADMIN!');
         openAuthModal('admin');
         return;
       }
@@ -5622,21 +5699,59 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
     }
 
     /* ========================================================================
-       5. SCREEN 3: DS-03 ADMIN PANEL & 8-CONFIRMATION RULE (D-001)
+       5. SCREEN 3: DS-03 ADMIN & MODERATION PANEL (D-001 & D-003)
        ======================================================================== */
     function switchAdminSubtab(tabKey) {
+      if (appState.currentUser.role === 'MODERATOR' && tabKey !== 'moderation') {
+        showToast('⚠️ Acces restricționat (D-003): Secțiunile Gestiune Unități și Import CSV sunt rezervate exclusiv pentru ADMIN.');
+        return;
+      }
       appState.adminSubtab = tabKey;
-      document.getElementById('btnAdminTabMod').classList.toggle('active', tabKey === 'moderation');
-      document.getElementById('btnAdminTabCsv').classList.toggle('active', tabKey === 'csv');
+      const btnMod = document.getElementById('btnAdminTabMod');
+      const btnFac = document.getElementById('btnAdminTabFacilities');
+      const btnCsv = document.getElementById('btnAdminTabCsv');
+      if (btnMod) btnMod.classList.toggle('active', tabKey === 'moderation');
+      if (btnFac) btnFac.classList.toggle('active', tabKey === 'facilities');
+      if (btnCsv) btnCsv.classList.toggle('active', tabKey === 'csv');
 
-      document.getElementById('adminTabModeration').classList.toggle('active-tab', tabKey === 'moderation');
-      document.getElementById('adminTabCsv').classList.toggle('active-tab', tabKey === 'csv');
+      const tabMod = document.getElementById('adminTabModeration');
+      const tabFac = document.getElementById('adminTabFacilities');
+      const tabCsv = document.getElementById('adminTabCsv');
+      if (tabMod) tabMod.classList.toggle('active-tab', tabKey === 'moderation');
+      if (tabFac) tabFac.classList.toggle('active-tab', tabKey === 'facilities');
+      if (tabCsv) tabCsv.classList.toggle('active-tab', tabKey === 'csv');
 
       if (tabKey === 'moderation') {
         renderAdminModerationQueue();
+      } else if (tabKey === 'facilities') {
+        renderFacilitiesAdminTable();
       } else if (tabKey === 'csv') {
         loadSampleCsvData();
       }
+    }
+
+    function renderFacilitiesAdminTable() {
+      const tbody = document.getElementById('adminFacilitiesTbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      facilities.slice(0, 10).forEach(fac => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><code>${fac.id}</code></td>
+          <td><strong>${fac.name}</strong></td>
+          <td><span class="threshold-pill-tag ${fac.type === 'PHARMACY' ? 'thresh-short' : 'thresh-standard'}">${fac.type === 'PHARMACY' ? '💊 Farmacie' : '🐾 Vet Urgență'}</span></td>
+          <td>${fac.city}</td>
+          <td><span style="font-size: 11px;">${fac.address}</span></td>
+          <td><a href="tel:${fac.phone}" style="color: var(--color-pharmacy);">${fac.phone}</a></td>
+          <td>
+            <div style="display: flex; gap: 4px;">
+              <button class="switcher-btn" style="padding: 2px 6px; font-size: 11px;" onclick="showToast('✏️ Formular editare unitate ${fac.id} (Disponibil în API)')">✏️ Editează</button>
+              <button class="switcher-btn" style="padding: 2px 6px; font-size: 11px; color: #DC2626; border-color: rgba(220, 38, 38, 0.3);" onclick="showToast('🗑️ Unitatea ${fac.id} a fost ștearsă (Simulare Admin)')">🗑️ Șterge</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function renderAdminModerationQueue() {
@@ -5648,7 +5763,7 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
       let approvedCount = 0;
 
       corrections.forEach(corr => {
-        if (corr.status === 'PENDING') pendingCount++;
+        if (corr.status === 'PENDING' || corr.status === 'CONFLICT') pendingCount++;
         if (corr.status === 'APPROVED') approvedCount++;
 
         const threshold = corr.threshold || 8;
@@ -5656,10 +5771,13 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
         const card = document.createElement('article');
         card.className = 'correction-review-card';
 
+        const isConflict = corr.status === 'CONFLICT';
         const statusBadge = corr.status === 'APPROVED' ? 
           `<span class="semantic-status-badge b-open">✓ APROBAT (${threshold === 4 ? 'Prag 4' : 'D-001'})</span>` :
           corr.status === 'REJECTED' ?
           '<span class="semantic-status-badge b-closed">✕ RESPINS</span>' :
+          isConflict ?
+          '<span class="semantic-status-badge" style="background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;">⚡ CONFLICT RAPORTAT</span>' :
           '<span class="semantic-status-badge b-duty"><span class="status-dot-mini pulse-dot"></span> ÎN AȘTEPTARE</span>';
 
         card.innerHTML = `
@@ -5693,14 +5811,14 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
           </div>
 
           <div class="corr-actions-row">
-            <button class="btn-vote-sim" onclick="voteConfirmation('${corr.id}')" ${corr.status !== 'PENDING' ? 'disabled style="opacity: 0.5;"' : ''}>
+            <button class="btn-vote-sim" onclick="voteConfirmation('${corr.id}')" ${corr.status !== 'PENDING' && !isConflict ? 'disabled style="opacity: 0.5;"' : ''}>
               <span>➕</span> <span>Votează Confirmare (+1)</span>
             </button>
             <div class="admin-decide-btn-group">
-              <button class="btn-admin-approve" onclick="adminDecideCorrection('${corr.id}', 'APPROVED')">
-                ✅ Aprobă Manual
+              <button class="btn-admin-approve" onclick="adminDecideCorrection('${corr.id}', 'APPROVED')" title="Aprobă sesizarea sau soluționează conflictul">
+                ${isConflict ? '⚖️ Soluționează & Aprobă' : '✅ Aprobă Manual'}
               </button>
-              <button class="btn-admin-reject" onclick="adminDecideCorrection('${corr.id}', 'REJECTED')">
+              <button class="btn-admin-reject" onclick="adminDecideCorrection('${corr.id}', 'REJECTED')" title="Respinge sesizarea">
                 ❌ Respinge
               </button>
             </div>
@@ -5752,14 +5870,17 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
       const corr = corrections.find(c => c.id === corrId);
       if (!corr) return;
       corr.status = decision;
-      showToast(`🛡️ Administratorul a setat statusul: ${decision === 'APPROVED' ? 'APROBAT DEFINITIV' : 'RESPINS'}`);
+      const roleTitle = appState.currentUser.role === 'MODERATOR' ? 'Moderatorul' : 'Administratorul';
+      showToast(`⚖️ ${roleTitle} a setat statusul: ${decision === 'APPROVED' ? 'APROBAT / SOLUȚIONAT' : 'RESPINS'}`);
       renderAdminModerationQueue();
     }
 
     function updateAdminPendingBadge() {
-      const pending = corrections.filter(c => c.status === 'PENDING').length;
-      document.getElementById('hdrAdminPendingCount').textContent = pending;
-      document.getElementById('adminPendingBadge').textContent = pending;
+      const pending = corrections.filter(c => c.status === 'PENDING' || c.status === 'CONFLICT').length;
+      const b1 = document.getElementById('hdrAdminPendingCount');
+      const b2 = document.getElementById('adminPendingBadge');
+      if (b1) b1.textContent = pending;
+      if (b2) b2.textContent = pending;
     }
 
     /* CSV Import Module */
@@ -5932,16 +6053,72 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
       }
     }
 
-    /* Role Separation & Auth Management (D-003 & Q-007) */
+    /* Role Separation & Auth Management (D-003: 4-Role Hierarchy) */
     function updateUserRoleUI() {
       const role = appState.currentUser.role;
       const adminNav = document.getElementById('hdrNavDS03');
       const authControl = document.getElementById('hdrAuthControl');
       const sessionText = document.getElementById('authSessionStatusText');
+      const adminHeaderIcon = document.getElementById('adminHeaderIcon');
+      const adminHeaderTitle = document.getElementById('adminHeaderTitle');
+      const adminHeaderDesc = document.getElementById('adminHeaderDesc');
+      const btnAdminTabFacilities = document.getElementById('btnAdminTabFacilities');
+      const btnAdminTabCsv = document.getElementById('btnAdminTabCsv');
 
-      // Admin tab visibility in header (ONLY visible when role === 'ADMIN')
+      const pendingCount = corrections.filter(c => c.status === 'PENDING' || c.status === 'CONFLICT').length;
+
+      // Navigation link visibility in header:
+      // Show "Panou Moderare" for MODERATOR, "Panou Admin" for ADMIN, hidden for USER/ANON
       if (adminNav) {
-        adminNav.style.display = role === 'ADMIN' ? 'inline-flex' : 'none';
+        if (role === 'MODERATOR') {
+          adminNav.style.display = 'inline-flex';
+          adminNav.innerHTML = `<span>⚖️ Panou Moderare</span> <span class="nav-badge-count admin-badge" id="hdrAdminPendingCount">${pendingCount}</span>`;
+          adminNav.title = "Deschide Coada de Moderare & Soluționare Conflicte (D-003)";
+        } else if (role === 'ADMIN') {
+          adminNav.style.display = 'inline-flex';
+          adminNav.innerHTML = `<span>🛡️ Panou Admin</span> <span class="nav-badge-count admin-badge" id="hdrAdminPendingCount">${pendingCount}</span>`;
+          adminNav.title = "Deschide Panoul de Administrare complet (D-003)";
+        } else {
+          adminNav.style.display = 'none';
+        }
+      }
+
+      // Configure DS-03 subtabs and headers depending on role (D-003)
+      if (adminHeaderTitle && adminHeaderDesc && adminHeaderIcon) {
+        if (role === 'MODERATOR') {
+          adminHeaderIcon.textContent = '⚖️';
+          adminHeaderTitle.textContent = 'Panou de Moderare Corecții & Conflicte';
+          adminHeaderDesc.textContent = 'Revizuiește, aprobă/respinge sesizările comunitare de orar și soluționează rapoartele conflictuale (D-001 & D-003)';
+        } else {
+          adminHeaderIcon.textContent = '🛡️';
+          adminHeaderTitle.textContent = 'Panou Unificat de Administrare & Dispecerat';
+          adminHeaderDesc.textContent = 'Gestionează moderarea sesizărilor comunitare (D-001), gestiunea facilităților și importul rotațiilor CSV de gardă (C-004)';
+        }
+      }
+
+      // Hiding / disabling Admin-only tabs when logged in as MODERATOR
+      if (btnAdminTabFacilities) {
+        if (role === 'ADMIN') {
+          btnAdminTabFacilities.style.display = 'inline-flex';
+          btnAdminTabFacilities.disabled = false;
+        } else {
+          btnAdminTabFacilities.style.display = 'none';
+          btnAdminTabFacilities.disabled = true;
+        }
+      }
+      if (btnAdminTabCsv) {
+        if (role === 'ADMIN') {
+          btnAdminTabCsv.style.display = 'inline-flex';
+          btnAdminTabCsv.disabled = false;
+        } else {
+          btnAdminTabCsv.style.display = 'none';
+          btnAdminTabCsv.disabled = true;
+        }
+      }
+
+      // If MODERATOR is viewing DS-03, lock strictly to 'moderation' tab
+      if (role === 'MODERATOR' && appState.adminSubtab !== 'moderation') {
+        switchAdminSubtab('moderation');
       }
 
       // Far right account/auth control in top header
@@ -5959,6 +6136,13 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
               <button class="auth-logout-btn" onclick="logoutUser()" title="Deconectare">Deconectare</button>
             </div>
           `;
+        } else if (role === 'MODERATOR') {
+          authControl.innerHTML = `
+            <div class="user-session-cluster">
+              <span class="user-active-badge badge-moderator">⚖️ ${appState.currentUser.name} · MODERATOR</span>
+              <button class="auth-logout-btn" onclick="logoutUser()" title="Deconectare">Deconectare</button>
+            </div>
+          `;
         } else {
           authControl.innerHTML = `
             <div class="user-session-cluster">
@@ -5972,19 +6156,22 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
       // Toolbar role switcher buttons highlight
       const btnAnon = document.getElementById('btnRoleAnon');
       const btnUser = document.getElementById('btnRoleUser');
+      const btnMod = document.getElementById('btnRoleModerator');
       const btnAdmin = document.getElementById('btnRoleAdmin');
       if (btnAnon) btnAnon.classList.toggle('active', role === 'ANON');
       if (btnUser) btnUser.classList.toggle('active', role === 'USER');
+      if (btnMod) btnMod.classList.toggle('active', role === 'MODERATOR');
       if (btnAdmin) btnAdmin.classList.toggle('active', role === 'ADMIN');
 
       if (sessionText) {
-        if (role === 'ADMIN') sessionText.textContent = `Conectat cu drepturi depline: ADMIN (${appState.currentUser.name})`;
+        if (role === 'ADMIN') sessionText.textContent = `Conectat cu drepturi depline: ADMIN (${appState.currentUser.name} • Moderare, Unități, Import CSV)`;
+        else if (role === 'MODERATOR') sessionText.textContent = `Conectat ca MODERATOR (${appState.currentUser.name} • Coadă Moderare & Soluționare Conflicte)`;
         else if (role === 'USER') sessionText.textContent = `Conectat ca USER (${appState.currentUser.name} • ${appState.currentUser.email})`;
         else sessionText.textContent = 'Mod Vizitator Anonim (Căutare liberă activă)';
       }
 
-      // If user logs out while on DS-03, redirect to DS-01
-      if (role !== 'ADMIN' && appState.currentScreen === 'ds03') {
+      // If user logs out or switches to USER/ANON while on DS-03, redirect to DS-01
+      if (role !== 'ADMIN' && role !== 'MODERATOR' && appState.currentScreen === 'ds03') {
         switchScreen('ds01');
       }
     }
@@ -6005,6 +6192,18 @@ FAC-PHARM-020,Farmacia Ecofarmacia Mediaș,PHARMACY,Mediaș,2026-11-01,2026-11-3
           }
         }
         showToast('👤 Conectat ca USER (Andreea). Salvare favorite și raportări deblocate (D-003)!');
+      } else if (role === 'MODERATOR') {
+        appState.currentUser = {
+          role: 'MODERATOR',
+          name: 'Tudor',
+          email: 'tudor.moderator@sibiu-urgente.ro'
+        };
+        if (!pending || pending.reason !== 'favorite') {
+          if (appState.favorites.length === 0) {
+            appState.favorites = ['FAC-PHARM-002', 'FAC-VET-001'];
+          }
+        }
+        showToast('⚖️ Conectat ca MODERATOR (Tudor). Link-ul „Panou Moderare” este acum vizibil!');
       } else if (role === 'ADMIN') {
         appState.currentUser = {
           role: 'ADMIN',

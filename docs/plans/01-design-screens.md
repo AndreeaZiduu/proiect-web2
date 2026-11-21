@@ -45,6 +45,7 @@
 | 3 | Număr de voturi adaptiv (4 voturi pauză scurtă vs 8 voturi orar general) | Test automat pe formularul de sesizare | Automat |
 | 4 | Apel telefonic direct la apăsarea butonului mare de apel | Test interacțiune buton apel | Automat |
 | 5 | Protecție cont: vizitatorii pot doar căuta, utilizatorii pot salva favorite | Test flux autentificare și favorite | Automat |
+| 6 | Ierarhie RBAC: MODERATOR primește 200 OK la moderare rapoarte/conflicte și 403 Forbidden la import CSV sau ștergere unități | Teste de integrare RBAC pe rutele de backend și interfață | Automat |
 
 ---
 
@@ -72,13 +73,13 @@
 * **Scop:** Salvarea farmaciilor utile pentru noapte și intrarea în cont.
 * **Pentru utilizatori conectați:** Afișează direct lista unităților salvate cu starea lor actualizată pe loc.
 * **Pentru vizitatori:** Mesaj prietenos care explică de ce este util contul și buton rapid de conectare.
-* **Conectare ușoară:** Butoane demonstrative de intrare cu 1-click (`USER` sau `ADMIN`).
+* **Conectare ușoară:** Butoane demonstrative de intrare cu 1-click (`USER`, `MODERATOR` sau `ADMIN`).
 
-### DS-05: Panou Administrator (`/admin`)
-* **Scop:** Verificarea sesizărilor primite și actualizarea programului oficial de gardă.
-* **Coadă de moderare:** Administratorul vede sesizările votate de comunitate și le aprobă sau respinge.
-* **Încărcare CSV:** Zonă simplă unde se trage fișierul lunar cu gărzile farmaciilor, cu previzualizare tabelară.
-* **Acces restrâns:** Vizibil doar pentru contul de administrator.
+### DS-05: Panou Moderare & Administrare (`/admin`)
+* **Scop:** Moderarea sesizărilor primite și actualizarea programului oficial de gardă conform ierarhiei RBAC (`D-003`).
+* **Rol MODERATOR:** Vede link-ul de navigare „Panou Moderare” și exclusiv coada de moderare a corecțiilor de orar și soluționarea rapoartelor conflictuale (`CONFLICT`); taburile de gestiune unități și import CSV sunt ascunse/dezactivate (`403 Forbidden`).
+* **Rol ADMIN:** Vede link-ul „Panou Admin” și are acces nerestricționat la toate modulele: coada de moderare & conflicte, gestiunea completă a facilităților (adăugare, editare, ștergere) și importul fișierului CSV cu rotațiile de gardă.
+* **Acces restrâns:** Vizibil doar pentru conturile autentificate cu rol de `MODERATOR` sau `ADMIN`.
 
 ---
 
@@ -105,8 +106,8 @@
 |---|---|---|---|
 | `D-001` | Auto-aprobare la 8 voturi (adaptat la 4 pentru pauze scurte) | Stabilește pragul de vot pe ecranul `DS-02` și `DS-05` | confirmat |
 | `D-002` | Fără comerț, plăți sau telemedicină | Păstrează aplicația simplă, strict de informare | confirmat |
-| `D-003` | Căutare liberă pentru oricine, cont cerut doar la favorite | Permite oricui să caute rapid noaptea fără cont | confirmat |
+| `D-003` | Ierarhie 4 roluri (ANON, USER, MODERATOR, ADMIN) și RBAC | Separă accesul la căutare, favorite, moderare și import | confirmat |
 | `C-003` | Format sesizări de program din comunitate | Folosit la trimiterea și confirmarea sesizărilor | confirmat |
 | `C-004` | Format fișier CSV pentru gărzile lunare | Folosit la încărcarea rotațiilor în panoul admin | confirmat |
 | `Q-004` | Încărcare CSV prin panou admin securizat | Stabilește ecranul de import din `DS-05` | confirmat |
-| `Q-007` | Rol unic de administrator (comasat cu moderator) | Simplifică panoul de administrare `DS-05` | confirmat |
+| `Q-007` | 4 Roluri distincte conform fișei P10 și D-003 | Stabilește nivelurile de acces în interfața DS-05 | confirmat |

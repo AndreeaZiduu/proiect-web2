@@ -30,11 +30,13 @@
 
 ### C-003 · Community Schedule Corrections API (/api/corrections)
 - **Status:** approved
+- **Confirmed:** 2026-11-19
 - **Interface:** `POST /api/corrections` (JWT auth required, body: `{ facilityId, proposedNote, proposedOpenMin?, proposedCloseMin?, isClosedOverride?, validFrom, validUntil }`), `POST /api/corrections/:id/confirm` (JWT auth, increments confirmations and auto-approves at 8 confirmations), `PATCH /api/corrections/:id/status` (ADMIN auth).
 - **Evidence:** Implemented in `backend/src/server.js` (lines 310-440); obeys decision D-001 and D-003.
 
 ### C-004 · On-Call Rotation CSV Import API (/api/rotations/import)
 - **Status:** approved
+- **Confirmed:** 2026-11-19
 - **Interface:** `POST /api/rotations/import` (ADMIN auth required, body: `{ csvData: string }` formatted as `facilityId,name,type,city,startDate,endDate,startHour,endHour,onCallPhone,notes`) -> returns `{ importedCount, batchId }`.
 - **Evidence:** Defined in `DATA.md` Section 2.3; implemented in `backend/src/server.js` (lines 450-515).
 

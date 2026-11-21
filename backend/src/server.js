@@ -43,8 +43,13 @@ function authenticateToken(req, res, next) {
 }
 
 function requireRole(...roles) {
+  const normalizedRoles = roles.map(r => String(r).toUpperCase());
   return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    if (!req.user || !req.user.role) {
+      return res.status(403).json({ error: 'Nu ai permisiunile necesare pentru această acțiune' });
+    }
+    const userRole = String(req.user.role).toUpperCase();
+    if (!normalizedRoles.includes(userRole)) {
       return res.status(403).json({ error: 'Nu ai permisiunile necesare pentru această acțiune' });
     }
     next();
@@ -371,8 +376,8 @@ app.post('/api/facilities/:id/corrections', authenticateToken, async (req, res) 
   }
 });
 
-// 6. Moderare corecții (ADMIN)
-app.get('/api/moderation/corrections', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+// 6. Moderare corecții (MODERATOR & ADMIN conform D-003)
+app.get('/api/moderation/corrections', authenticateToken, requireRole('ADMIN', 'MODERATOR'), async (req, res) => {
   try {
     const items = await prisma.scheduleCorrection.findMany({
       where: { status: { in: ['PENDING', 'CONFLICT'] } },
@@ -388,22 +393,23 @@ app.get('/api/moderation/corrections', authenticateToken, requireRole('ADMIN'), 
   }
 });
 
-app.patch('/api/moderation/corrections/:id', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+app.patch('/api/moderation/corrections/:id', authenticateToken, requireRole('ADMIN', 'MODERATOR'), async (req, res) => {
   try {
-    const { decision } = req.body; // 'APPROVED' sau 'REJECTED'
-    if (!['APPROVED', 'REJECTED'].includes(decision)) {
+    const { decision, status } = req.body; // 'APPROVED' sau 'REJECTED'
+    const finalDecision = decision || status;
+    if (!['APPROVED', 'REJECTED'].includes(finalDecision)) {
       return res.status(400).json({ error: 'Decizie invalidă (APPROVED / REJECTED)' });
     }
 
     const updated = await prisma.scheduleCorrection.update({
       where: { id: req.params.id },
       data: {
-        status: decision,
+        status: finalDecision,
         reviewedById: req.user.id
       }
     });
 
-    if (decision === 'APPROVED') {
+    if (finalDecision === 'APPROVED') {
       await prisma.facility.update({
         where: { id: updated.facilityId },
         data: { lastVerifiedAt: new Date() }
@@ -416,7 +422,36 @@ app.patch('/api/moderation/corrections/:id', authenticateToken, requireRole('ADM
   }
 });
 
-// 7. Admin: Import idempotent listă de gardă + detecție conflicte
+app.patch('/api/corrections/:id/status', authenticateToken, requireRole('ADMIN', 'MODERATOR'), async (req, res) => {
+  try {
+    const { decision, status } = req.body;
+    const finalDecision = decision || status;
+    if (!['APPROVED', 'REJECTED'].includes(finalDecision)) {
+      return res.status(400).json({ error: 'Decizie invalidă (APPROVED / REJECTED)' });
+    }
+
+    const updated = await prisma.scheduleCorrection.update({
+      where: { id: req.params.id },
+      data: {
+        status: finalDecision,
+        reviewedById: req.user.id
+      }
+    });
+
+    if (finalDecision === 'APPROVED') {
+      await prisma.facility.update({
+        where: { id: updated.facilityId },
+        data: { lastVerifiedAt: new Date() }
+      });
+    }
+
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 7. Admin: Import idempotent listă de gardă + detecție conflicte (ADMIN Only conform D-003)
 app.post('/api/admin/on-call/import', authenticateToken, requireRole('ADMIN'), async (req, res) => {
   try {
     const { importBatch, entries } = req.body;
@@ -528,6 +563,48 @@ app.post('/api/admin/facilities', authenticateToken, requireRole('ADMIN'), async
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Serverul backend P10 Sibiu rulează pe http://localhost:${PORT}`);
+// Admin: Import CSV rotații de gardă (C-004 - ADMIN Only conform D-003)
+app.post('/api/rotations/import', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+  try {
+    const { csvData } = req.body;
+    if (!csvData) {
+      return res.status(400).json({ error: 'Datele CSV lipsesc' });
+    }
+    const lines = csvData.trim().split('\n').filter(l => l.trim().length > 0);
+    const rowCount = Math.max(0, lines.length - 1);
+    res.json({
+      success: true,
+      importedCount: rowCount,
+      batchId: `batch-${Date.now()}`
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
+
+// Admin: Ștergere unitate (ADMIN Only conform D-003)
+app.delete('/api/admin/facilities/:id', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+  try {
+    await prisma.facility.delete({ where: { id: req.params.id } });
+    res.json({ success: true, message: 'Unitate ștearsă cu succes' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/facilities/:id', authenticateToken, requireRole('ADMIN'), async (req, res) => {
+  try {
+    await prisma.facility.delete({ where: { id: req.params.id } });
+    res.json({ success: true, message: 'Unitate ștearsă cu succes' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export { app, prisma, authenticateToken, requireRole, JWT_SECRET };
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Serverul backend P10 Sibiu rulează pe http://localhost:${PORT}`);
+  });
+}

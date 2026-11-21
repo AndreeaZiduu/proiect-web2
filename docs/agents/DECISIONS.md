@@ -9,7 +9,7 @@
 ## Index
 - D-001 · 8 Community confirmations for automatic temporary correction approval
 - D-002 · Strict boundary: commerce, payments and telemedicine are out of scope
-- D-003 · Authentication requirement for favorites and crowd reporting
+- D-003 · 4-Role hierarchy (ANON, USER, MODERATOR, ADMIN) and server-side RBAC rules
 - D-004 · Timezone calculation strictly anchored to Europe/Bucharest
 - D-005 · Haversine distance formula with client-side coordinates for sorting
 - D-006 · Modern Healthcare Minimalist design tokens and semantic status palette
@@ -18,6 +18,7 @@
 
 ## D-001 · 8 Community confirmations for automatic temporary correction approval
 - **Status:** approved
+- **Confirmed:** 2026-11-19
 - **Rule:** Corecțiile de orar raportate de comunitate necesită 8 confirmări de la utilizatori autentificați activi pentru a trece automat în status temporar aprobat (`APPROVED`) până la verificarea și decizia finală a unui moderator sau administrator.
 - **Why:** Previne raportările false sau vandalismul menținând în același timp viteza de reacție în timp util dacă o farmacie s-a închis neașteptat.
 - **Evidence:** Decis în interviul de cerințe P10 (A3); gestionat în `backend/src/server.js` la `/api/corrections/:id/confirm`.
@@ -26,17 +27,24 @@
 
 ## D-002 · Strict boundary: commerce, payments and telemedicine are out of scope
 - **Status:** approved
+- **Confirmed:** 2026-11-19
 - **Rule:** Comanda online de medicamente, plățile electronice, coșul de cumpărături, telemedicina și chat-ul direct cu personalul medical sunt strict out of scope pentru P10; aplicația este dedicată exclusiv informării de urgență și triajului orarului în timp real.
 - **Why:** Delimitarea clară a complexității proiectului academic și alinierea la realitatea operațională (fără integrări bancare și de stocuri farmaceutice).
 - **Evidence:** Decis în interviul de cerințe P10 (răspuns la Întrebarea 1).
 
 ---
 
-## D-003 · Authentication requirement for favorites and crowd reporting
+## D-003 · 4-Role hierarchy (ANON, USER, MODERATOR, ADMIN) and server-side RBAC rules
 - **Status:** approved
-- **Rule:** Căutarea, filtrarea, vizualizarea pe hartă și apelul direct sunt accesibile liber fără cont; salvarea unităților favorite și trimiterea sau confirmarea modificărilor de program necesită cont autentificat (`USER`).
-- **Why:** Asigură acces instant în caz de urgență nocturnă oricărui cetățean fără fricțiune, protejând în același timp baza de date împotriva spam-ului.
-- **Evidence:** Decis în interviul de cerințe P10 (răspuns la Întrebarea 2); implementat prin middleware-ul `authenticateToken` din `backend/src/server.js`.
+- **Confirmed:** 2026-11-21
+- **Rule:** Aplicația implementează o ierarhie strictă cu 4 roluri și control al accesului bazat pe roluri (RBAC) pe server și client:
+  1. `ANON` (vizitator neautentificat): acces liber fără cont la căutare, filtrare, vizualizare pe hartă, calcul distanță Haversine și apel direct către unități.
+  2. `USER` (utilizator autentificat): include toate permisiunile `ANON` + salvare/ștergere unități la favorite și trimitere sau confirmare (vot) a corecțiilor de orar din comunitate.
+  3. `MODERATOR`: include toate permisiunile `USER` + acces la coada de moderare a sesizărilor comunitare de orar (`DS-05` / `ScheduleCorrection`), aprobare (`APPROVED`), respingere (`REJECTED`) și rezolvare a rapoartelor conflictuale (`CONFLICT`). Rutele administrative de import CSV și gestiune facilități sunt restricționate (`403 Forbidden`).
+  4. `ADMIN`: include toate permisiunile `MODERATOR` + drepturi depline de administrare: creare, editare și ștergere unități medicale/veterinare (`Facility`) și importul fișierelor CSV lunare pentru rotațiile de gardă (`OnCallRotation`).
+  La nivel de backend, middleware-ul `authenticateToken` validează JWT, iar middleware-urile `requireRole(['MODERATOR', 'ADMIN'])` și `requireRole('ADMIN')` impun restricțiile pe rutele protejate.
+- **Why:** Respectă cerințele formale din fișa de catalog P10, asigurând acces nocturn fără piedici pentru cetățeni, implicarea comunității cu protecție anti-spam, delegarea moderării sesizărilor către moderatori și rezervarea modificărilor structurale (date facilități, import CSV) exclusiv administratorilor.
+- **Evidence:** Definit în fișa de catalog P10 și interviul de cerințe; implementat în middleware-ul RBAC din `backend/src/server.js`, schema Prisma (`Role` enum) și demonstrat în prototipul `docs/design/mocks/full-site-prototype.html`.
 
 ---
 

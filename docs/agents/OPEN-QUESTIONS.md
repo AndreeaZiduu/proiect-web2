@@ -12,7 +12,7 @@
 - Q-001 · What is this project's purpose and intended stack? · _answered_
 - Q-002 · How should user location be determined for distance calculation? · _answered_
 - Q-003 · How to distinguish 24/7 physical emergency vets from on-call vet clinics in the UI? · _answered_
-- Q-004 · How should the monthly on-call rotation CSV be imported?
+- Q-004 · How should the monthly on-call rotation CSV be imported? · _answered_
 - Q-005 · Should the application support real-time medicine stock tracking or search? · _answered_
 - Q-006 · Should the application implement turn-by-turn navigation or rely on external map links? · _answered_
 - Q-007 · Should the management system distinguish between MODERATOR and ADMIN roles or collapse into a single ADMIN role? · _answered_
@@ -47,10 +47,11 @@
 ---
 
 ## Q-004 · How should the monthly on-call rotation CSV be imported?
-- **Status:** open
+- **Status:** answered
+- **Confirmed:** 2026-11-19
 - **Blocks:** On-call schedule management interface and admin tooling.
 - **Who answers:** Project owner
-- **Proposed answer:** Secure Admin/Moderator dashboard with CSV file upload, preview validation, and import confirmation.
+- **Answer:** Secure Admin/Moderator dashboard with CSV file upload (dropzone), column validation preview, and import confirmation to `POST /api/rotations/import` (C-004). (Answered: 2026-11-19)
 
 ---
 
@@ -72,9 +73,10 @@
 
 ## Q-007 · Should the management system distinguish between MODERATOR and ADMIN roles or collapse into a single ADMIN role?
 - **Status:** answered
+- **Confirmed:** 2026-11-21
 - **Blocks:** RBAC schema simplification, user management views, and route protection guards.
 - **Who answers:** Project owner
-- **Answer:** NU păstrăm două roluri separate — comasăm MODERATOR și ADMIN într-un singur rol ADMIN (alături de USER autentificat și vizitator neautentificat) pentru simplitate arhitecturală. ADMIN gestionează atât moderarea corecțiilor de program, cât și unitățile și importul CSV de rotații. (Answered: 2026-11-18)
+- **Answer:** Se disting cele 4 roluri cerute de fișa de catalog P10 conform deciziei D-003: `ANON` (vizitator liber), `USER` (favorite și raportări comunitare), `MODERATOR` (moderare/aprobare sesizări orar și conflicte) și `ADMIN` (gestiune facilități și import CSV rotații gardă). (Answered: 2026-11-21)
 
 ---
 

@@ -704,4 +704,57 @@ Fără nicio dată pre-completată fictiv, și consemnarea acțiunii în `AI_LOG
 *Notă Sesiunea 19:* Planul `docs/plans/01-design-screens.md` a fost simplificat direct în limba română (Size: M, căi relative, puncte cheie per ecran pentru laborator) păstrând statusul APPROVED.
 Integritatea a fost re-validată prin `ledger-lint`.
 
+---
+
+# Sesiunea 20 — Actualizare Ierarhie cu 4 Roluri (ANON, USER, MODERATOR, ADMIN), RBAC și Integrare Prototip / Backend (2026-11-21)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Actualizarea deciziei D-003 în `docs/agents/DECISIONS.md`** (cu `Status: approved`) pentru a defini ierarhia completă cu 4 roluri cerută de fișa de catalog P10:
+   - `ANON` (vizitator): căutare, filtrare, hartă, apel direct libere fără cont.
+   - `USER`: permisiuni `ANON` + favorite și trimitere/votare sesizări de orar din comunitate.
+   - `MODERATOR`: permisiuni `USER` + revizuire/aprobare/respingere sesizări și soluționare rapoarte conflictuale (`CONFLICT`).
+   - `ADMIN`: drepturi depline (moderare, gestiune facilități, import CSV lunar pentru rotațiile de gardă).
+   - Validare cu `python3 docs/agents/tools/ledger-lint.py --fix` și `python3 docs/agents/tools/ledger-lint.py`.
+2. **Actualizarea `docs/design/registry.yaml` și a prototipului `docs/design/mocks/full-site-prototype.html`**:
+   - Adăugarea unui buton 1-click demo login pentru `MODERATOR` (ex. „Intră ca MODERATOR”) în modalul de autentificare, alături de `USER` și `ADMIN`.
+   - Când este conectat ca `MODERATOR`, afișarea link-ului de navigare `Panou Moderare` și deschiderea panoului afișând EXCLUSIV Coada de Moderare a Sesizărilor & Conflictelor (ascunzând/dezactivând taburile de Gestiune Facilități și Import CSV).
+   - Păstrarea accesului complet la toate taburile când utilizatorul este conectat ca `ADMIN`.
+3. **Actualizarea planurilor `docs/plans/01-design-screens.md` și `docs/plans/02-db-schema.md`** (concise și APPROVED):
+   - Definirea explicită a coloanei `users.role` și a middleware-ului RBAC pentru `'user'`, `'moderator'`, `'admin'`.
+   - Teste automate de integrare ce verifică: `MODERATOR` primește `200 OK` la moderare rapoarte și `403 Forbidden` la import CSV sau ștergere facilități; `ADMIN` are acces deplin (`200 OK`); `USER` primește `403 Forbidden`; `ANON` primește `401 Unauthorized`.
+4. **Consemnarea detaliată a sesiunii în `AI_LOG.md`**.
+
+## 2. Ce S-a Livrat
+* **`docs/agents/DECISIONS.md`**:
+  - `D-003` actualizat la titlul `4-Role hierarchy (ANON, USER, MODERATOR, ADMIN) and server-side RBAC rules`, cu status `approved`, definind matricea de permisiuni pe cele 4 niveluri și ancorarea în middleware-ul Express.
+* **`docs/agents/OPEN-QUESTIONS.md`**:
+  - `Q-007` actualizat conform deciziei `D-003` și cerințelor fișei P10 (distincție între MODERATOR și ADMIN).
+* **`docs/design/registry.yaml`**:
+  - Ecranele `DS-03`, `DS-04` și specificația prototipului `PROTO-FULL` actualizate pentru a documenta rolul `MODERATOR`, navigarea condiționată pe roluri și acțiunile 1-click.
+* **`docs/design/mocks/full-site-prototype.html`**:
+  - Adăugată insigna CSS `.user-active-badge.badge-moderator` (albastru azur/ceresc) pentru temele Light și Dark.
+  - Adăugat buton 1-click demo login pentru `MODERATOR` în modalul de autentificare (`authModal`), în prompt-ul ecranului de favorite (`favsAnonBanner`) și în bara demo de simulare a rolurilor (`btnRoleModerator`).
+  - Antetul randează dinamic `Panou Moderare` (cu iconiță `⚖️` și contor badge) pentru `MODERATOR`, respectiv `Panou Admin` (`🛡️`) pentru `ADMIN`.
+  - În ecranul de administrare/moderare (`view-ds03`): titlul se adaptează automat; pentru `MODERATOR`, taburile de Gestiune Facilități (`btnAdminTabFacilities`) și Import CSV (`btnAdminTabCsv`) sunt ascunse și blocate, fiind afișată strict Coada de Moderare; coada include sesizări conflictuale (`CONFLICT`) cu opțiune de soluționare.
+* **`docs/plans/01-design-screens.md`**:
+  - Adăugat testul de integrare 6 pentru validarea ierarhiei RBAC; actualizate descrierile ecranelor `DS-04`, `DS-05` și tabelul Knowledge used.
+* **`docs/plans/02-db-schema.md`**:
+  - Creat documentul complet și concis cu status **`APPROVED`**, definind schema Prisma (`enum Role { USER, MODERATOR, ADMIN }`), matricea tabelară a rutelor API pe cele 4 roluri și specificațiile testelor de integrare.
+* **`backend/prisma/schema.prisma`**:
+  - Extins enum-ul `Role` cu valoarea `MODERATOR`.
+* **`backend/src/server.js`**:
+  - Rafinat middleware-ul `requireRole` pentru potrivire insensibilă la majuscule/minuscule.
+  - Rutele de moderare (`/api/moderation/corrections`, `/api/moderation/corrections/:id`, `/api/corrections/:id/status`) permit accesul rolurilor `ADMIN` și `MODERATOR`.
+  - Rutele de import CSV (`/api/admin/on-call/import`, `/api/rotations/import`) și ștergere facilități (`/api/admin/facilities/:id`, `/api/facilities/:id`) sunt restricționate strict la rolul `ADMIN`.
+  - Exportate componentele serverului și protejat `app.listen` pentru rulare în mediul de testare.
+* **`backend/tests/rbac.test.js`**:
+  - Suită dedicată de 13 teste de integrare cu Supertest și Vitest, acoperind comportamentul `MODERATOR` (`200 OK` moderare, `403 Forbidden` import/ștergere), `ADMIN` (acces complet `200 OK`), `USER` (`403 Forbidden`) și `ANON` (`401 Unauthorized`).
+
+## 3. Verificări
+* **Teste Backend:** `npm test --prefix backend` — **32 teste trecute din 32** (19 teste status orar + 13 teste de integrare RBAC).
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Sintaxă Prototip:** Compilat scriptul JS din `full-site-prototype.html` cu motorul V8/Node.js — **valid 100% fără erori**.
+* **Control Versiuni:** `git status` — modificările respectă strict regulile din `AGENTS.md`.
+
+
 
