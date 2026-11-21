@@ -853,3 +853,42 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Teste Backend:** `npm test --prefix backend` — **45 teste trecute din 45 (100% succes)** pe toate cele 4 fișiere de test (`status.test.js`, `rbac.test.js`, `csv-import.test.js`, `geocode.test.js`).
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
 * **Protecție Frontend:** Niciun fișier din `frontend/` nu a fost atins.
+
+
+# Sesiunea 24 — Frontend Foundation + Ecranul Principal DS-01 cu Rutare OSRM pe Hartă (2026-11-21)
+
+## 1. Ce a Cerut Utilizatorul
+1. **Scope strict**: Doar Frontend Foundation + Ecranul Principal (`DS-01`) cu Rutare pe Hartă prin OSRM (fără modificări pe `backend/`).
+2. Configurare `frontend/src/index.css` și `frontend/index.html` folosind tokens și tipografia exacte din `docs/design/DESIGN.md` și `docs/design/mocks/full-site-prototype.html`.
+3. Configurare rutare curată pe client (`react-router-dom`) și `AuthContext` care suportă cele 4 roluri (`ANON`, `USER`, `MODERATOR`, `ADMIN`) cu comutare demo rapidă 1-click pentru testare.
+4. Construirea barei comune de navigare/header (adaptabilă dinamic per rol) și a ecranului principal `DS-01`:
+   - Layout split-screen 42/58 desktop + buton comutare mobil Listă/Hartă.
+   - Filtre pe domenii (`Toate`, `Farmacii 💊`, `Vet 🐾`) și status (`Deschis Acum`, `De Gardă` cu pulse dot).
+   - Ordonare după distanța Haversine față de Piața Mare Sibiu (`45.7983, 24.1503`).
+   - Badge-uri live de status din `GET /api/facilities` (5 stări: `ON_DUTY`, `OPEN`, `CLOSING_SOON`, `CLOSED`, `UNKNOWN`).
+   - Hartă interactivă Leaflet cu pini personalizați și tile-uri CartoDB (Voyager / Dark Matter).
+   - Rutare stradală integrată prin OSRM (timp estimat în minute, distanță pe străzi în km) + buton de rezervă extern Google Maps / Waze.
+5. Verificarea compilării curate a frontend-ului (`npm run build` în `frontend/`) și actualizarea `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **Tipografie & Tokens Vizuale (`DESIGN.md` / `Originle Warm Editorial`)**:
+  - `frontend/index.html`: integrat fontul `Plus Jakarta Sans` și CSS Leaflet.
+  - `frontend/src/index.css`: configurat sistemul complet de tokens calde (`#FAF7F4` Light / `#141210` Dark), carduri rotunjite `24px`, umbre difuze, diferențiere cromatică de domeniu (Herbal Teal `#0E7465` pentru `PHARMACY` și Royal Indigo `#5548A8` pentru `EMERGENCY_VET`), pulse dot teracotă pentru `ON_DUTY` și layout split 42/58 (`.explorer-grid`).
+* **Rutare Client & Autentificare RBAC**:
+  - `frontend/src/main.jsx`: configurat `BrowserRouter` din `react-router-dom`.
+  - `frontend/src/context/AuthContext.jsx`: context reactiv pentru cele 4 roluri (`ANON`, `USER`, `MODERATOR`, `ADMIN`) cu funcția `switchRole` 1-click pentru testare rapidă offline/online.
+  - `frontend/src/components/common/Header.jsx`: antet unificat cu `NavLink`, comutator temă Light/Dark și afișare/ascundere dinamică a filei Admin (vizibilă exclusiv pentru `MODERATOR` și `ADMIN`, ascunsă pentru `ANON` și `USER` conform `D-003`).
+* **Ecranul Principal DS-01 & Rutare OSRM**:
+  - `frontend/src/components/ds01-explorer/ExplorerView.jsx`: integrare split-screen 42/58 pe desktop, comutator receptiv Listă/Hartă pe mobil, căutare text, filtru dropdown orașe Sibiu, cipuri de domeniu/status, ordonare ascendentă după distanța Haversine față de Piața Mare și stări de încărcare (skeleton, empty, error).
+  - `frontend/src/components/ds01-explorer/FacilityCard.jsx`: card unitate cu bară laterală colorată conform domeniului, badge de disponibilitate cu pulse dot, buton apel direct `tel:`, buton calcul traseu OSRM, link extern Google Maps și steluță favorit.
+  - `frontend/src/components/ds01-explorer/SibiuMap.jsx`: hartă Leaflet cu pini distincți farmacie/vet, trasare linie rutieră OSRM în teracotă (`#C25E34`), banner plutitor cu timp estimat și distanță reală, plus butoane directe de lansare în Google Maps și Waze.
+  - `frontend/src/services/api.js`: apeluri către `GET /api/facilities` și serviciul public OSRM driving.
+* **Panou Testare Rapidă**:
+  - `frontend/src/components/common/DemoDrawer.jsx` și `AuthModal.jsx`: permit comutarea instantanee cu 1-click între oricare dintre cele 4 roluri pentru evaluare imediată în browser.
+
+## 3. Verificări
+* **Protecție Backend:** Niciun fișier din `backend/` nu a fost modificat (`git diff backend/` este gol).
+* **Build Frontend:** `npm run build --prefix frontend` — compilat cu succes (0 erori) generând bundle-ul de producție în `frontend/dist/`.
+* **Linting Frontend:** `npm run lint --prefix frontend` (oxlint) — 0 erori.
+* **Teste Backend:** `npm test --prefix backend` — 45/45 teste trecute (100% succes).
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py --fix` — `✓ ledger ok`.

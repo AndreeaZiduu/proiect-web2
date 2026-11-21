@@ -1,122 +1,216 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { Header } from './components/common/Header';
+import { AuthModal } from './components/common/AuthModal';
+import { DemoDrawer } from './components/common/DemoDrawer';
+import { ExplorerView } from './components/ds01-explorer/ExplorerView';
+import { FacilityDetailModal } from './components/ds02-details/FacilityDetailModal';
+import { EmergencyGuideView } from './components/ds03-emergency/EmergencyGuideView';
+import { FavoritesView } from './components/ds04-favorites/FavoritesView';
+import { AdminPanel } from './components/ds05-admin/AdminPanel';
+import { SesizariView } from './components/ds06-sesizari/SesizariView';
+import { api } from './services/api';
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppContent() {
+  const { role, isModerator } = useAuth();
+
+  // Theme: 'light' | 'dark'
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  // State Preview Mode for Demo & Test inspection: 'normal' | 'loading' | 'empty' | 'error'
+  const [previewState, setPreviewState] = useState('normal');
+
+  // Modals & Drawers
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isDemoDrawerOpen, setIsDemoDrawerOpen] = useState(false);
+  const [detailFacility, setDetailFacility] = useState(null);
+
+  // Favorites state (local + remote)
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem('local_favorites');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [correctionsCount, setCorrectionsCount] = useState(2);
+  const [moderationCount, setModerationCount] = useState(0);
+
+  // Apply Theme to DOM
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  // Sync favorites & moderation count
+  const syncRemoteData = async () => {
+    try {
+      if (role !== 'ANON') {
+        const favs = await api.getFavorites();
+        setFavorites(favs);
+        localStorage.setItem('local_favorites', JSON.stringify(favs));
+      }
+      if (isModerator) {
+        const queue = await api.getModerationQueue();
+        setModerationCount(queue.length);
+        setCorrectionsCount(queue.length);
+      }
+    } catch {
+      // Offline fallback
+    }
+  };
+
+  useEffect(() => {
+    syncRemoteData();
+  }, [role, isModerator]);
+
+  // Register PWA Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator && import.meta.env.PROD) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((reg) => console.log('PWA Service Worker registered:', reg.scope))
+        .catch((err) => console.warn('Service Worker registration failed:', err));
+    }
+  }, []);
+
+  const handleToggleFavorite = async (facilityId) => {
+    const isAlready = favorites.some((f) => (f.facilityId || f.id) === facilityId);
+
+    if (role === 'ANON') {
+      let updated;
+      if (isAlready) {
+        updated = favorites.filter((f) => (f.facilityId || f.id) !== facilityId);
+      } else {
+        updated = [...favorites, { id: facilityId, facilityId, savedAt: new Date().toISOString() }];
+      }
+      setFavorites(updated);
+      localStorage.setItem('local_favorites', JSON.stringify(updated));
+      return;
+    }
+
+    try {
+      const res = await api.toggleFavorite(facilityId);
+      if (res.favorited) {
+        syncRemoteData();
+      } else {
+        const updated = favorites.filter((f) => (f.facilityId || f.id) !== facilityId);
+        setFavorites(updated);
+        localStorage.setItem('local_favorites', JSON.stringify(updated));
+      }
+    } catch {
+      // Fallback local toggle
+      const updated = isAlready
+        ? favorites.filter((f) => (f.facilityId || f.id) !== facilityId)
+        : [...favorites, { id: facilityId, facilityId }];
+      setFavorites(updated);
+      localStorage.setItem('local_favorites', JSON.stringify(updated));
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Top Header with React Router NavLinks */}
+      <Header
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenDemoDrawer={() => setIsDemoDrawerOpen(true)}
+        favoritesCount={favorites.length}
+        moderationCount={moderationCount}
+        correctionsCount={correctionsCount}
+      />
 
-      <div className="ticks"></div>
+      {/* Main Screen Content via React Router */}
+      <main className="app-main">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ExplorerView
+                theme={theme}
+                favorites={favorites}
+                onToggleFavorite={handleToggleFavorite}
+                onOpenDetails={(fac) => setDetailFacility(fac)}
+                previewState={previewState}
+              />
+            }
+          />
+          <Route path="/explorer" element={<Navigate to="/" replace />} />
+          <Route path="/urgenta" element={<EmergencyGuideView />} />
+          <Route
+            path="/sesizari"
+            element={<SesizariView onOpenAuthModal={() => setIsAuthModalOpen(true)} />}
+          />
+          <Route
+            path="/favorite"
+            element={
+              <FavoritesView
+                favorites={favorites}
+                onToggleFavorite={handleToggleFavorite}
+                onOpenDetails={(fac) => setDetailFacility(fac)}
+                onOpenAuthModal={() => setIsAuthModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/admin"
+            element={isModerator ? <AdminPanel /> : <Navigate to="/" replace />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {/* Floating Demo FAB Button */}
+      <button
+        type="button"
+        className="demo-fab"
+        onClick={() => setIsDemoDrawerOpen(true)}
+        title="Deschide panoul de testare și inspecție rapidă a rolurilor"
+      >
+        <span>⚙️ Testează Rolurile</span>
+      </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Demo Drawer */}
+      <DemoDrawer
+        isOpen={isDemoDrawerOpen}
+        onClose={() => setIsDemoDrawerOpen(false)}
+        previewState={previewState}
+        onSetPreviewState={setPreviewState}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* Facility Details Modal (DS-02) */}
+      <FacilityDetailModal
+        facilityId={detailFacility?.id}
+        isOpen={Boolean(detailFacility)}
+        onClose={() => setDetailFacility(null)}
+        isFavorited={favorites.some((f) => (f.facilityId || f.id) === detailFacility?.id)}
+        onToggleFavorite={handleToggleFavorite}
+        onDrawRoute={() => {
+          setDetailFacility(null);
+        }}
+      />
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
