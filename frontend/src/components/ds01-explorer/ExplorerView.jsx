@@ -32,6 +32,18 @@ export function ExplorerView({
 
   // Mobile layout switch (List vs Map)
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'map'
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Fetch facilities from backend
   const fetchFacilities = useCallback(async () => {
@@ -47,6 +59,9 @@ export function ExplorerView({
         lat: SIBIU_CENTER.lat,
         lng: SIBIU_CENTER.lng
       });
+      if (data.isOffline) {
+        setIsOffline(true);
+      }
       const rawList = data.facilities || [];
       // Sort by Haversine distance ascending from Piața Mare (D-005)
       const sorted = [...rawList].sort((a, b) => {
@@ -192,6 +207,31 @@ export function ExplorerView({
           🗺️ Hartă Interactivă
         </button>
       </div>
+
+      {/* Offline Notice Banner */}
+      {isOffline && (
+        <div
+          className="offline-notice-bar"
+          style={{
+            background: 'rgba(194, 94, 52, 0.12)',
+            border: '1px solid rgba(194, 94, 52, 0.35)',
+            color: 'var(--accent-terracotta)',
+            padding: '8px 16px',
+            borderRadius: 'var(--radius-lg)',
+            fontSize: 'var(--font-size-xs)',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '16px'
+          }}
+        >
+          <span>📡</span>
+          <span>
+            <strong>Mod offline — date salvate local:</strong> Conexiunea la internet sau server este indisponibilă. Se afișează ultimul catalog salvat pe dispozitiv; căutarea, datele unităților și apelurile directe rămân active.
+          </span>
+        </div>
+      )}
 
       {/* 2. Main Explorer Grid (Split-screen 40% list / 60% map) */}
       <div className="explorer-grid">

@@ -55,8 +55,8 @@ Catalogul conține **65 de unități reale** verificate și cartografiate prin c
 | **Backend** | Node.js (v20+), Express | API REST, middleware JWT, calcul Haversine, import rotații |
 | **ORM & Bază de Date** | Prisma ORM, MySQL 8.0 | Schemă relațională, migrări automate, indexare GPS și orare |
 | **Motor Status** | JavaScript (ESM) | Calcul status 5 surse în `Europe/Bucharest` via `Intl.DateTimeFormat` |
-| **Testare Automată** | Vitest (v5.1+) | 19 teste unitare pentru orare normale, gardă, nopți, sărbători |
-| **Frontend** | React 19, Vite, Leaflet | Interfață split-screen desktop, comutator mobil, componente reactive |
+| **Testare Automată** | Vitest (v5.1+) | 45 teste automate pentru orare, gardă, nopți, sărbători, RBAC pe 4 roluri, CSV și geocodare |
+| **Frontend** | React 19, Vite, Leaflet, PWA | Interfață split-screen desktop, comutator mobil, rutare OSRM pe hartă, Service Worker offline |
 | **Infrastructură Dev** | Docker, Docker Compose | Instanță MySQL 8.0 pe portul 3307 |
 
 ---
@@ -92,7 +92,7 @@ cd backend
 npm install
 npx prisma db push
 npm run seed       # Populează cele 65 de unități din sibiu-facilities.json
-npm test           # Rulează suita completă de 19 teste Vitest
+npm test           # Rulează suita completă de 45 teste Vitest
 npm start          # Pornește serverul pe http://localhost:4000
 ```
 
@@ -102,6 +102,47 @@ cd frontend
 npm install
 npm run dev        # Pornește interfața pe http://localhost:5173
 ```
+
+### 4.4. Cele 4 Roluri & Conectare Demo 1-Click (Decizia D-003)
+Aplicația implementează o ierarhie clară de 4 roluri pe client și server:
+* **`ANON` (Vizitator anonim):** Acces liber fără autentificare la căutare, filtrare pe orașe/domenii, vizualizare hartă, calcul distanță Haversine și apel direct către unități.
+* **`USER` (Utilizator înregistrat):** Include toate drepturile `ANON` + salvare favorite persistente pe cont și trimitere/confirmare sesizări orar (auto-aprobare la 4 sau 8 voturi).
+  * *Cont demo:* `andreea.zidu@ulbsibiu.ro` / `Parola123!`
+* **`MODERATOR` (Moderator comunitate):** Include toate drepturile `USER` + acces la coada de moderare a sesizărilor de orar (`/api/moderation/corrections`), aprobare, respingere și rezolvare conflicte. Modificarea structurală a unităților și importul CSV sunt restricționate (`403 Forbidden`).
+  * *Cont demo:* `moderator@sibiu.ro` / `Moderator123!`
+* **`ADMIN` (Administrator complet):** Drepturi depline de administrare: creare, editare și ștergere unități medicale/veterinare (`Facility`) și importul fișierelor CSV lunare pentru rotațiile de gardă (`OnCallRotation`).
+  * *Cont demo:* `admin@sibiu.ro` / `Admin123!`
+
+> **Comutare rapidă demo:** Butonul plutitor `⚙️ Testează Rolurile` (dreapta-jos) deschide DemoDrawer-ul ce permite comutarea instantanee cu un singur click între oricare dintre cele 4 roluri, precum și simularea stărilor de încărcare, catalog gol sau eroare de conexiune.
+
+### 4.5. Suport PWA & Funcționare Offline
+* **Service Worker (`frontend/public/sw.js`) & Manifest (`manifest.json`):** Aplicația este instalabilă ca Progressive Web App.
+* **Acces Offline în Urgențe:** În cazul în care conexiunea la internet sau server este indisponibilă:
+  * Ghidul de Urgență (`DS-03`) cu numerele vitale (112, UPU Sibiu, Pediatrie, etc.) se încarcă instantaneu offline.
+  * Ultimul catalog descărcat de unități (`DS-01`) și lista de favorite a utilizatorului (`DS-04`) sunt servite direct din memoria locală a dispozitivului, însoțite de un banner discret: `Mod offline — date salvate local`.
+  * Datele de contact și numerele de telefon rămân complet funcționale pentru apelare directă.
+
+### 4.6. Comenzi de Verificare și Testare Automată
+* **Backend Vitest (45 teste automate):**
+  ```bash
+  cd backend && npm test
+  ```
+  Verifică motorul de status (22 teste), matricea RBAC pe 4 roluri (18 teste), importul CSV idempotent (3 teste) și geocodarea Nominatim cu cache (2 teste).
+* **Frontend Linting & Verificare Statică:**
+  ```bash
+  cd frontend && npm run lint
+  ```
+  Rulează `oxlint` pe toate fișierele frontend (0 erori, 0 avertismente).
+* **Compilare Pachet Producție Frontend:**
+  ```bash
+  cd frontend && npm run build
+  ```
+  Compilează curat bundle-ul optimizat de producție în `frontend/dist/`.
+* **Integritate Registru Agentic:**
+  ```bash
+  python3 docs/agents/tools/ledger-lint.py
+  ```
+  Validează indexurile și consistența deciziilor (`DECISIONS.md`), modelelor (`PATTERNS.md`) și contractelor (`CONTRACTS.md`).
 
 ---
 

@@ -79,16 +79,6 @@ function AppContent() {
     navigate('/');
   };
 
-  // Register PWA Service Worker
-  useEffect(() => {
-    if ('serviceWorker' in navigator && import.meta.env.PROD) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((reg) => console.log('PWA Service Worker registered:', reg.scope))
-        .catch((err) => console.warn('Service Worker registration failed:', err));
-    }
-  }, []);
-
   const handleToggleFavorite = async (facilityId) => {
     const isAlready = favorites.some((f) => (f.facilityId || f.id) === facilityId);
 

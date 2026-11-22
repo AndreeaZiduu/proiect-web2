@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export function FavoritesView({
@@ -9,9 +9,46 @@ export function FavoritesView({
   onDrawRoute
 }) {
   const { isAnon } = useAuth();
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   return (
     <section className="screen-pane active-screen" id="paneDs04">
+      {/* Offline Notice Banner */}
+      {isOffline && (
+        <div
+          className="offline-notice-bar"
+          style={{
+            background: 'rgba(194, 94, 52, 0.12)',
+            border: '1px solid rgba(194, 94, 52, 0.35)',
+            color: 'var(--accent-terracotta)',
+            padding: '8px 16px',
+            borderRadius: 'var(--radius-lg)',
+            fontSize: 'var(--font-size-xs)',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '16px'
+          }}
+        >
+          <span>📡</span>
+          <span>
+            <strong>Mod offline — date salvate local:</strong> Favoritele tale sunt încărcate din memoria locală a dispozitivului. Telefoanele și detaliile sunt accesibile fără conexiune la internet.
+          </span>
+        </div>
+      )}
+
       <div style={{ marginBottom: '24px' }}>
         <div className="originle-kicker">
           <span className="originle-kicker-dot" /> ACCES RAPID & SALVARE OFFLINE (DS-04)

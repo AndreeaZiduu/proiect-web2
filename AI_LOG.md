@@ -965,3 +965,41 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Build Frontend:** `cd frontend && npm run build` — **Compilat cu succes (dist generat curat)**.
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/ds02-ds05-screens`.
+
+
+# Sesiunea 27 — Suport Offline PWA, Verificare Finală & Pregătire Predare (2026-11-22)
+
+## 1. Ce a Cerut Utilizatorul
+1. Respectarea fluxului `/build` pe ramura nouă dedicată: `feat/pwa-offline` (fără lucru pe `main`).
+2. Configurare `frontend/public/manifest.json` și înregistrare curată a Service Worker-ului (`frontend/public/sw.js`) în `frontend/src/main.jsx`.
+3. Asigurarea funcționării în mod offline:
+   - Resursele statice și Ghidul de Urgență (`DS-03`) se încarcă instantaneu fără internet.
+   - Ultimul catalog descărcat de unități (`/api/facilities`) și favoritele utilizatorului (`DS-04`) sunt salvate în cache local și rămân vizibile, însoțite de un banner discret: `Mod offline — date salvate local`.
+4. Verificarea livrabilelor și igienei depozitului:
+   - Rularea tuturor testelor backend (`npm test --prefix backend`) și a build-ului de producție (`npm run build --prefix frontend`).
+   - Rularea linterului de registru `python3 docs/agents/tools/ledger-lint.py`.
+   - Actualizarea `README.md` cu instrucțiuni complete de pornire, cele 4 roluri demo cu credențiale și comenzile de testare.
+5. Oprirea procesului pentru testarea manuală a modului offline și finisarea vizuală finală de către utilizator.
+
+## 2. Ce S-a Livrat
+* **Control Versiuni & Izolare**:
+  - Creată ramura `feat/pwa-offline`.
+* **PWA & Service Worker**:
+  - `frontend/public/manifest.json`: configurat cu metadatele oficiale PWA, temă `#FAF7F4` și iconițe SVG maskable.
+  - `frontend/index.html`: actualizat link-ul către `/manifest.json`.
+  - `frontend/src/main.jsx`: înregistrat Service Worker-ul la evenimentul `window.load` cu logare curată.
+  - `frontend/src/App.jsx`: eliminat codul duplicat de înregistrare a Service Worker-ului din `useEffect`.
+  - `frontend/public/sw.js`: implementat cache versionat (`v2`) cu precaching pentru asset-uri statice de bază, strategie Network-First cu fallback la shell-ul `/index.html` pentru rute SPA offline, Network-First cu fallback la cache pentru `/api/facilities` și Stale-While-Revalidate pentru fișiere statice (JS/CSS).
+* **Caching Local & Semnalizare Vizuală Offline**:
+  - `frontend/src/services/api.js`: adăugat mecanism dublu de salvare în `localStorage` a catalogului `cached_facilities` și a favoritelor `local_favorites`, returnând flag-ul `isOffline: true` la eșecul rețelei.
+  - `frontend/src/components/ds01-explorer/ExplorerView.jsx`: adăugată detecție reactivă online/offline și bannerul discret teracotă `Mod offline — date salvate local`.
+  - `frontend/src/components/ds04-favorites/FavoritesView.jsx`: adăugată detecție reactivă online/offline și bannerul discret teracotă `Mod offline — date salvate local`.
+* **Documentație Completă de Predare**:
+  - `README.md`: actualizat detaliat cu pașii de pornire (Docker, backend, seed, teste, frontend), cele 4 roluri RBAC cu credențiale demo și comutator 1-click, suportul PWA offline și comenzile de testare automată.
+
+## 3. Verificări
+* **Teste Backend:** `cd backend && npm test` — **45 teste trecute din 45 (100% succes)**.
+* **Linting Frontend:** `cd frontend && npm run lint` (oxlint) — **0 erori, 0 avertismente** pe toate fișierele.
+* **Build Frontend:** `cd frontend && npm run build` (vite build) — **Compilat cu succes în dist/**.
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/pwa-offline`.

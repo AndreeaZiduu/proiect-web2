@@ -1,0 +1,17 @@
+{
+  "name": "P10 Farmacii & Vet Sibiu",
+  "short_name": "Farmacii Sibiu",
+  "description": "Găsește rapid o farmacie de gardă sau un cabinet veterinar de urgență deschis în Județul Sibiu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F4",
+  "theme_color": "#FAF7F4",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

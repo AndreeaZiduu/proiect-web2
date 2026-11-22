@@ -19,15 +19,52 @@ client.interceptors.request.use((config) => {
 });
 
 export const api = {
-  // Facilities & Status (C-001, C-002)
+  // Facilities & Status (C-001, C-002) with offline caching
   async getFacilities(params = {}) {
-    const res = await client.get('/facilities', { params });
-    return res.data;
+    try {
+      const res = await client.get('/facilities', { params });
+      if (res.data && res.data.facilities) {
+        try {
+          localStorage.setItem('cached_facilities', JSON.stringify(res.data));
+          localStorage.setItem('cached_facilities_at', new Date().toISOString());
+        } catch {
+          // Ignore localStorage quota errors
+        }
+      }
+      return { ...res.data, isOffline: false };
+    } catch (err) {
+      // Offline fallback: load last cached facilities from localStorage
+      const cached = localStorage.getItem('cached_facilities');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          return { ...parsed, isOffline: true };
+        } catch {
+          // Fall through to throw
+        }
+      }
+      throw err;
+    }
   },
 
   async getFacility(id, at) {
-    const res = await client.get(`/facilities/${id}`, { params: at ? { at } : {} });
-    return res.data;
+    try {
+      const res = await client.get(`/facilities/${id}`, { params: at ? { at } : {} });
+      return res.data;
+    } catch (err) {
+      // Offline fallback: find unit in local facilities cache
+      const cached = localStorage.getItem('cached_facilities');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          const found = (parsed.facilities || []).find((f) => f.id === id);
+          if (found) return found;
+        } catch {
+          // Fall through
+        }
+      }
+      throw err;
+    }
   },
 
   // Auth & Roles (D-003)
@@ -41,10 +78,26 @@ export const api = {
     return res.data;
   },
 
-  // Favorites (DS-04)
+  // Favorites (DS-04) with offline local caching
   async getFavorites() {
-    const res = await client.get('/favorites');
-    return res.data;
+    try {
+      const res = await client.get('/favorites');
+      if (Array.isArray(res.data)) {
+        localStorage.setItem('local_favorites', JSON.stringify(res.data));
+      }
+      return res.data;
+    } catch {
+      // Offline fallback: read from local_favorites
+      const saved = localStorage.getItem('local_favorites');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          // Fall through
+        }
+      }
+      return [];
+    }
   },
 
   async toggleFavorite(facilityId) {
