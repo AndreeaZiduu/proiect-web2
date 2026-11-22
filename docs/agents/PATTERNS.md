@@ -8,6 +8,7 @@
 ## Index
 - PATTERN-001 · Responsive split-screen desktop and toggle mobile view · candidate
 - PATTERN-002 · Warm Editorial Minimalist styling and semantic status palette · candidate
+- PATTERN-003 · Integrated OSRM road routing on interactive map with external app fallback · candidate
 
 ---
 
@@ -24,3 +25,10 @@
 - **Confirmed:** 2026-11-21
 - **How:** Adopt a warm, reassuring Warm Editorial Minimalist aesthetic (Originle inspired) using Plus Jakarta Sans typography, tabular figures, 24px rounded card geometry with subtle warm gradients (Warm Alabaster #FAF7F4 and Warm Obsidian #141210), soft diffuse shadows, terracotta (#C25E34) accents for numbers/badges, and inverted dark surface cards (#1C1917) for high-urgency focal points (112, emergency hotlines). Color-coding separates facility types (Herbal Teal #0E7465 for PHARMACY 💊 vs Royal Indigo #5548A8 for EMERGENCY_VET 🐾), while real-time operational status follows a 5-state WCAG AAA indicator system (ON_DUTY with pulse dot, OPEN, CLOSING_SOON, CLOSED, UNKNOWN).
 - **Example:** `frontend/src/index.css` defining CSS custom properties (`--font-family-primary: 'Plus Jakarta Sans'`, `--color-pharmacy: #0E7465`, `--color-vet: #5548A8`, `--accent-terracotta: #C25E34`, `--bg-app`, `--bg-surface-gradient`, `--status-duty-bg`, `--status-open-bg`, `--status-closing-bg`, `--status-closed-bg`) with dual `[data-theme="light"]` and `[data-theme="dark"]` tokens.
+
+---
+
+## PATTERN-003 · Integrated OSRM road routing on interactive map with external app fallback
+- **Status:** candidate
+- **How:** Query public OSRM routing endpoint for driving directions between user coordinates (or Piața Mare fallback) and the target facility to draw an interactive polyline on the Leaflet map with estimated duration and distance in kilometers, while providing deep links for external launch into Google Maps and Waze.
+- **Example:** `frontend/src/services/api.js` (`getOsrmRoute`) and `frontend/src/components/ds01-explorer/SibiuMap.jsx` rendering the terracotta route polyline and floating travel summary.

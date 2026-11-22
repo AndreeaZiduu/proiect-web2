@@ -933,3 +933,35 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Linting Frontend:** `npm run lint --prefix frontend` (oxlint) — **0 erori, 0 avertismente** pe toate cele 17 fișiere.
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/ds02-ds05-screens`.
+
+
+# Sesiunea 26 — Verificare, Audit și Finalizare /build Master Plan Unificat P10 (2026-11-22)
+
+## 1. Ce a Cerut Utilizatorul
+1. Rularea comenzii de build `/build docs/plans/01-master-plan.md` conform fluxului de lucru din `.claude/skills/build/SKILL.md`.
+2. Validarea completă a tuturor componentelor specificate în plan:
+   - Backend cu 9 tabele relaționale, 4 roluri RBAC (`ANON`, `USER`, `MODERATOR`, `ADMIN`), geocodare Nominatim cu cache, import CSV gardă idempotent și motor pur de status `Europe/Bucharest`.
+   - Frontend React 19 complet cu cele 5 ecrane (`DS-01` Explorer cu rutare OSRM pe hartă, `DS-02` Detalii Unitate cu orar săptămânal și sesizări, `DS-03` Ghid de Urgență cu numere vitale, `DS-04` Favorite offline PWA, `DS-05` Panou Moderare & Admin cu RBAC strict).
+3. Verificarea întregii suite de teste automate (Backend Vitest + Frontend oxlint & Vite build) și a integrității registrului (`ledger-lint.py`).
+4. Înregistrarea noilor practici reutilizabile ca pattern `candidate` în `docs/agents/PATTERNS.md`.
+
+## 2. Ce S-a Livrat
+* **Validare Backend**:
+  - `status.test.js` (22 teste): orar normal, pauze de prânz, alerte închidere ≤ 30 min, ture peste noapte, sărbători legale, gărzi lunare CSV și auto-aprobare la 4 vs 8 voturi.
+  - `rbac.test.js` (18 teste): matricea celor 4 roluri (401 vizitator, 403 utilizator pe admin, moderator permisiuni sesizări dar 403 pe CSV/unități, admin permisiuni depline).
+  - `csv-import.test.js` (3 teste): import CSV, idempotență (ignorare duplicate fără multiplicare) și erori de format.
+  - `geocode.test.js` (2 teste): geocodare Nominatim cu servire directă din cache pentru cereri repetate.
+* **Validare Frontend**:
+  - `oxlint`: 0 erori, 0 avertismente pe toate cele 17 fișiere React.
+  - `vite build`: bundle de producție compilat cu succes în `frontend/dist/`.
+  - Suport offline PWA configurat prin `frontend/public/sw.js` și `frontend/public/manifest.webmanifest`.
+* **Registru de Cunoștințe (Ledger)**:
+  - Înregistrat `PATTERN-003` (`Integrated OSRM road routing on interactive map with external app fallback`) în `docs/agents/PATTERNS.md`.
+  - Rulat `python3 docs/agents/tools/ledger-lint.py --fix` — status `✓ ledger ok`.
+
+## 3. Verificări
+* **Teste Backend:** `cd backend && npm test` — **45 teste trecute din 45 (100% verde)**.
+* **Linting Frontend:** `cd frontend && npm run lint` — **0 erori, 0 avertismente**.
+* **Build Frontend:** `cd frontend && npm run build` — **Compilat cu succes (dist generat curat)**.
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/ds02-ds05-screens`.
