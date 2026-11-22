@@ -41,6 +41,26 @@ function AppContent() {
   const [correctionsCount, setCorrectionsCount] = useState(2);
   const [moderationCount, setModerationCount] = useState(0);
 
+  // Offline status state: reactive to network events & API fallback
+  const [isOffline, setIsOffline] = useState(() => (typeof navigator !== 'undefined' ? !navigator.onLine : false));
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const handleOfflineChange = useCallback((offline) => {
+    setIsOffline(Boolean(offline) || (typeof navigator !== 'undefined' && !navigator.onLine));
+  }, []);
+
   // Apply Theme to DOM
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -78,6 +98,14 @@ function AppContent() {
     setRouteTargetFacility(facility);
     navigate('/');
   };
+
+  const handleOpenDetails = useCallback((facility) => {
+    navigate(`/unitate/${facility.id}`);
+  }, [navigate]);
+
+  const handleClearRouteTarget = useCallback(() => {
+    setRouteTargetFacility(null);
+  }, []);
 
   const handleToggleFavorite = async (facilityId) => {
     const isAlready = favorites.some((f) => (f.facilityId || f.id) === facilityId);
@@ -126,6 +154,16 @@ function AppContent() {
         correctionsCount={correctionsCount}
       />
 
+      {/* Visible Full-width Offline Status Banner directly below Header */}
+      {isOffline && (
+        <div className="offline-status-banner" role="status" aria-live="polite">
+          <div className="offline-status-banner-inner">
+            <span className="offline-status-icon" aria-hidden="true">📡</span>
+            <span>Mod offline — afișăm datele salvate local (Ghidul de Urgență și Favoritele rămân disponibile).</span>
+          </div>
+        </div>
+      )}
+
       {/* Main Screen Content via React Router */}
       <main className="app-main">
         <Routes>
@@ -136,10 +174,11 @@ function AppContent() {
                 theme={theme}
                 favorites={favorites}
                 onToggleFavorite={handleToggleFavorite}
-                onOpenDetails={(fac) => setDetailFacility(fac)}
+                onOpenDetails={handleOpenDetails}
                 previewState={previewState}
                 routeTargetFacility={routeTargetFacility}
-                onClearRouteTarget={() => setRouteTargetFacility(null)}
+                onClearRouteTarget={handleClearRouteTarget}
+                onOfflineChange={handleOfflineChange}
               />
             }
           />
@@ -155,7 +194,7 @@ function AppContent() {
               <FavoritesView
                 favorites={favorites}
                 onToggleFavorite={handleToggleFavorite}
-                onOpenDetails={(fac) => setDetailFacility(fac)}
+                onOpenDetails={handleOpenDetails}
                 onOpenAuthModal={() => setIsAuthModalOpen(true)}
                 onDrawRoute={handleDrawRouteFromModal}
               />
@@ -164,11 +203,23 @@ function AppContent() {
           <Route
             path="/unitate/:id"
             element={
-              <FacilityRouteWrapper
-                favorites={favorites}
-                onToggleFavorite={handleToggleFavorite}
-                onDrawRoute={handleDrawRouteFromModal}
-              />
+              <>
+                <ExplorerView
+                  theme={theme}
+                  favorites={favorites}
+                  onToggleFavorite={handleToggleFavorite}
+                  onOpenDetails={handleOpenDetails}
+                  previewState={previewState}
+                  routeTargetFacility={routeTargetFacility}
+                  onClearRouteTarget={handleClearRouteTarget}
+                  onOfflineChange={handleOfflineChange}
+                />
+                <FacilityRouteWrapper
+                  favorites={favorites}
+                  onToggleFavorite={handleToggleFavorite}
+                  onDrawRoute={handleDrawRouteFromModal}
+                />
+              </>
             }
           />
           <Route
@@ -203,15 +254,17 @@ function AppContent() {
         onClose={() => setIsAuthModalOpen(false)}
       />
 
-      {/* Facility Details Modal (DS-02) */}
-      <FacilityDetailModal
-        facilityId={detailFacility?.id}
-        isOpen={Boolean(detailFacility)}
-        onClose={() => setDetailFacility(null)}
-        isFavorited={favorites.some((f) => (f.facilityId || f.id) === detailFacility?.id)}
-        onToggleFavorite={handleToggleFavorite}
-        onDrawRoute={handleDrawRouteFromModal}
-      />
+      {/* Facility Details Modal (DS-02 fallback when opened directly via state) */}
+      {Boolean(detailFacility) && (
+        <FacilityDetailModal
+          facilityId={detailFacility?.id}
+          isOpen={true}
+          onClose={() => setDetailFacility(null)}
+          isFavorited={favorites.some((f) => (f.facilityId || f.id) === detailFacility?.id)}
+          onToggleFavorite={handleToggleFavorite}
+          onDrawRoute={handleDrawRouteFromModal}
+        />
+      )}
     </div>
   );
 }

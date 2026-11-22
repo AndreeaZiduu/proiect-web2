@@ -1,9 +1,54 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api';
 import { FacilityCard } from './FacilityCard';
 import { SibiuMap } from './SibiuMap';
 
 const SIBIU_CENTER = { lat: 45.7983, lng: 24.1503 };
+
+/**
+ * Normalizes Romanian search queries and facility strings:
+ * - converts to lowercase
+ * - strips Romanian diacritics (ă, â, î, ș/ş, ț/ţ)
+ * - replaces punctuation (. - _ / , etc.) with spaces
+ * - normalizes multiple whitespace
+ */
+export function normalizeSearchText(str) {
+  if (!str) return '';
+  return String(str)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[șş]/g, 's')
+    .replace(/[țţ]/g, 't')
+    .replace(/[.\-_,/()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Checks whether a facility matches a normalized query across name, address, city, and services
+ */
+function matchesFacilityQuery(facility, normalizedQuery) {
+  if (!normalizedQuery) return true;
+
+  const rawText = `${facility.name || ''} ${facility.address || ''} ${facility.city || ''} ${
+    Array.isArray(facility.services)
+      ? facility.services.map((s) => s.serviceName || s.name || s).join(' ')
+      : ''
+  }`;
+  const target = normalizeSearchText(rawText);
+  const targetNoSpaces = target.replace(/\s+/g, '');
+  const queryNoSpaces = normalizedQuery.replace(/\s+/g, '');
+
+  if (target.includes(normalizedQuery) || targetNoSpaces.includes(queryNoSpaces)) {
+    return true;
+  }
+
+  // Token-based matching (e.g. "dr max" matches when "dr" and "max" are both present)
+  const tokens = normalizedQuery.split(' ').filter(Boolean);
+  return tokens.every((token) => target.includes(token));
+}
 
 export function ExplorerView({
   theme,
@@ -12,18 +57,92 @@ export function ExplorerView({
   onOpenDetails,
   previewState = 'normal',
   routeTargetFacility = null,
-  onClearRouteTarget
+  onClearRouteTarget,
+  onOfflineChange
 }) {
-  const [facilities, setFacilities] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Parse incoming navigation parameters / query params (e.g. from DS-03 Emergency Guide)
+  const parseFiltersFromUrl = useCallback((params) => {
+    // 1. Category: PHARMACY, VET (or EMERGENCY_VET), or ALL
+    const cat = (params.get('category') || params.get('type') || '').toUpperCase();
+    let domain = 'all';
+    if (cat === 'PHARMACY' || cat === 'FARMACII') {
+      domain = 'PHARMACY';
+    } else if (cat === 'VET' || cat === 'EMERGENCY_VET') {
+      domain = 'EMERGENCY_VET';
+    }
+
+    // 2. Open Now: openNow=true or filter=open
+    const openParam = params.get('openNow') || params.get('open');
+    const filterParam = params.get('filter');
+    const isOpen = openParam === 'true' || filterParam === 'open';
+
+    // 3. On Duty: onDuty=true, onCall=true or filter=duty
+    const dutyParam = params.get('onDuty') || params.get('onCall') || params.get('duty');
+    const isOnDuty = dutyParam === 'true' || filterParam === 'duty';
+
+    // 4. City: city=ALL or specific city name
+    const cityParam = params.get('city');
+    const city = (cityParam && cityParam.toUpperCase() !== 'ALL') ? cityParam : 'all';
+
+    // 5. Search query: q
+    const q = params.get('q') || '';
+
+    return {
+      domain,
+      openNow: isOpen,
+      onCall: isOnDuty,
+      city,
+      searchQuery: q
+    };
+  }, []);
+
+  const [allFacilities, setAllFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filters state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState('all');
-  const [selectedDomain, setSelectedDomain] = useState('all'); // 'all', 'PHARMACY', 'EMERGENCY_VET'
-  const [filterOpenNow, setFilterOpenNow] = useState(false);
-  const [filterOnCall, setFilterOnCall] = useState(false);
+  // Initialize filters state from URL on mount
+  const initialFilters = useMemo(() => parseFiltersFromUrl(searchParams), [parseFiltersFromUrl, searchParams]);
+
+  const [searchQuery, setSearchQuery] = useState(initialFilters.searchQuery);
+  const [selectedCity, setSelectedCity] = useState(initialFilters.city);
+  const [selectedDomain, setSelectedDomain] = useState(initialFilters.domain);
+  const [filterOpenNow, setFilterOpenNow] = useState(initialFilters.openNow);
+  const [filterOnCall, setFilterOnCall] = useState(initialFilters.onCall);
+
+  // Sync state when URL search params change (e.g. navigation from DS-03 emergency buttons or browser history)
+  useEffect(() => {
+    const updated = parseFiltersFromUrl(searchParams);
+    setSelectedDomain(updated.domain);
+    setFilterOpenNow(updated.openNow);
+    setFilterOnCall(updated.onCall);
+    setSelectedCity(updated.city);
+    if (searchParams.has('q')) {
+      setSearchQuery(updated.searchQuery);
+    }
+  }, [searchParams, parseFiltersFromUrl]);
+
+  // Synchronize user filter interactions into URL search params
+  const updateUrlParams = useCallback((overrides = {}) => {
+    const domain = overrides.domain !== undefined ? overrides.domain : selectedDomain;
+    const openNow = overrides.openNow !== undefined ? overrides.openNow : filterOpenNow;
+    const onCall = overrides.onCall !== undefined ? overrides.onCall : filterOnCall;
+    const city = overrides.city !== undefined ? overrides.city : selectedCity;
+    const q = overrides.q !== undefined ? overrides.q : searchQuery;
+
+    const next = {};
+    if (domain === 'PHARMACY') next.category = 'PHARMACY';
+    else if (domain === 'EMERGENCY_VET') next.category = 'VET';
+
+    if (openNow) next.openNow = 'true';
+    if (onCall) next.onDuty = 'true';
+
+    if (city && city !== 'all') next.city = city;
+    if (q && q.trim()) next.q = q.trim();
+
+    setSearchParams(next, { replace: true });
+  }, [selectedDomain, filterOpenNow, filterOnCall, selectedCity, searchQuery, setSearchParams]);
 
   // Selected facility and routing
   const [selectedFacility, setSelectedFacility] = useState(null);
@@ -32,35 +151,37 @@ export function ExplorerView({
 
   // Mobile layout switch (List vs Map)
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'map'
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
+    const handleOnline = () => {
+      if (onOfflineChange) onOfflineChange(false);
+    };
+    const handleOffline = () => {
+      if (onOfflineChange) onOfflineChange(true);
+    };
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
+  }, [onOfflineChange]);
 
-  // Fetch facilities from backend
-  const fetchFacilities = useCallback(async () => {
-    setLoading(true);
+  // Fetch full facility dataset from backend with Haversine distances
+  const fetchFacilities = useCallback(async (isBackground = false) => {
+    if (!isBackground) {
+      setLoading(true);
+    }
     setError(null);
     try {
       const data = await api.getFacilities({
-        q: searchQuery || undefined,
-        city: selectedCity !== 'all' ? selectedCity : undefined,
-        type: selectedDomain !== 'all' ? selectedDomain : undefined,
-        openNow: filterOpenNow ? 'true' : undefined,
-        onCall: filterOnCall ? 'true' : undefined,
         lat: SIBIU_CENTER.lat,
         lng: SIBIU_CENTER.lng
       });
       if (data.isOffline) {
-        setIsOffline(true);
+        if (onOfflineChange) onOfflineChange(true);
+      } else {
+        if (onOfflineChange) onOfflineChange(false);
       }
       const rawList = data.facilities || [];
       // Sort by Haversine distance ascending from Piața Mare (D-005)
@@ -69,21 +190,82 @@ export function ExplorerView({
         const distB = b.distanceKm !== null && b.distanceKm !== undefined ? b.distanceKm : 9999;
         return distA - distB;
       });
-      setFacilities(sorted);
-      setSelectedFacility((prev) => (prev ? prev : (sorted[0] || null)));
+      setAllFacilities(sorted);
     } catch (err) {
       setError(err.message || 'Eroare la preluarea catalogului');
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        if (onOfflineChange) onOfflineChange(true);
+      }
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, selectedCity, selectedDomain, filterOpenNow, filterOnCall]);
+  }, [onOfflineChange]);
 
   useEffect(() => {
-    fetchFacilities();
-    // Auto re-evaluate every 60 seconds
-    const interval = setInterval(fetchFacilities, 60000);
+    fetchFacilities(false);
+    // Auto re-evaluate every 60 seconds silently in the background without UI skeleton flickering
+    const interval = setInterval(() => fetchFacilities(true), 60000);
     return () => clearInterval(interval);
   }, [fetchFacilities]);
+
+  // 1. Filter all facilities ONLY by city and search query
+  const filteredBySearchAndCity = useMemo(() => {
+    const normQ = normalizeSearchText(searchQuery);
+    return allFacilities.filter((fac) => {
+      // City filter
+      if (selectedCity && selectedCity !== 'all' && fac.city !== selectedCity) {
+        return false;
+      }
+      // Search filter with normalization
+      if (normQ && !matchesFacilityQuery(fac, normQ)) {
+        return false;
+      }
+      return true;
+    });
+  }, [allFacilities, selectedCity, searchQuery]);
+
+  // 2. Requirement 1: Category counts computed from dataset filtered ONLY by city/search, NEVER by the active category tab!
+  const counts = useMemo(() => {
+    const total = filteredBySearchAndCity.length;
+    const pharm = filteredBySearchAndCity.filter((f) => f.type === 'PHARMACY').length;
+    const vet = filteredBySearchAndCity.filter((f) => f.type === 'EMERGENCY_VET').length;
+    const open = filteredBySearchAndCity.filter((f) => f.status?.isOpen || f.status?.isOnCall).length;
+    const duty = filteredBySearchAndCity.filter((f) => f.status?.isOnCall).length;
+    return { total, pharm, vet, open, duty };
+  }, [filteredBySearchAndCity]);
+
+  // 3. Displayed facilities: apply category pill and status pills on top of filteredBySearchAndCity
+  const displayedFacilities = useMemo(() => {
+    return filteredBySearchAndCity.filter((fac) => {
+      // Category pill filter: 'all', 'PHARMACY', 'EMERGENCY_VET'
+      if (selectedDomain === 'PHARMACY' && fac.type !== 'PHARMACY') {
+        return false;
+      }
+      if (selectedDomain === 'EMERGENCY_VET' && fac.type !== 'EMERGENCY_VET') {
+        return false;
+      }
+
+      // Status filters
+      if (filterOpenNow && !fac.status?.isOpen && !fac.status?.isOnCall) {
+        return false;
+      }
+      if (filterOnCall && !fac.status?.isOnCall) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [filteredBySearchAndCity, selectedDomain, filterOpenNow, filterOnCall]);
+
+  // Ensure selectedFacility updates when displayed facilities change so stale filtered-out facilities are not retained
+  useEffect(() => {
+    setSelectedFacility((prev) => {
+      if (prev && displayedFacilities.some((f) => f.id === prev.id)) {
+        return displayedFacilities.find((f) => f.id === prev.id) || prev;
+      }
+      return displayedFacilities[0] || null;
+    });
+  }, [displayedFacilities]);
 
   // Handle OSRM route calculation
   const handleDrawRoute = async (facility) => {
@@ -116,15 +298,36 @@ export function ExplorerView({
     });
   };
 
-  // Domain counts
-  const counts = useMemo(() => {
-    const total = facilities.length;
-    const pharm = facilities.filter((f) => f.type === 'PHARMACY').length;
-    const vet = facilities.filter((f) => f.type === 'EMERGENCY_VET').length;
-    const open = facilities.filter((f) => f.status?.isOpen).length;
-    const duty = facilities.filter((f) => f.status?.isOnCall).length;
-    return { total, pharm, vet, open, duty };
-  }, [facilities]);
+  const handleSelectDomain = (domain) => {
+    setSelectedDomain(domain);
+    updateUrlParams({ domain });
+  };
+
+  const handleToggleOpenNow = () => {
+    const next = !filterOpenNow;
+    setFilterOpenNow(next);
+    updateUrlParams({ openNow: next });
+  };
+
+  const handleToggleOnCall = () => {
+    const next = !filterOnCall;
+    setFilterOnCall(next);
+    updateUrlParams({ onCall: next });
+  };
+
+  const handleSelectCity = (city) => {
+    setSelectedCity(city);
+    updateUrlParams({ city });
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedCity('all');
+    setSelectedDomain('all');
+    setFilterOpenNow(false);
+    setFilterOnCall(false);
+    setSearchParams({}, { replace: true });
+  };
 
   const isFavorited = (id) => favorites.some((f) => (f.facilityId || f.id) === id);
 
@@ -140,11 +343,17 @@ export function ExplorerView({
             placeholder="Caută după nume, stradă sau serviciu..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                updateUrlParams({ q: searchQuery });
+              }
+            }}
+            onBlur={() => updateUrlParams({ q: searchQuery })}
           />
           <select
             className="city-dropdown-select"
             value={selectedCity}
-            onChange={(e) => setSelectedCity(e.target.value)}
+            onChange={(e) => handleSelectCity(e.target.value)}
           >
             <option value="all">Tot Județul Sibiu</option>
             <option value="Sibiu">Sibiu</option>
@@ -159,32 +368,32 @@ export function ExplorerView({
         <div className="chips-group">
           <button
             className={`filter-chip ${selectedDomain === 'all' ? 'active' : ''}`}
-            onClick={() => setSelectedDomain('all')}
+            onClick={() => handleSelectDomain('all')}
           >
             Toate ({counts.total})
           </button>
           <button
             className={`filter-chip ${selectedDomain === 'PHARMACY' ? 'active' : ''}`}
-            onClick={() => setSelectedDomain(selectedDomain === 'PHARMACY' ? 'all' : 'PHARMACY')}
+            onClick={() => handleSelectDomain(selectedDomain === 'PHARMACY' ? 'all' : 'PHARMACY')}
           >
             💊 Farmacii ({counts.pharm})
           </button>
           <button
             className={`filter-chip ${selectedDomain === 'EMERGENCY_VET' ? 'active' : ''}`}
-            onClick={() => setSelectedDomain(selectedDomain === 'EMERGENCY_VET' ? 'all' : 'EMERGENCY_VET')}
+            onClick={() => handleSelectDomain(selectedDomain === 'EMERGENCY_VET' ? 'all' : 'EMERGENCY_VET')}
           >
             🐾 Vet ({counts.vet})
           </button>
           <button
             className={`filter-chip ${filterOpenNow ? 'active' : ''}`}
-            onClick={() => setFilterOpenNow(!filterOpenNow)}
+            onClick={handleToggleOpenNow}
           >
             <span className="status-dot-core" style={{ background: 'var(--status-open-dot)' }} />
             Deschis Acum
           </button>
           <button
             className={`filter-chip ${filterOnCall ? 'active-duty' : ''}`}
-            onClick={() => setFilterOnCall(!filterOnCall)}
+            onClick={handleToggleOnCall}
           >
             <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
             De Gardă
@@ -198,7 +407,7 @@ export function ExplorerView({
           className={`mobile-toggle-btn ${mobileView === 'list' ? 'active' : ''}`}
           onClick={() => setMobileView('list')}
         >
-          📋 Listă Unități ({facilities.length})
+          📋 Listă Unități ({displayedFacilities.length})
         </button>
         <button
           className={`mobile-toggle-btn ${mobileView === 'map' ? 'active' : ''}`}
@@ -208,31 +417,6 @@ export function ExplorerView({
         </button>
       </div>
 
-      {/* Offline Notice Banner */}
-      {isOffline && (
-        <div
-          className="offline-notice-bar"
-          style={{
-            background: 'rgba(194, 94, 52, 0.12)',
-            border: '1px solid rgba(194, 94, 52, 0.35)',
-            color: 'var(--accent-terracotta)',
-            padding: '8px 16px',
-            borderRadius: 'var(--radius-lg)',
-            fontSize: 'var(--font-size-xs)',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '16px'
-          }}
-        >
-          <span>📡</span>
-          <span>
-            <strong>Mod offline — date salvate local:</strong> Conexiunea la internet sau server este indisponibilă. Se afișează ultimul catalog salvat pe dispozitiv; căutarea, datele unităților și apelurile directe rămân active.
-          </span>
-        </div>
-      )}
-
       {/* 2. Main Explorer Grid (Split-screen 40% list / 60% map) */}
       <div className="explorer-grid">
         {/* Left: Scrollable Cards Pane */}
@@ -240,7 +424,7 @@ export function ExplorerView({
           {/* Header row in list */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
             <span className="originle-kicker">
-              ● CATALOG DISPONIBILITATE ({facilities.length} UNITĂȚI)
+              ● CATALOG DISPONIBILITATE ({displayedFacilities.length} UNITĂȚI)
             </span>
             <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
               Sortat după distanță
@@ -248,7 +432,7 @@ export function ExplorerView({
           </div>
 
           {/* Loading Skeleton */}
-          {(loading || previewState === 'loading') && (
+          {((loading && allFacilities.length === 0) || previewState === 'loading') && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {[1, 2, 3].map((n) => (
                 <div key={n} className="originle-card" style={{ padding: '20px' }}>
@@ -262,7 +446,7 @@ export function ExplorerView({
           )}
 
           {/* Empty State */}
-          {!loading && previewState !== 'loading' && (facilities.length === 0 || previewState === 'empty') && (
+          {!loading && previewState !== 'loading' && (displayedFacilities.length === 0 || previewState === 'empty') && (
             <div className="originle-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
               <div style={{ fontSize: '40px', marginBottom: '12px' }}>📭</div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)' }}>
@@ -274,13 +458,7 @@ export function ExplorerView({
               <button
                 type="button"
                 className="pill-btn pill-btn-primary"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCity('all');
-                  setSelectedDomain('all');
-                  setFilterOpenNow(false);
-                  setFilterOnCall(false);
-                }}
+                onClick={handleResetFilters}
               >
                 Resetează filtrele
               </button>
@@ -300,7 +478,7 @@ export function ExplorerView({
               <button
                 type="button"
                 className="pill-btn pill-btn-emergency"
-                onClick={fetchFacilities}
+                onClick={() => fetchFacilities(false)}
               >
                 Reîncearcă conexiunea
               </button>
@@ -308,9 +486,9 @@ export function ExplorerView({
           )}
 
           {/* Real Facilities List */}
-          {!loading && previewState === 'normal' && facilities.length > 0 && (
+          {(!loading || displayedFacilities.length > 0) && previewState === 'normal' && displayedFacilities.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {facilities.map((fac) => (
+              {displayedFacilities.map((fac) => (
                 <FacilityCard
                   key={fac.id}
                   ref={(el) => {
@@ -338,7 +516,7 @@ export function ExplorerView({
         {/* Right: Interactive Map Pane */}
         <div className={`map-container-pane ${mobileView === 'map' ? 'mobile-visible' : ''}`}>
           <SibiuMap
-            facilities={facilities}
+            facilities={displayedFacilities}
             selectedFacility={selectedFacility}
             routeData={routeData}
             theme={theme}

@@ -155,6 +155,10 @@ export function SibiuMap({
         }
       });
 
+      if (isSelected) {
+        marker.openPopup();
+      }
+
       marker.addTo(markersLayer);
     });
   }, [facilities, selectedFacility, onSelectFacility]);

@@ -22,13 +22,25 @@ export function EmergencyGuideView() {
             </h2>
           </div>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <Link to="/?filter=open" className="pill-btn pill-btn-primary" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+            <Link
+              to="/?category=PHARMACY&openNow=true&city=ALL"
+              className="pill-btn pill-btn-primary"
+              style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}
+            >
               🟢 Farmacii Deschise Acum ›
             </Link>
-            <Link to="/?filter=duty" className="pill-btn pill-btn-outline" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+            <Link
+              to="/?category=PHARMACY&onDuty=true&city=ALL"
+              className="pill-btn pill-btn-outline"
+              style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}
+            >
               🛡️ De Gardă Activă (Non-Stop) ›
             </Link>
-            <Link to="/?type=EMERGENCY_VET" className="pill-btn pill-btn-outline" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+            <Link
+              to="/?category=VET&openNow=true&city=ALL"
+              className="pill-btn pill-btn-outline"
+              style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}
+            >
               🐾 Cabinete Veterinare Urgență ›
             </Link>
           </div>
@@ -166,7 +178,7 @@ export function EmergencyGuideView() {
           <span className="hero-stat-lbl">Confirmări comunitare necesare pentru auto-aprobarea orarului (D-001)</span>
         </div>
         <div className="hero-stat-card">
-          <span className="hero-stat-val">4</span>
+          <span className="hero-stat-val">6</span>
           <span className="hero-stat-lbl">Linii telefonice oficiale verificate în Județul Sibiu</span>
         </div>
       </div>
