@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
-export function AdminPanel() {
-  const { role, isAdmin } = useAuth();
+export function AdminPanel({ onOpenAuthModal }) {
+  const { role, isModerator, isAdmin, switchRole } = useAuth();
   const [activeSubtab, setActiveSubtab] = useState('mod'); // 'mod' | 'facs' | 'csv'
   const [corrections, setCorrections] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -22,12 +22,15 @@ export function AdminPanel() {
   // CSV Import state
   const [csvText, setCsvText] = useState('');
   const [csvPreview, setCsvPreview] = useState([]);
+  const [importResult, setImportResult] = useState(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setActionMsg(null);
     try {
-      const corrs = await api.getModerationQueue();
-      setCorrections(corrs);
+      if (isModerator) {
+        const corrs = await api.getModerationQueue();
+        setCorrections(corrs);
+      }
 
       if (isAdmin) {
         const facsData = await api.getFacilities({ city: 'all' });
@@ -36,11 +39,67 @@ export function AdminPanel() {
     } catch (err) {
       console.error('Error loading admin data:', err);
     }
-  };
+  }, [isAdmin, isModerator]);
 
   useEffect(() => {
     loadData();
-  }, [isAdmin]);
+  }, [loadData]);
+
+  // Access denied fallback for ANON and USER (Decizia D-003)
+  if (!isModerator) {
+    return (
+      <section className="screen-pane active-screen" id="paneDs05">
+        <div
+          className="auth-banner-box originle-card"
+          style={{
+            maxWidth: '560px',
+            margin: '40px auto',
+            textAlign: 'center',
+            padding: '40px 24px',
+            boxShadow: 'var(--shadow-floating)'
+          }}
+        >
+          <div style={{ fontSize: '48px', marginBottom: '12px' }}>🔒</div>
+          <span className="originle-kicker" style={{ color: 'var(--accent-coral-alert)' }}>
+            ● ACCES RESTRICȚIONAT (DECIZIA D-003)
+          </span>
+          <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-extrabold)', margin: '8px 0 12px 0' }}>
+            Panou Rezervat Moderatorilor & Administratorilor
+          </h2>
+          <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: '1.5' }}>
+            Conform deciziei arhitecturale <strong>D-003</strong> (RBAC), accesul la moderarea sesizărilor comunitare și gestiunea catalogului necesită autentificare cu rolul de <strong>MODERATOR</strong> sau <strong>ADMIN</strong>.
+            <br />
+            Ești conectat în prezent ca: <strong>{role === 'USER' ? 'Utilizator Obișnuit (USER)' : 'Vizitator (ANON)'}</strong>.
+          </p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="pill-btn pill-btn-primary"
+              onClick={() => switchRole('MODERATOR')}
+            >
+              ⚖️ Intră ca MODERATOR (Tudor)
+            </button>
+            <button
+              type="button"
+              className="pill-btn pill-btn-primary"
+              onClick={() => switchRole('ADMIN')}
+            >
+              🛡️ Intră ca ADMIN (Admin Sibiu)
+            </button>
+            {onOpenAuthModal && (
+              <button
+                type="button"
+                className="pill-btn pill-btn-outline"
+                onClick={onOpenAuthModal}
+              >
+                Conectare Cont Propriu
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // Moderation action
   const handleReview = async (id, decision) => {
@@ -536,6 +595,22 @@ vet_transilvania,Spital Veterinar Transilvania,EMERGENCY_VET,Sibiu,2026-11-21,20
                     Procesează și salvează rotațiile
                   </button>
                 </div>
+
+                {importResult && (
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      padding: '12px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      fontSize: '12px',
+                      color: 'var(--status-open-text)'
+                    }}
+                  >
+                    ✓ Rotații inserate: <strong>{importResult.importedCount}</strong> • Rotații existente omise: <strong>{importResult.skippedDuplicates}</strong>
+                  </div>
+                )}
               </div>
 
               {/* Preview Table */}

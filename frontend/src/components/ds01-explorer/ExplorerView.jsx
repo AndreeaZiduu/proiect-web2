@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { api } from '../../services/api';
 import { FacilityCard } from './FacilityCard';
 import { SibiuMap } from './SibiuMap';
@@ -10,7 +10,9 @@ export function ExplorerView({
   favorites = [],
   onToggleFavorite,
   onOpenDetails,
-  previewState = 'normal'
+  previewState = 'normal',
+  routeTargetFacility = null,
+  onClearRouteTarget
 }) {
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,7 @@ export function ExplorerView({
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'map'
 
   // Fetch facilities from backend
-  const fetchFacilities = async () => {
+  const fetchFacilities = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -53,22 +55,20 @@ export function ExplorerView({
         return distA - distB;
       });
       setFacilities(sorted);
-      if (!selectedFacility && sorted.length > 0) {
-        setSelectedFacility(sorted[0]);
-      }
+      setSelectedFacility((prev) => (prev ? prev : (sorted[0] || null)));
     } catch (err) {
       setError(err.message || 'Eroare la preluarea catalogului');
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, selectedCity, selectedDomain, filterOpenNow, filterOnCall]);
 
   useEffect(() => {
     fetchFacilities();
     // Auto re-evaluate every 60 seconds
     const interval = setInterval(fetchFacilities, 60000);
     return () => clearInterval(interval);
-  }, [searchQuery, selectedCity, selectedDomain, filterOpenNow, filterOnCall]);
+  }, [fetchFacilities]);
 
   // Handle OSRM route calculation
   const handleDrawRoute = async (facility) => {
@@ -79,6 +79,16 @@ export function ExplorerView({
     const route = await api.getOsrmRoute(startPoint, endPoint);
     setRouteData(route);
   };
+
+  // Trigger route drawing if requested externally (e.g. from FacilityDetailModal or Favorites)
+  useEffect(() => {
+    if (routeTargetFacility) {
+      handleDrawRoute(routeTargetFacility);
+      if (onClearRouteTarget) {
+        onClearRouteTarget();
+      }
+    }
+  }, [routeTargetFacility, onClearRouteTarget]);
 
   // Handle facility selection from map pin click with smooth scroll to matching card
   const handleSelectFacilityFromMap = (facility) => {

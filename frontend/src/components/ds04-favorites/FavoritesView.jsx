@@ -5,7 +5,8 @@ export function FavoritesView({
   favorites = [],
   onToggleFavorite,
   onOpenDetails,
-  onOpenAuthModal
+  onOpenAuthModal,
+  onDrawRoute
 }) {
   const { isAnon } = useAuth();
 
@@ -130,6 +131,16 @@ export function FavoritesView({
                     <a href={`tel:${fac.phone}`} className="pill-btn pill-btn-primary" style={{ padding: '6px 14px', fontSize: '12px' }}>
                       📞 {fac.phone}
                     </a>
+                  )}
+                  {onDrawRoute && (
+                    <button
+                      type="button"
+                      className="pill-btn pill-btn-outline"
+                      style={{ padding: '6px 12px', fontSize: '12px' }}
+                      onClick={() => onDrawRoute(fac)}
+                    >
+                      📍 Traseu OSRM ›
+                    </button>
                   )}
                   <button
                     type="button"

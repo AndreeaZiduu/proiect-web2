@@ -892,3 +892,44 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Linting Frontend:** `npm run lint --prefix frontend` (oxlint) — 0 erori.
 * **Teste Backend:** `npm test --prefix backend` — 45/45 teste trecute (100% succes).
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py --fix` — `✓ ledger ok`.
+
+
+# Sesiunea 25 — Construcția Ecranelor Frontend DS-02 .. DS-05 pe Ramura Dedicată (2026-11-22)
+
+## 1. Ce a Cerut Utilizatorul
+1. Respectarea strictă a fluxului `/build` din `.claude/skills/build/SKILL.md`: crearea și lucrul exclusiv pe ramura `feat/ds02-ds05-screens` (fără lucru pe `main`).
+2. Păstrarea neatinsă a ecranului `DS-01` Explorer (pini hartă, auto-scroll, rutare stradală OSRM) și protecție strictă a directorului `backend/` (zero modificări pe server sau baza de date).
+3. Construcția completă a celor 4 ecrane frontend rămase conform token-urilor și esteticii din `docs/design/DESIGN.md` și `docs/design/mocks/full-site-prototype.html` (atât în Light Mode cât și în Dark Mode):
+   - **`DS-02` (Facility Details modal și vizualizare `/unitate/:id`)**: declanșat la click pe "Detalii" sau accesare directă URL, afișare info completă, badge categorie, adresă, status live, timestamp `lastVerifiedAt`, apel direct 1-tap, declanșare traseu OSRM, steluță favorite, orar săptămânal, banner rotație de gardă activă (`C-004`), excepții sărbători legale (`D-004`), formular sesizări orar / închideri temporare și buton confirmare cu bară de progres spre pragul de 4 vs 8 voturi (`D-001`).
+   - **`DS-03` (`/urgenta` — Ghid de Urgență Sibiu)**: linii roșii plasate sus pentru apelare 1-tap (112, UPU Sibiu, Urgențe Pediatrice, Centre de Permanență Cedonia, Spital Veterinar 24/7, Farmacii de Gardă / Colegiul Farmaciștilor), link-uri rapide înapoi către farmaciile deschise/de gardă din `DS-01` și protocolul de triaj în 6 pași.
+   - **`DS-04` (`/favorite` & `/sesizari` — Cont, Favorite și Sesizări)**:
+     - `/favorite`: catalog unități salvate (sincronizat cu backend-ul pentru utilizatori autentificați și fallback local pentru `ANON`), status live, buton traseu OSRM și apel direct.
+     - `/sesizari`: flux sesizări comunitare cu badge-uri de stare (`PENDING`, `APPROVED`, `REJECTED`, `CONFLICT`), progres vizual spre pragul de 4 vs 8 confirmări și buton de vot 1-tap.
+   - **`DS-05` (`/admin` — Panou Moderare & Administrare)**:
+     - Rută protejată conform `D-003`, afișând un ecran clar de acces restricționat cu butoane de conectare rapidă 1-click pentru `ANON` și `USER`.
+     - Coadă de moderare sesizări pentru `MODERATOR` și `ADMIN` (aprobare/respingere și soluționare conflicte).
+     - Gestiune unități (adăugare/ștergere) și import CSV rotații gardă idempotent cu previzualizare tabelară rezervate exclusiv rolului `ADMIN` (cu blocare 403 pentru Moderator).
+4. Verificarea compilării curate `npm run build` în `frontend/`, a integrității registrului (`ledger-lint.py`) și consemnarea concisă în `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **Control Versiuni & Izolare**:
+  - Creată ramura de lucru `feat/ds02-ds05-screens`.
+  - `backend/` a rămas complet neatins (`git diff backend/` este gol).
+  - Componentele de bază `DS-01` Explorer (`ExplorerView.jsx`, `SibiuMap.jsx`, `FacilityCard.jsx`) au fost conservate fără regresii.
+* **Ecranul DS-02 (Detalii Unitate & Rută `/unitate/:id`)**:
+  - `frontend/src/App.jsx`: adăugat componenta `FacilityRouteWrapper` și ruta `/unitate/:id` pentru accesare directă prin URL.
+  - `frontend/src/components/ds02-details/FacilityDetailModal.jsx`: integrat timestamp-ul `lastVerifiedAt`, banner-ul vizual pentru rotația de gardă activă (`C-004`), orarul excepțiilor de sărbători legale (`D-004`), selecția motivului raportat și bara animată de progres către cele 4 sau 8 confirmări necesare (`D-001`).
+* **Ecranul DS-03 (Ghid de Urgență Sibiu)**:
+  - `frontend/src/components/ds03-emergency/EmergencyGuideView.jsx`: adăugat panoul cu link-uri rapide către farmaciile deschise acum / de gardă din `DS-01` și extins grila de linii directe pentru apelare imediată (112, UPU Sibiu 0269 215 050, Urgențe Pediatrie 0269 217 927, Centrul de Permanență Cedonia 0269 243 000, Spitalul Veterinar Transilvania 0369 991, Colegiul Farmaciștilor 0269 211 333).
+* **Ecranul DS-04 (Favorite & Sesizări Comunitare)**:
+  - `frontend/src/components/ds04-favorites/FavoritesView.jsx`: carduri de favorite cu status live, apel telefonic direct `tel:`, buton dedicat `📍 Traseu OSRM ›` și alertă vizuală pentru modificări recente de program.
+  - `frontend/src/components/ds06-sesizari/SesizariView.jsx`: flux de sesizări comunitare cu semnalizare cromatică de stare (inclusiv `CONFLICT`), bară vizuală de progres (procentaj și număr voturi din pragul de 4 sau 8), votare securizată și formular de raportare.
+* **Ecranul DS-05 (Panou Moderare & Administrare)**:
+  - `frontend/src/components/ds05-admin/AdminPanel.jsx`: integrat ecranul dedicat de acces restricționat pentru `ANON` și `USER` conform deciziei `D-003`, coada de moderare pentru `MODERATOR` și `ADMIN` cu soluționare conflicte, panoul de gestiune unități și importul CSV gardă cu previzualizare tabelară și rezumat inserate vs duplicate rezervat exclusiv pentru `ADMIN`.
+
+## 3. Verificări
+* **Protecție Backend:** `git diff backend/` — **0 modificări (complet neatins)**.
+* **Build Frontend:** `npm run build --prefix frontend` — compilat cu succes în 2.46s (0 erori).
+* **Linting Frontend:** `npm run lint --prefix frontend` (oxlint) — **0 erori, 0 avertismente** pe toate cele 17 fișiere.
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/ds02-ds05-screens`.

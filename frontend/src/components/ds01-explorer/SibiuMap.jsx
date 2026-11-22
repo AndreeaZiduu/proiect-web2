@@ -157,7 +157,7 @@ export function SibiuMap({
 
       marker.addTo(markersLayer);
     });
-  }, [facilities, selectedFacility]);
+  }, [facilities, selectedFacility, onSelectFacility]);
 
   // Update Route Polyline
   useEffect(() => {

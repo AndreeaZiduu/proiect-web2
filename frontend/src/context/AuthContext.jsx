@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { api } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -14,24 +14,12 @@ export function AuthProvider({ children }) {
   });
 
   const [token, setToken] = useState(() => localStorage.getItem('token') || null);
-  const [role, setRole] = useState(() => {
-    if (user && user.role) return user.role;
-    return 'ANON';
-  });
-
-  useEffect(() => {
-    if (user && user.role) {
-      setRole(user.role);
-    } else {
-      setRole('ANON');
-    }
-  }, [user]);
+  const role = user?.role || 'ANON';
 
   const login = async (email, password) => {
     const data = await api.login(email, password);
     setToken(data.token);
     setUser(data.user);
-    setRole(data.user.role);
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     return data;
@@ -41,7 +29,6 @@ export function AuthProvider({ children }) {
     const data = await api.register(email, password, name);
     setToken(data.token);
     setUser(data.user);
-    setRole(data.user.role);
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     return data;
@@ -50,7 +37,6 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     setUser(null);
-    setRole('ANON');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   };
@@ -86,7 +72,6 @@ export function AuthProvider({ children }) {
       const mockToken = `demo-token-${targetRole.toLowerCase()}`;
       setToken(mockToken);
       setUser(mockUser);
-      setRole(targetRole);
       localStorage.setItem('token', mockToken);
       localStorage.setItem('user', JSON.stringify(mockUser));
     }

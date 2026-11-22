@@ -1,19 +1,51 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export function EmergencyGuideView() {
   return (
     <section className="screen-pane active-screen" id="paneDs03">
-      {/* 1. Top Section: 4 Hotlines */}
+      {/* Quick Navigation Links back to DS-01 Explorer */}
+      <div
+        className="originle-card"
+        style={{
+          marginBottom: '24px',
+          background: 'var(--bg-surface-subtle)',
+          padding: '16px 20px',
+          borderLeft: '4px solid var(--color-pharmacy)'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <span className="originle-kicker">● REZERVAT TRIAJULUI RAPID</span>
+            <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-bold)', margin: '2px 0 0 0' }}>
+              Găsește Imediat o Unitate Deschisă în Județul Sibiu
+            </h2>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <Link to="/?filter=open" className="pill-btn pill-btn-primary" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+              🟢 Farmacii Deschise Acum ›
+            </Link>
+            <Link to="/?filter=duty" className="pill-btn pill-btn-outline" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+              🛡️ De Gardă Activă (Non-Stop) ›
+            </Link>
+            <Link to="/?type=EMERGENCY_VET" className="pill-btn pill-btn-outline" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+              🐾 Cabinete Veterinare Urgență ›
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* 1. Top Section: 6 Official Sibiu Emergency Hotlines */}
       <div style={{ marginBottom: '28px' }}>
         <div className="originle-kicker">
-          <span className="originle-kicker-dot" /> LINII DIRECTE OFICIALE JUDEȚUL SIBIU
+          <span className="originle-kicker-dot" /> LINII DIRECTE OFICIALE JUDEȚUL SIBIU (APELARE 1-TAP)
         </div>
         <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-extrabold)', letterSpacing: '-0.01em', margin: '4px 0 16px 0' }}>
-          Numere de Urgență & Triaj Rapid
+          Numere de Urgență & Triaj Rapid Sibiu
         </h1>
 
         <div className="hotlines-top-grid-4">
-          {/* 112 Major Emergency */}
+          {/* 112 Major Human Emergency */}
           <div className="hotline-card-top hotline-card-112">
             <div>
               <span className="hotline-badge-tag" style={{ color: 'var(--accent-coral-alert)' }}>
@@ -23,7 +55,7 @@ export function EmergencyGuideView() {
                 112
               </div>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
-                Număr Național Unic: Salvare, Pompieri, Poliție, SMURD Sibiu.
+                Număr Național Unic: Salvare, Pompieri, Poliție, SMURD Sibiu. Pericol iminent pentru viață.
               </p>
             </div>
             <a href="tel:112" className="pill-btn pill-btn-emergency" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
@@ -31,17 +63,71 @@ export function EmergencyGuideView() {
             </a>
           </div>
 
+          {/* UPU Sibiu - Spital Judetean Urgente Adulti */}
+          <div className="hotline-card-top">
+            <div>
+              <span className="hotline-badge-tag">
+                UPU ADULȚI — SPITAL JUDEȚEAN SIBIU
+              </span>
+              <div className="hotline-phone-number">
+                0269 215 050
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
+                Unitatea de Primiri Urgențe Sibiu: Bd. Corneliu Coposu nr. 2-4. Serviciu non-stop 24/7.
+              </p>
+            </div>
+            <a href="tel:0269215050" className="pill-btn pill-btn-outline" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
+              📞 Apelează UPU Sibiu
+            </a>
+          </div>
+
+          {/* Pediatrie Sibiu - Urgente Copii */}
+          <div className="hotline-card-top">
+            <div>
+              <span className="hotline-badge-tag">
+                URGENȚE PEDIATRIE SIBIU
+              </span>
+              <div className="hotline-phone-number">
+                0269 217 927
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
+                Spitalul Clinic de Pediatrie Sibiu: Str. Gheorghe Barițiu nr. 1-3. Triaj pediatric 24/7.
+              </p>
+            </div>
+            <a href="tel:0269217927" className="pill-btn pill-btn-outline" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
+              📞 Sună Pediatrie Urgențe
+            </a>
+          </div>
+
+          {/* Centre de Permanenta Sibiu */}
+          <div className="hotline-card-top">
+            <div>
+              <span className="hotline-badge-tag">
+                CENTRE DE PERMANENȚĂ SIBIU
+              </span>
+              <div className="hotline-phone-number">
+                0269 243 000
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
+                Centrul de Permanență Cedonia: Str. Nicolae Iorga. Asistență medicală primară de noapte.
+              </p>
+            </div>
+            <a href="tel:0269243000" className="pill-btn pill-btn-outline" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
+              📞 Info Centru Permanență
+            </a>
+          </div>
+
           {/* Emergency Vet Hospital 24/7 */}
           <div className="hotline-card-top" style={{ borderColor: 'var(--color-vet-border)' }}>
             <div>
               <span className="hotline-badge-tag" style={{ color: 'var(--color-vet-text)' }}>
-                SPITAL VETERINAR URGENȚĂ SIBIU
+                SPITAL VETERINAR URGENȚĂ 24/7
               </span>
               <div className="hotline-phone-number" style={{ color: 'var(--color-vet-text)' }}>
                 0369 991
               </div>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
-                Spitalul Veterinar Transilvania: Terapie intensivă și urgențe 24/7.
+                Spitalul Veterinar Transilvania: Str. Vasile Cârlova nr. 26. Terapie intensivă și chirurgie vet 24/7.
               </p>
             </div>
             <a href="tel:0369991" className="pill-btn pill-btn-primary" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
@@ -59,29 +145,11 @@ export function EmergencyGuideView() {
                 0269 211 333
               </div>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
-                Colegiul Farmaciștilor Sibiu: Informații oficiale rotații nocturne.
+                Colegiul Farmaciștilor Sibiu: Informații oficiale rotații nocturne și festive.
               </p>
             </div>
             <a href="tel:0269211333" className="pill-btn pill-btn-outline" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
               📞 Info Gardă Farmacii
-            </a>
-          </div>
-
-          {/* DSVSA Sibiu */}
-          <div className="hotline-card-top">
-            <div>
-              <span className="hotline-badge-tag">
-                DISPECERAT DSVSA SIBIU
-              </span>
-              <div className="hotline-phone-number">
-                0269 223 069
-              </div>
-              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.35' }}>
-                Direcția Sanitar-Veterinară: Supraveghere și alerte sanitare Sibiu.
-              </p>
-            </div>
-            <a href="tel:0269223069" className="pill-btn pill-btn-outline" style={{ width: '100%', fontSize: '13px', padding: '10px' }}>
-              📞 Sună Dispecerat
             </a>
           </div>
         </div>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Header } from './components/common/Header';
 import { AuthModal } from './components/common/AuthModal';
@@ -14,6 +14,7 @@ import { api } from './services/api';
 
 function AppContent() {
   const { role, isModerator } = useAuth();
+  const navigate = useNavigate();
 
   // Theme: 'light' | 'dark'
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
@@ -25,6 +26,7 @@ function AppContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isDemoDrawerOpen, setIsDemoDrawerOpen] = useState(false);
   const [detailFacility, setDetailFacility] = useState(null);
+  const [routeTargetFacility, setRouteTargetFacility] = useState(null);
 
   // Favorites state (local + remote)
   const [favorites, setFavorites] = useState(() => {
@@ -50,7 +52,7 @@ function AppContent() {
   };
 
   // Sync favorites & moderation count
-  const syncRemoteData = async () => {
+  const syncRemoteData = useCallback(async () => {
     try {
       if (role !== 'ANON') {
         const favs = await api.getFavorites();
@@ -65,11 +67,17 @@ function AppContent() {
     } catch {
       // Offline fallback
     }
-  };
+  }, [role, isModerator]);
 
   useEffect(() => {
     syncRemoteData();
-  }, [role, isModerator]);
+  }, [syncRemoteData]);
+
+  const handleDrawRouteFromModal = (facility) => {
+    setDetailFacility(null);
+    setRouteTargetFacility(facility);
+    navigate('/');
+  };
 
   // Register PWA Service Worker
   useEffect(() => {
@@ -140,6 +148,8 @@ function AppContent() {
                 onToggleFavorite={handleToggleFavorite}
                 onOpenDetails={(fac) => setDetailFacility(fac)}
                 previewState={previewState}
+                routeTargetFacility={routeTargetFacility}
+                onClearRouteTarget={() => setRouteTargetFacility(null)}
               />
             }
           />
@@ -157,12 +167,23 @@ function AppContent() {
                 onToggleFavorite={handleToggleFavorite}
                 onOpenDetails={(fac) => setDetailFacility(fac)}
                 onOpenAuthModal={() => setIsAuthModalOpen(true)}
+                onDrawRoute={handleDrawRouteFromModal}
+              />
+            }
+          />
+          <Route
+            path="/unitate/:id"
+            element={
+              <FacilityRouteWrapper
+                favorites={favorites}
+                onToggleFavorite={handleToggleFavorite}
+                onDrawRoute={handleDrawRouteFromModal}
               />
             }
           />
           <Route
             path="/admin"
-            element={isModerator ? <AdminPanel /> : <Navigate to="/" replace />}
+            element={<AdminPanel onOpenAuthModal={() => setIsAuthModalOpen(true)} />}
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -199,11 +220,25 @@ function AppContent() {
         onClose={() => setDetailFacility(null)}
         isFavorited={favorites.some((f) => (f.facilityId || f.id) === detailFacility?.id)}
         onToggleFavorite={handleToggleFavorite}
-        onDrawRoute={() => {
-          setDetailFacility(null);
-        }}
+        onDrawRoute={handleDrawRouteFromModal}
       />
     </div>
+  );
+}
+
+function FacilityRouteWrapper({ favorites, onToggleFavorite, onDrawRoute }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <FacilityDetailModal
+      facilityId={id}
+      isOpen={true}
+      onClose={() => navigate('/')}
+      isFavorited={favorites.some((f) => (f.facilityId || f.id) === id)}
+      onToggleFavorite={onToggleFavorite}
+      onDrawRoute={onDrawRoute}
+    />
   );
 }
 

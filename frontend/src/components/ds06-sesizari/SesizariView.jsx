@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -12,13 +12,11 @@ export function SesizariView({ onOpenAuthModal }) {
   const [feedback, setFeedback] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const facData = await api.getFacilities({ city: 'all' });
       setFacilities(facData.facilities || []);
-      if (!selectedFacilityId && facData.facilities?.length > 0) {
-        setSelectedFacilityId(facData.facilities[0].id);
-      }
+      setSelectedFacilityId((prev) => (prev ? prev : (facData.facilities?.[0]?.id || '')));
 
       // Collect active corrections from facilities
       const activeCorrs = [];
@@ -31,11 +29,11 @@ export function SesizariView({ onOpenAuthModal }) {
     } catch (err) {
       console.error('Error loading sesizari:', err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const handleVote = async (id) => {
     try {
@@ -157,9 +155,11 @@ export function SesizariView({ onOpenAuthModal }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {corrections.map((corr) => {
                 const required = corr.isClosedOverride ? 4 : 8;
+                const pct = Math.min(100, Math.round((corr.confirmations / required) * 100));
+
                 return (
                   <div key={corr.id} className="originle-card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
                       <div>
                         <span className="originle-kicker">● SESIZARE COMUNITATE</span>
                         <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-bold)', margin: '2px 0 4px 0' }}>
@@ -170,28 +170,62 @@ export function SesizariView({ onOpenAuthModal }) {
                         </p>
                       </div>
 
-                      <span
-                        className="status-badge b-duty"
-                        style={{ fontSize: '11px' }}
-                      >
-                        {corr.confirmations} / {required} confirmări
-                      </span>
+                      <div style={{ textAlign: 'right' }}>
+                        {corr.status === 'APPROVED' ? (
+                          <span className="status-badge b-open">✓ APROBAT (D-001)</span>
+                        ) : corr.status === 'CONFLICT' ? (
+                          <span className="status-badge" style={{ background: 'rgba(217, 56, 41, 0.12)', color: 'var(--accent-coral-alert)', border: '1px solid rgba(217, 56, 41, 0.3)' }}>
+                            ⚠️ ÎN CONFLICT
+                          </span>
+                        ) : corr.status === 'REJECTED' ? (
+                          <span className="status-badge b-closed">✕ RESPINS</span>
+                        ) : (
+                          <span className="status-badge b-duty">
+                            <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
+                            ÎN AȘTEPTARE ({corr.confirmations}/{required})
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    <p style={{ fontSize: 'var(--font-size-sm)', margin: '12px 0', fontWeight: '500' }}>
+                    <p style={{ fontSize: 'var(--font-size-sm)', margin: '10px 0 8px 0', fontWeight: '500' }}>
                       "{corr.proposedNote}"
                     </p>
 
+                    {/* Live Progress Bar toward 4 vs 8 confirmations (D-001) */}
+                    <div style={{ margin: '8px 0 10px 0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '3px' }}>
+                        <span>Prag aprobare automată ({corr.isClosedOverride ? '4 confirmări pauză/închidere' : '8 confirmări orar'})</span>
+                        <span><strong>{corr.confirmations} / {required}</strong> voturi ({pct}%)</span>
+                      </div>
+                      <div style={{ width: '100%', height: '8px', background: 'var(--border-subtle)', borderRadius: '9999px', overflow: 'hidden' }}>
+                        <div
+                          style={{
+                            width: `${pct}%`,
+                            height: '100%',
+                            background: corr.status === 'APPROVED' ? 'var(--status-open-dot)' : corr.status === 'CONFLICT' ? 'var(--accent-coral-alert)' : 'var(--accent-terracotta)',
+                            transition: 'width 0.3s ease'
+                          }}
+                        />
+                      </div>
+                    </div>
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
                       <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                        Status: <strong>{corr.status}</strong>
+                        Status: <strong>{corr.status}</strong> • Valabil până: {corr.validUntil ? new Date(corr.validUntil).toLocaleDateString('ro-RO') : '24h'}
                       </span>
-                      {corr.status !== 'APPROVED' && (
+                      {corr.status !== 'APPROVED' && corr.status !== 'REJECTED' && (
                         <button
                           type="button"
                           className="pill-btn pill-btn-primary"
                           style={{ padding: '6px 14px', fontSize: '12px' }}
-                          onClick={() => handleVote(corr.id)}
+                          onClick={() => {
+                            if (isAnon && onOpenAuthModal) {
+                              onOpenAuthModal();
+                            } else {
+                              handleVote(corr.id);
+                            }
+                          }}
                         >
                           +1 Confirmă sesizarea
                         </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -25,7 +25,7 @@ export function FacilityDetailModal({
   const [validDays, setValidDays] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  const loadDetails = async () => {
+  const loadDetails = useCallback(async () => {
     if (!facilityId) return;
     setLoading(true);
     try {
@@ -36,14 +36,14 @@ export function FacilityDetailModal({
     } finally {
       setLoading(false);
     }
-  };
+  }, [facilityId]);
 
   useEffect(() => {
     if (isOpen && facilityId) {
       loadDetails();
       setFeedbackMsg(null);
     }
-  }, [isOpen, facilityId]);
+  }, [isOpen, facilityId, loadDetails]);
 
   if (!isOpen) return null;
 
@@ -185,6 +185,9 @@ export function FacilityDetailModal({
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
                     📍 {facility.address}, {facility.city} • Sursă: {facility.sourceName}
                   </p>
+                  <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    ✓ Ultima verificare oficială: {facility.lastVerifiedAt ? new Date(facility.lastVerifiedAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' }) : '21 noiembrie 2026'}
+                  </p>
                 </div>
 
                 <div>
@@ -246,6 +249,55 @@ export function FacilityDetailModal({
             <div className="details-split-grid">
               {/* Left Column: Weekly Schedule & Services */}
               <div className="originle-card">
+                {/* Active Guard Duty Banner (DutyRotation / C-004) */}
+                {facility.onCallRotations && facility.onCallRotations.length > 0 && (
+                  <div
+                    className="originle-card"
+                    style={{
+                      background: 'var(--status-duty-bg)',
+                      border: '1px solid var(--status-duty-border)',
+                      padding: '14px 18px',
+                      borderRadius: 'var(--radius-lg)',
+                      marginBottom: '16px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
+                      <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-bold)', color: 'var(--status-duty-text)' }}>
+                        🛡️ ROTAȚIE DE GARDĂ NOCTURNĂ OFICIALĂ (C-004)
+                      </span>
+                    </div>
+                    {facility.onCallRotations.map((rot) => (
+                      <div key={rot.id} style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-primary)', marginTop: '4px' }}>
+                        <div>Perioadă: <strong>{new Date(rot.startsAt).toLocaleDateString('ro-RO')} – {new Date(rot.endsAt).toLocaleDateString('ro-RO')}</strong></div>
+                        {rot.onCallPhone && (
+                          <div style={{ marginTop: '2px' }}>
+                            Telefon gardă urgență: <strong><a href={`tel:${rot.onCallPhone}`} style={{ color: 'var(--accent-terracotta)', textDecoration: 'none' }}>📞 {rot.onCallPhone}</a></strong>
+                          </div>
+                        )}
+                        {rot.notes && <div style={{ color: 'var(--text-secondary)', fontStyle: 'italic', marginTop: '2px' }}>Note: {rot.notes}</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Holiday Overrides (D-004) */}
+                {facility.holidaySchedules && facility.holidaySchedules.length > 0 && (
+                  <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-md)' }}>
+                    <span className="originle-kicker">● EXCEPȚII SĂRBĂTORI LEGALE (D-004)</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '6px' }}>
+                      {facility.holidaySchedules.map((hol) => (
+                        <div key={hol.id} style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)' }}>
+                          📅 <strong>{new Date(hol.date).toLocaleDateString('ro-RO')}</strong> ({hol.name || 'Sărbătoare'}):{' '}
+                          <span style={{ color: hol.isClosed ? 'var(--accent-coral-alert)' : 'var(--status-open-text)', fontWeight: '600' }}>
+                            {hol.isClosed ? 'Închis' : `${String(Math.floor(hol.openMinute/60)).padStart(2,'0')}:${String(hol.openMinute%60).padStart(2,'0')} - ${String(Math.floor(hol.closeMinute/60)).padStart(2,'0')}:${String(hol.closeMinute%60).padStart(2,'0')}`}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <span className="originle-kicker">● ORAR OFICIAL</span>
                 <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-bold)', margin: '4px 0 12px 0' }}>
                   Program Săptămânal de Funcționare
@@ -325,6 +377,7 @@ export function FacilityDetailModal({
                   {facility.corrections && facility.corrections.length > 0 ? (
                     facility.corrections.map((corr) => {
                       const required = corr.isClosedOverride ? 4 : 8;
+                      const pct = Math.min(100, Math.round((corr.confirmations / required) * 100));
                       return (
                         <div
                           key={corr.id}
@@ -336,16 +389,35 @@ export function FacilityDetailModal({
                           }}
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--accent-terracotta)' }}>
+                            <span style={{ fontSize: '11px', fontWeight: '700', color: corr.status === 'APPROVED' ? 'var(--status-open-text)' : corr.status === 'CONFLICT' ? 'var(--accent-coral-alert)' : 'var(--accent-terracotta)' }}>
                               {corr.status} • {corr.confirmations} / {required} confirmări
                             </span>
                             <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
                               de {corr.submittedBy?.name || 'Cetățean'}
                             </span>
                           </div>
-                          <p style={{ fontSize: 'var(--font-size-xs)', margin: '4px 0 8px 0', fontWeight: '500' }}>
+                          <p style={{ fontSize: 'var(--font-size-xs)', margin: '4px 0 6px 0', fontWeight: '500' }}>
                             {corr.proposedNote}
                           </p>
+
+                          {/* Live Progress Bar toward 4 vs 8 confirmations (D-001) */}
+                          <div style={{ margin: '6px 0 8px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '3px' }}>
+                              <span>Progres aprobare automată (D-001)</span>
+                              <span>{corr.confirmations} / {required} voturi ({pct}%)</span>
+                            </div>
+                            <div style={{ width: '100%', height: '6px', background: 'var(--border-subtle)', borderRadius: '9999px', overflow: 'hidden' }}>
+                              <div
+                                style={{
+                                  width: `${pct}%`,
+                                  height: '100%',
+                                  background: corr.status === 'APPROVED' ? 'var(--status-open-dot)' : 'var(--accent-terracotta)',
+                                  transition: 'width 0.3s'
+                                }}
+                              />
+                            </div>
+                          </div>
+
                           {corr.status !== 'APPROVED' && (
                             <button
                               type="button"
