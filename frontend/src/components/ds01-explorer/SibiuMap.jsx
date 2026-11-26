@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 
-const SIBIU_CENTER = [45.7983, 24.1503]; // Piața Mare Sibiu
+const DEFAULT_SIBIU_CENTER = [45.7983, 24.1256]; // Centrul Sibiului
 
 export function SibiuMap({
   facilities = [],
   selectedFacility = null,
   routeData = null,
+  userLocation = null,
   theme = 'light',
   onSelectFacility
 }) {
@@ -15,6 +16,7 @@ export function SibiuMap({
   const markersLayerRef = useRef(null);
   const routeLayerRef = useRef(null);
   const tileLayerRef = useRef(null);
+  const prevUserLocationRef = useRef(null);
 
   // Initialize Leaflet map
   useEffect(() => {
@@ -22,7 +24,7 @@ export function SibiuMap({
     if (mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
-      center: SIBIU_CENTER,
+      center: DEFAULT_SIBIU_CENTER,
       zoom: 14,
       zoomControl: false
     });
@@ -61,25 +63,55 @@ export function SibiuMap({
     }
   }, [theme]);
 
-  // Update Markers
+  // Update Markers (Origin "Tu ești aici" / Centrul Sibiului + Facilities)
   useEffect(() => {
     if (!mapInstanceRef.current || !markersLayerRef.current) return;
 
     const markersLayer = markersLayerRef.current;
     markersLayer.clearLayers();
 
-    // Center marker (Piața Mare Sibiu)
-    const centerIcon = L.divIcon({
-      className: 'custom-leaflet-pin',
-      html: `
-        <div style="background: var(--text-primary); color: var(--bg-surface); border-radius: 9999px; padding: 2px 8px; font-size: 11px; font-weight: 700; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-          🎯 Piața Mare
+    if (userLocation) {
+      const userIcon = L.divIcon({
+        className: 'custom-leaflet-pin',
+        html: `
+          <div class="user-location-pin">
+            <span class="user-location-pin-dot"></span>
+            <span>📍 Tu ești aici</span>
+          </div>
+        `,
+        iconSize: null,
+        iconAnchor: [58, 14]
+      });
+      const userMarker = L.marker([userLocation.lat, userLocation.lng], {
+        icon: userIcon,
+        zIndexOffset: 1000
+      });
+      userMarker.bindPopup(`
+        <div style="padding: 6px; font-family: var(--font-family-primary);">
+          <div style="font-size: 11px; font-weight: 800; color: var(--accent-terracotta); text-transform: uppercase;">
+            ● LOCAȚIA TA CURENTĂ
+          </div>
+          <div style="font-size: 13px; font-weight: 700; margin-top: 2px;">Tu ești aici</div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
+            Punct de plecare pentru sortare și trasee OSRM.
+          </div>
         </div>
-      `,
-      iconSize: [80, 24],
-      iconAnchor: [40, 12]
-    });
-    L.marker(SIBIU_CENTER, { icon: centerIcon }).addTo(markersLayer);
+      `);
+      userMarker.addTo(markersLayer);
+    } else {
+      // Default center reference marker (Centrul Sibiului)
+      const centerIcon = L.divIcon({
+        className: 'custom-leaflet-pin',
+        html: `
+          <div style="background: var(--text-primary); color: var(--bg-surface); border-radius: 9999px; padding: 2px 8px; font-size: 11px; font-weight: 700; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+            🎯 Centrul Sibiului
+          </div>
+        `,
+        iconSize: null,
+        iconAnchor: [60, 12]
+      });
+      L.marker(DEFAULT_SIBIU_CENTER, { icon: centerIcon }).addTo(markersLayer);
+    }
 
     // Facility Markers
     facilities.forEach((fac) => {
@@ -161,7 +193,22 @@ export function SibiuMap({
 
       marker.addTo(markersLayer);
     });
-  }, [facilities, selectedFacility, onSelectFacility]);
+  }, [facilities, selectedFacility, userLocation, onSelectFacility]);
+
+  // Pan map to user location when detected (unless an active route is controlling bounds)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !userLocation) {
+      prevUserLocationRef.current = userLocation;
+      return;
+    }
+    const prev = prevUserLocationRef.current;
+    const changed = !prev || prev.lat !== userLocation.lat || prev.lng !== userLocation.lng;
+    prevUserLocationRef.current = userLocation;
+
+    if (changed && !routeData) {
+      mapInstanceRef.current.setView([userLocation.lat, userLocation.lng], 14, { animate: true });
+    }
+  }, [userLocation, routeData]);
 
   // Update Route Polyline
   useEffect(() => {
@@ -193,7 +240,10 @@ export function SibiuMap({
 
   const handleCenter = () => {
     if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.setView(SIBIU_CENTER, 14, { animate: true });
+    const targetCenter = userLocation
+      ? [userLocation.lat, userLocation.lng]
+      : DEFAULT_SIBIU_CENTER;
+    mapInstanceRef.current.setView(targetCenter, 14, { animate: true });
   };
 
   return (
@@ -206,8 +256,13 @@ export function SibiuMap({
         <button type="button" className="map-tool-btn" onClick={() => handleZoom(-1)} title="Micșorează">
           &minus;
         </button>
-        <button type="button" className="map-tool-btn" onClick={handleCenter} title="Centrează Piața Mare">
-          🎯
+        <button
+          type="button"
+          className="map-tool-btn"
+          onClick={handleCenter}
+          title={userLocation ? 'Centrează pe locația mea' : 'Centrează Centrul Sibiului'}
+        >
+          {userLocation ? '📍' : '🎯'}
         </button>
       </div>
 
@@ -216,7 +271,7 @@ export function SibiuMap({
         <div className="osrm-route-banner">
           <div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Traseu Auto către {selectedFacility.name}
+              Traseu Auto: {userLocation ? 'Tu ești aici' : 'Centrul Sibiului'} → {selectedFacility.name}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {routeData.durationMin !== null ? (

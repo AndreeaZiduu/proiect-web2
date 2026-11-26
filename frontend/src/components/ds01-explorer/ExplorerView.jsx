@@ -3,8 +3,53 @@ import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api';
 import { FacilityCard } from './FacilityCard';
 import { SibiuMap } from './SibiuMap';
+import { LocationConsentModal } from './LocationConsentModal';
 
-const SIBIU_CENTER = { lat: 45.7983, lng: 24.1503 };
+export const DEFAULT_SIBIU_CENTER = { lat: 45.7983, lng: 24.1256 };
+const LOCATION_CONSENT_KEY = 'p10_location_consent';
+const LOCATION_COORDS_KEY = 'p10_location_coords';
+
+function calculateDistanceKm(lat1, lng1, lat2, lng2) {
+  if (
+    lat1 === null || lat1 === undefined ||
+    lng1 === null || lng1 === undefined ||
+    lat2 === null || lat2 === undefined ||
+    lng2 === null || lng2 === undefined
+  ) {
+    return null;
+  }
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c * 10) / 10;
+}
+
+function readStoredConsent() {
+  try {
+    return sessionStorage.getItem(LOCATION_CONSENT_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function readStoredCoords() {
+  try {
+    const raw = sessionStorage.getItem(LOCATION_COORDS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.lat === 'number' && typeof parsed?.lng === 'number') {
+      return { lat: parsed.lat, lng: parsed.lng };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 const QUICK_SERVICE_SUGGESTIONS = [
   { label: 'Parasinus', query: 'Parasinus', icon: '💊' },
@@ -225,12 +270,117 @@ export function ExplorerView({
     setSearchParams(next, { replace: true });
   }, [selectedDomain, filterOpenNow, filterOnCall, selectedCity, searchQuery, setSearchParams]);
 
+  // Geolocation consent & active origin (no silent navigator.geolocation call before user consent)
+  const [showLocationPrompt, setShowLocationPrompt] = useState(() => readStoredConsent() === null);
+  const [userLocation, setUserLocation] = useState(() =>
+    readStoredConsent() === 'granted' ? readStoredCoords() : null
+  );
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState(null);
+
+  const activeOrigin = useMemo(() => userLocation || DEFAULT_SIBIU_CENTER, [userLocation]);
+
   // Selected facility and routing
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [routeData, setRouteData] = useState(null);
+  const selectedFacilityRef = useRef(null);
+  const routeDataRef = useRef(null);
+
+  useEffect(() => {
+    selectedFacilityRef.current = selectedFacility;
+    routeDataRef.current = routeData;
+  }, [selectedFacility, routeData]);
+
   const cardRefs = useRef({});
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchContainerRef = useRef(null);
+
+  const requestBrowserLocation = useCallback(() => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      setLocationError('Browserul nu suportă localizarea GPS — folosim Centrul Sibiului.');
+      setIsLocating(false);
+      return;
+    }
+
+    setIsLocating(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        try {
+          sessionStorage.setItem(LOCATION_CONSENT_KEY, 'granted');
+          sessionStorage.setItem(LOCATION_COORDS_KEY, JSON.stringify(coords));
+        } catch {
+          // Ignore storage restrictions
+        }
+        setUserLocation(coords);
+        setIsLocating(false);
+        setLocationError(null);
+
+        // Recalculate active OSRM route from the newly detected user origin
+        if (routeDataRef.current && selectedFacilityRef.current) {
+          const target = selectedFacilityRef.current;
+          api
+            .getOsrmRoute(coords, { lat: target.latitude, lng: target.longitude })
+            .then((updatedRoute) => setRouteData(updatedRoute));
+        }
+      },
+      (geoErr) => {
+        const isDenied = geoErr && geoErr.code === 1;
+        if (isDenied) {
+          try {
+            sessionStorage.setItem(LOCATION_CONSENT_KEY, 'denied');
+            sessionStorage.removeItem(LOCATION_COORDS_KEY);
+          } catch {
+            // Ignore storage restrictions
+          }
+          setUserLocation(null);
+          setLocationError('Accesul la locație a fost refuzat în browser — folosim Centrul Sibiului.');
+        } else {
+          setLocationError('Nu am putut detecta locația curentă — folosim Centrul Sibiului.');
+        }
+        setIsLocating(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  }, []);
+
+  // Only refresh geolocation on mount if the user already granted consent in this session
+  useEffect(() => {
+    if (readStoredConsent() === 'granted') {
+      requestBrowserLocation();
+    }
+  }, [requestBrowserLocation]);
+
+  const handleAllowLocation = useCallback(() => {
+    try {
+      sessionStorage.setItem(LOCATION_CONSENT_KEY, 'granted');
+    } catch {
+      // Ignore storage restrictions
+    }
+    setShowLocationPrompt(false);
+    requestBrowserLocation();
+  }, [requestBrowserLocation]);
+
+  const handleDeclineLocation = useCallback(() => {
+    try {
+      sessionStorage.setItem(LOCATION_CONSENT_KEY, 'denied');
+      sessionStorage.removeItem(LOCATION_COORDS_KEY);
+    } catch {
+      // Ignore storage restrictions
+    }
+    setShowLocationPrompt(false);
+    setUserLocation(null);
+    setLocationError(null);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -268,8 +418,8 @@ export function ExplorerView({
     setError(null);
     try {
       const data = await api.getFacilities({
-        lat: SIBIU_CENTER.lat,
-        lng: SIBIU_CENTER.lng
+        lat: activeOrigin.lat,
+        lng: activeOrigin.lng
       });
       if (data.isOffline) {
         if (onOfflineChange) onOfflineChange(true);
@@ -277,8 +427,20 @@ export function ExplorerView({
         if (onOfflineChange) onOfflineChange(false);
       }
       const rawList = data.facilities || [];
-      // Sort by Haversine distance ascending from Piața Mare (D-005)
-      const sorted = [...rawList].sort((a, b) => {
+      const withDistances = data.isOffline
+        ? rawList.map((fac) => ({
+            ...fac,
+            distanceKm: calculateDistanceKm(
+              activeOrigin.lat,
+              activeOrigin.lng,
+              fac.latitude,
+              fac.longitude
+            )
+          }))
+        : rawList;
+
+      // Sort by Haversine distance ascending from active origin (D-005)
+      const sorted = [...withDistances].sort((a, b) => {
         const distA = a.distanceKm !== null && a.distanceKm !== undefined ? a.distanceKm : 9999;
         const distB = b.distanceKm !== null && b.distanceKm !== undefined ? b.distanceKm : 9999;
         return distA - distB;
@@ -292,7 +454,7 @@ export function ExplorerView({
     } finally {
       setLoading(false);
     }
-  }, [onOfflineChange]);
+  }, [activeOrigin.lat, activeOrigin.lng, onOfflineChange]);
 
   useEffect(() => {
     fetchFacilities(false);
@@ -385,15 +547,15 @@ export function ExplorerView({
     });
   }, [displayedFacilities]);
 
-  // Handle OSRM route calculation
-  const handleDrawRoute = async (facility) => {
+  // Handle OSRM route calculation using user's detected coordinates or default Sibiu center
+  const handleDrawRoute = useCallback(async (facility) => {
     setSelectedFacility(facility);
     setMobileView('map');
-    const startPoint = SIBIU_CENTER;
+    const startPoint = activeOrigin;
     const endPoint = { lat: facility.latitude, lng: facility.longitude };
     const route = await api.getOsrmRoute(startPoint, endPoint);
     setRouteData(route);
-  };
+  }, [activeOrigin]);
 
   // Trigger route drawing if requested externally (e.g. from FacilityDetailModal or Favorites)
   useEffect(() => {
@@ -403,7 +565,7 @@ export function ExplorerView({
         onClearRouteTarget();
       }
     }
-  }, [routeTargetFacility, onClearRouteTarget]);
+  }, [routeTargetFacility, onClearRouteTarget, handleDrawRoute]);
 
   // Handle facility selection from map pin click with smooth scroll to matching card
   const handleSelectFacilityFromMap = (facility) => {
@@ -451,6 +613,12 @@ export function ExplorerView({
 
   return (
     <section className="screen-pane active-screen" id="paneDs01">
+      <LocationConsentModal
+        isOpen={showLocationPrompt}
+        onAllow={handleAllowLocation}
+        onDecline={handleDeclineLocation}
+      />
+
       {/* 1. Explorer Filters Bar */}
       <div className="explorer-filters-row">
         {/* Search capsule, City dropdown & Quick Service Suggestions */}
@@ -624,8 +792,35 @@ export function ExplorerView({
             <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
             De Gardă ({counts.duty})
           </button>
+          <button
+            type="button"
+            className={`filter-chip location-chip ${userLocation ? 'active-location' : ''}`}
+            onClick={handleAllowLocation}
+            disabled={isLocating}
+            title={
+              userLocation
+                ? 'Actualizează locația curentă pentru sortare și traseu OSRM'
+                : 'Folosește locația curentă pentru sortare și traseu OSRM'
+            }
+          >
+            <span>{isLocating ? '⏳ Se localizează...' : '📍 Locația mea'}</span>
+          </button>
         </div>
       </div>
+
+      {locationError && (
+        <div className="location-feedback-banner" role="status">
+          <span>ℹ️ {locationError}</span>
+          <button
+            type="button"
+            className="location-feedback-close"
+            onClick={() => setLocationError(null)}
+            aria-label="Închide notificarea de locație"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Mobile Toggle Switch (Visible only on <1024px screens) */}
       <div className="mobile-view-toggle">
@@ -653,7 +848,7 @@ export function ExplorerView({
               ● CATALOG DISPONIBILITATE ({displayedFacilities.length} UNITĂȚI)
             </span>
             <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
-              Sortat după distanță
+              {userLocation ? 'Sortat după distanța de la locația ta' : 'Sortat după distanță (Centrul Sibiului)'}
             </span>
           </div>
 
@@ -747,6 +942,7 @@ export function ExplorerView({
             facilities={displayedFacilities}
             selectedFacility={selectedFacility}
             routeData={routeData}
+            userLocation={userLocation}
             theme={theme}
             onSelectFacility={handleSelectFacilityFromMap}
           />

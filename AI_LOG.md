@@ -1083,3 +1083,39 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Build Frontend (`npm run build --prefix frontend`):** **Compilat cu succes** (`vite build` în `frontend/dist/`).
 * **Linter Registru (`python3 docs/agents/tools/ledger-lint.py --fix`):** **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/official-services-and-medications`.
+
+
+# Sesiunea 30 — Dialog Explicit de Consimțământ Locație, Marker „Tu ești aici” & Origine Dinamică OSRM (2026-11-26)
+
+## 1. Ce a Cerut Utilizatorul
+1. Lucrul conform fluxului `/build` pe o ramură nouă dedicată: `feat/location-permission-prompt` (fără modificări pe `main`).
+2. **Dialog explicit de consimțământ pentru locație înainte de apelarea `navigator.geolocation.getCurrentPosition`:**
+   - Nu se apelează `navigator.geolocation.getCurrentPosition` silențios la încărcarea paginii fără acordul utilizatorului.
+   - La prima intrare în Explorer (dacă nu există o decizie salvată în `sessionStorage`), se afișează un dialog stilizat cu token-urile `DESIGN.md`:
+     - Titlu: **"Permiți accesul la locația ta?"**
+     - Descriere: *"Folosim locația ta curentă pentru a sorta farmaciile și cabinetele veterinare după distanța reală și pentru a calcula traseul exact de unde te afli. Locația nu este salvată pe server."*
+     - Buton principal: **"Permite accesul la locație"** → salvează acordul în `sessionStorage` și declanșează `navigator.geolocation.getCurrentPosition(...)`.
+     - Buton secundar: **"Nu acum (folosește Centrul Sibiului)"** → salvează refuzul în `sessionStorage` și folosește coordonatele implicite centrale Sibiu (`45.7983, 24.1256`).
+   - Păstrarea butonului **"📍 Locația mea"** în bara Explorer astfel încât utilizatorul să poată acorda/actualiza oricând permisiunea de locație și să recalculeze distanțele și traseele.
+3. **Origine exactă pe hartă și în rutarea OSRM:**
+   - Afișarea markerului **"Tu ești aici"** pe harta Leaflet la coordonatele detectate și folosirea acestora ca punct de plecare pentru toate traseele OSRM **"Traseu"**.
+4. **Verificare:** Rularea `npm run build --prefix frontend` și actualizarea `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **Control Versiuni:**
+  - Creată ramura `feat/location-permission-prompt` (din `feat/official-services-and-medications`).
+* **Dialog Consimțământ Locație (`LocationConsentModal.jsx`):**
+  - Creat `frontend/src/components/ds01-explorer/LocationConsentModal.jsx` cu textele exacte, suport Light/Dark (`DESIGN.md`), accesibilitate `role="dialog"` / `Escape` și acțiunile de acord sau fallback la Centrul Sibiului.
+* **Flux Consimțământ, Buton „📍 Locația mea” & Origine OSRM (`ExplorerView.jsx`, `SibiuMap.jsx`, `index.css`):**
+  - `frontend/src/components/ds01-explorer/ExplorerView.jsx`: persistență în `sessionStorage` (`p10_location_consent`, `p10_location_coords`), zero apeluri silențioase la `navigator.geolocation.getCurrentPosition` înaintea acordului explicit, buton **"📍 Locația mea"** în bara de filtre, recalculare distanțe Haversine (inclusiv pentru modul offline cache) și recalculare automată a traseului OSRM activ din poziția detectată.
+  - `frontend/src/components/ds01-explorer/SibiuMap.jsx`: marker distinct **"📍 Tu ești aici"** cu pulsare și popup dedicat la coordonatele utilizatorului (sau marker implicit `🎯 Centrul Sibiului` la `45.7983, 24.1256`), pan automat și banner traseu cu originea afișată explicit.
+  - `frontend/src/index.css`: stiluri dedicate pentru dialogul de consimțământ, butonul `.location-chip`, bannerul de feedback și markerul `.user-location-pin` folosind token-urile din `DESIGN.md`.
+* **Registru de Cunoștințe (`docs/agents/PATTERNS.md`):**
+  - Adăugat `PATTERN-006` (`In-app location consent prompt with sessionStorage persistence and live OSRM origin`) cu statut `candidate`.
+
+## 3. Verificări
+* **Linting Frontend (`npm run lint --prefix frontend`):** **0 erori, 0 avertismente** (`oxlint` pe 18 fișiere).
+* **Build Frontend (`npm run build --prefix frontend`):** **Compilat cu succes** (`vite build` în `frontend/dist/`).
+* **Teste Backend (`npm test --prefix backend`):** **56 teste trecute din 56** (7 fișiere de test, fără modificări pe backend).
+* **Linter Registru (`python3 docs/agents/tools/ledger-lint.py --fix`):** **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/location-permission-prompt`.

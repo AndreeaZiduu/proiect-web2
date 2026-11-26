@@ -11,6 +11,7 @@
 - PATTERN-003 · Integrated OSRM road routing on interactive map with external app fallback · candidate
 - PATTERN-004 · Session-scoped Welcome Gate with Visitor Bypass and Header Account Menu · candidate
 - PATTERN-005 · Accent-insensitive catalog autocomplete and matched-pill highlighting · candidate
+- PATTERN-006 · In-app location consent prompt with sessionStorage persistence and live OSRM origin · candidate
 
 ---
 
@@ -48,3 +49,10 @@
 - **Status:** candidate
 - **How:** Derive unique catalog tags (official services and clean medication labels) from loaded facilities, rank live autocomplete matches using diacritic-stripped `normalizeSearchText` (prefix matches first, then substring/token matches with facility counts), and highlight matched substrings inline inside `✓` pills on facility cards without using stock-availability wording.
 - **Example:** `frontend/src/components/ds01-explorer/ExplorerView.jsx` (`normalizeSearchText`, `getAutocompleteSuggestions`, `getMatchingServices`) and `frontend/src/components/ds01-explorer/FacilityCard.jsx` (`highlightServiceMatch`).
+
+---
+
+## PATTERN-006 · In-app location consent prompt with sessionStorage persistence and live OSRM origin
+- **Status:** candidate
+- **How:** Never call `navigator.geolocation.getCurrentPosition` silently on page load; check `sessionStorage` for a prior decision and present an explicit in-app consent modal (`LocationConsentModal`) with allow and central Sibiu (`45.7983, 24.1256`) fallback buttons, keep a `"📍 Locația mea"` chip in the Explorer bar for opting in later, and render the detected coordinates as a `"Tu ești aici"` map marker and OSRM route starting point.
+- **Example:** `frontend/src/components/ds01-explorer/LocationConsentModal.jsx`, `frontend/src/components/ds01-explorer/ExplorerView.jsx`, and `frontend/src/components/ds01-explorer/SibiuMap.jsx`.
