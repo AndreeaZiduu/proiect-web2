@@ -6,6 +6,17 @@ import { SibiuMap } from './SibiuMap';
 
 const SIBIU_CENTER = { lat: 45.7983, lng: 24.1503 };
 
+const QUICK_SERVICE_SUGGESTIONS = [
+  { label: 'Parasinus', query: 'Parasinus', icon: '💊' },
+  { label: 'Nurofen Forte', query: 'Nurofen Forte', icon: '💊' },
+  { label: 'Ventolin', query: 'Ventolin', icon: '🫁' },
+  { label: 'Bravecto (antiparazitar câini)', query: 'Bravecto (antiparazitar câini)', icon: '🐾' },
+  { label: 'Vaccinare antigripală în farmacie', query: 'Vaccinare antigripală în farmacie', icon: '💉' },
+  { label: 'Eliberare rețete compensate CAS', query: 'Eliberare rețete compensate CAS', icon: '📋' },
+  { label: 'Urgențe veterinare 24/7', query: 'Urgențe veterinare 24/7', icon: '🏥' },
+  { label: 'Ecografie veterinară', query: 'Ecografie veterinară', icon: '🩻' }
+];
+
 /**
  * Normalizes Romanian search queries and facility strings:
  * - converts to lowercase
@@ -24,6 +35,52 @@ export function normalizeSearchText(str) {
     .replace(/[.\-_,/()]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/**
+ * Returns facility services/medications matching the user's current search query.
+ */
+export function getMatchingServices(facility, query) {
+  const normQ = normalizeSearchText(query);
+  if (!normQ || normQ.length < 2 || !Array.isArray(facility?.services)) return [];
+  const tokens = normQ.split(' ').filter(Boolean);
+  if (tokens.length === 0) return [];
+
+  return facility.services
+    .map((s) => s.serviceName || s.name || s)
+    .filter((name) => {
+      const normService = normalizeSearchText(name);
+      return (
+        normService.includes(normQ) ||
+        tokens.every((token) => normService.includes(token))
+      );
+    });
+}
+
+/**
+ * Filters and ranks catalog services & medications for live autocomplete suggestions.
+ */
+export function getAutocompleteSuggestions(catalogItems, query, limit = 10) {
+  const normQ = normalizeSearchText(query);
+  if (!normQ || !Array.isArray(catalogItems)) return [];
+  const tokens = normQ.split(' ').filter(Boolean);
+
+  const scored = [];
+  for (const item of catalogItems) {
+    const normLabel = normalizeSearchText(item.label);
+    const fullIdx = normLabel.indexOf(normQ);
+    const allTokensMatch = tokens.every((t) => normLabel.includes(t));
+    if (fullIdx === -1 && !allTokensMatch) continue;
+
+    // Prioritize prefix matches, then earlier substring matches, then higher facility count
+    const score =
+      (normLabel.startsWith(normQ) ? 0 : fullIdx >= 0 ? 100 + fullIdx : 500) -
+      Math.min(item.count || 0, 50) * 0.01;
+    scored.push({ ...item, _score: score });
+  }
+
+  scored.sort((a, b) => a._score - b._score || a.label.localeCompare(b.label, 'ro'));
+  return scored.slice(0, limit);
 }
 
 /**
@@ -172,6 +229,18 @@ export function ExplorerView({
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [routeData, setRouteData] = useState(null);
   const cardRefs = useRef({});
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchContainerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Mobile layout switch (List vs Map)
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'map'
@@ -231,6 +300,31 @@ export function ExplorerView({
     const interval = setInterval(() => fetchFacilities(true), 60000);
     return () => clearInterval(interval);
   }, [fetchFacilities]);
+
+  const catalogItems = useMemo(() => {
+    const map = new Map();
+    for (const fac of allFacilities) {
+      const isVet = fac.type === 'EMERGENCY_VET';
+      for (const srv of fac.services || []) {
+        const label = srv.serviceName || srv.name || srv;
+        if (!label) continue;
+        const entry = map.get(label) || { label, count: 0, hasPharm: false, hasVet: false };
+        entry.count += 1;
+        if (isVet) entry.hasVet = true;
+        else entry.hasPharm = true;
+        map.set(label, entry);
+      }
+    }
+    return Array.from(map.values()).map((entry) => ({
+      ...entry,
+      icon: entry.hasVet && !entry.hasPharm ? '🐾' : '💊'
+    }));
+  }, [allFacilities]);
+
+  const autocompleteSuggestions = useMemo(
+    () => getAutocompleteSuggestions(catalogItems, searchQuery, 10),
+    [catalogItems, searchQuery]
+  );
 
   // 1. Filter all facilities ONLY by city and search query
   const filteredBySearchAndCity = useMemo(() => {
@@ -359,33 +453,141 @@ export function ExplorerView({
     <section className="screen-pane active-screen" id="paneDs01">
       {/* 1. Explorer Filters Bar */}
       <div className="explorer-filters-row">
-        {/* Search capsule & City dropdown */}
-        <div className="search-city-capsule">
-          <span>🔍</span>
-          <input
-            type="text"
-            placeholder="Caută după nume, stradă sau serviciu..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                updateUrlParams({ q: searchQuery });
-              }
-            }}
-            onBlur={() => updateUrlParams({ q: searchQuery })}
-          />
-          <select
-            className="city-dropdown-select"
-            value={selectedCity}
-            onChange={(e) => handleSelectCity(e.target.value)}
-          >
-            <option value="all">Tot Județul Sibiu</option>
-            <option value="Sibiu">Sibiu</option>
-            <option value="Mediaș">Mediaș</option>
-            <option value="Cisnădie">Cisnădie</option>
-            <option value="Șelimbăr">Șelimbăr</option>
-            <option value="Avrig">Avrig</option>
-          </select>
+        {/* Search capsule, City dropdown & Quick Service Suggestions */}
+        <div className="search-capsule-container" ref={searchContainerRef}>
+          <div className="search-city-capsule">
+            <span aria-hidden="true">🔍</span>
+            <input
+              type="text"
+              placeholder='Caută farmacie, cabinet, stradă, serviciu sau medicament (ex: "Parasinus", "Bravecto", "Vaccinare antigripală")...'
+              value={searchQuery}
+              aria-label="Căutare unități, servicii și medicamente"
+              onFocus={() => setIsSearchFocused(true)}
+              onChange={(e) => {
+                const nextVal = e.target.value;
+                setSearchQuery(nextVal);
+                setIsSearchFocused(true);
+                if (!nextVal) {
+                  updateUrlParams({ q: '' });
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  updateUrlParams({ q: searchQuery });
+                  setIsSearchFocused(false);
+                } else if (e.key === 'Escape') {
+                  setIsSearchFocused(false);
+                }
+              }}
+              onBlur={() => updateUrlParams({ q: searchQuery })}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                title="Șterge căutarea"
+                aria-label="Șterge căutarea"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setSearchQuery('');
+                  updateUrlParams({ q: '' });
+                }}
+              >
+                ✕
+              </button>
+            )}
+            <select
+              className="city-dropdown-select"
+              value={selectedCity}
+              onChange={(e) => handleSelectCity(e.target.value)}
+            >
+              <option value="all">Tot Județul Sibiu</option>
+              <option value="Sibiu">Sibiu</option>
+              <option value="Mediaș">Mediaș</option>
+              <option value="Cisnădie">Cisnădie</option>
+              <option value="Șelimbăr">Șelimbăr</option>
+              <option value="Avrig">Avrig</option>
+            </select>
+          </div>
+
+          {isSearchFocused && (
+            <div
+              className="search-suggestions-dropdown"
+              role="region"
+              aria-label="Sugestii servicii și medicamente"
+            >
+              {searchQuery.trim() ? (
+                <>
+                  <div className="search-suggestions-header">
+                    <span className="originle-kicker" style={{ margin: 0, fontSize: '10px' }}>
+                      ● SUGESTII MEDICAMENTE & SERVICII
+                    </span>
+                    <span className="search-suggestions-hint">
+                      {autocompleteSuggestions.length > 0
+                        ? `${autocompleteSuggestions.length} potriviri în catalog`
+                        : 'Filtrare după nume, stradă sau serviciu'}
+                    </span>
+                  </div>
+                  {autocompleteSuggestions.length > 0 ? (
+                    <div className="search-suggestions-chips">
+                      {autocompleteSuggestions.map((item) => {
+                        const isActive =
+                          normalizeSearchText(searchQuery) === normalizeSearchText(item.label);
+                        return (
+                          <button
+                            key={item.label}
+                            type="button"
+                            className={`service-suggestion-chip ${isActive ? 'active' : ''}`}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setSearchQuery(item.label);
+                              updateUrlParams({ q: item.label });
+                              setIsSearchFocused(false);
+                            }}
+                          >
+                            <span aria-hidden="true">{item.icon}</span>
+                            <span>{item.label}</span>
+                            <span className="suggestion-count-badge">({item.count})</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="search-suggestions-hint" style={{ padding: '4px 0' }}>
+                      Nicio etichetă exactă de medicament/serviciu — se caută și în numele sau adresa unităților.
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="search-suggestions-header">
+                    <span className="originle-kicker" style={{ margin: 0, fontSize: '10px' }}>
+                      ● CĂUTARE RAPIDĂ SERVICII & MEDICAMENTE
+                    </span>
+                    <span className="search-suggestions-hint">Click pentru filtrare instantanee</span>
+                  </div>
+                  <div className="search-suggestions-chips">
+                    {QUICK_SERVICE_SUGGESTIONS.map((item) => (
+                      <button
+                        key={item.label}
+                        type="button"
+                        className="service-suggestion-chip"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setSearchQuery(item.query);
+                          updateUrlParams({ q: item.query });
+                          setIsSearchFocused(false);
+                        }}
+                      >
+                        <span aria-hidden="true">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Filter Chips */}
@@ -523,6 +725,8 @@ export function ExplorerView({
                     }
                   }}
                   facility={fac}
+                  searchQuery={searchQuery}
+                  matchedServices={getMatchingServices(fac, searchQuery)}
                   isSelected={selectedFacility?.id === fac.id}
                   isFavorited={isFavorited(fac.id)}
                   onSelect={(f) => {

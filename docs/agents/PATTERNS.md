@@ -10,6 +10,7 @@
 - PATTERN-002 · Warm Editorial Minimalist styling and semantic status palette · candidate
 - PATTERN-003 · Integrated OSRM road routing on interactive map with external app fallback · candidate
 - PATTERN-004 · Session-scoped Welcome Gate with Visitor Bypass and Header Account Menu · candidate
+- PATTERN-005 · Accent-insensitive catalog autocomplete and matched-pill highlighting · candidate
 
 ---
 
@@ -40,3 +41,10 @@
 - **Status:** candidate
 - **How:** Gate application entry behind `AuthWelcomeScreen` until the user selects a role/account or clicks "Continuă ca Vizitator (fără cont)", persisting entry in `sessionStorage` so page refreshes remain inside the app while allowing return via a top-header account menu ("Deconectare / Schimbă contul").
 - **Example:** `frontend/src/context/AuthContext.jsx` (`hasEnteredApp`, `continueAsVisitor`, `returnToWelcomeScreen`), `frontend/src/components/auth/AuthWelcomeScreen.jsx`, and `frontend/src/components/common/Header.jsx`.
+
+---
+
+## PATTERN-005 · Accent-insensitive catalog autocomplete and matched-pill highlighting
+- **Status:** candidate
+- **How:** Derive unique catalog tags (official services and clean medication labels) from loaded facilities, rank live autocomplete matches using diacritic-stripped `normalizeSearchText` (prefix matches first, then substring/token matches with facility counts), and highlight matched substrings inline inside `✓` pills on facility cards without using stock-availability wording.
+- **Example:** `frontend/src/components/ds01-explorer/ExplorerView.jsx` (`normalizeSearchText`, `getAutocompleteSuggestions`, `getMatchingServices`) and `frontend/src/components/ds01-explorer/FacilityCard.jsx` (`highlightServiceMatch`).

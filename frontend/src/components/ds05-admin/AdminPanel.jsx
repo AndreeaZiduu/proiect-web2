@@ -109,6 +109,7 @@ export function AdminPanel({ onOpenAuthModal }) {
         type: 'success',
         text: `Sesizarea a fost ${decision === 'APPROVED' ? 'aprobată' : 'respinsă'}.`
       });
+      window.dispatchEvent(new CustomEvent('p10:corrections-updated'));
       loadData();
     } catch (err) {
       setActionMsg({

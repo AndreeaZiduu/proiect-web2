@@ -244,6 +244,36 @@ app.get('/api/facilities/:id', async (req, res) => {
 });
 
 // 4. Favorite & Notificări schimbare program
+function getFavoriteScheduleNotification(facility, savedAt, now = new Date()) {
+  const corrections = facility?.corrections || [];
+  const nowMs = now.getTime();
+  const savedAtMs = savedAt ? new Date(savedAt).getTime() : 0;
+
+  const matchingCorrection = corrections.find((c) => {
+    if (c.status !== 'APPROVED') return false;
+    const validFromMs = c.validFrom ? new Date(c.validFrom).getTime() : 0;
+    const validUntilMs = c.validUntil ? new Date(c.validUntil).getTime() : Infinity;
+    const isCurrentlyActive = nowMs >= validFromMs && nowMs <= validUntilMs;
+    const isNewerThanSaveAndNotExpired =
+      new Date(c.createdAt).getTime() > savedAtMs && nowMs <= validUntilMs;
+    return isCurrentlyActive || isNewerThanSaveAndNotExpired;
+  });
+
+  return {
+    hasScheduleChangeNotification: Boolean(matchingCorrection),
+    notificationNote: matchingCorrection ? matchingCorrection.proposedNote : null,
+    notificationCorrection: matchingCorrection
+      ? {
+          id: matchingCorrection.id,
+          proposedNote: matchingCorrection.proposedNote,
+          isClosedOverride: Boolean(matchingCorrection.isClosedOverride),
+          validFrom: matchingCorrection.validFrom,
+          validUntil: matchingCorrection.validUntil
+        }
+      : null
+  };
+}
+
 app.get('/api/favorites', authenticateToken, async (req, res) => {
   try {
     const favs = await prisma.favorite.findMany({
@@ -263,17 +293,16 @@ app.get('/api/favorites', authenticateToken, async (req, res) => {
 
     const now = new Date();
     const result = favs.map((f) => {
-      const recentChange = f.facility.corrections.find(
-        (c) => new Date(c.createdAt).getTime() > new Date(f.createdAt).getTime()
-      );
+      const status = getFacilityStatus(f.facility, now);
+      const alertInfo = getFavoriteScheduleNotification(f.facility, f.createdAt, now);
       return {
         facilityId: f.facilityId,
         savedAt: f.createdAt,
-        hasScheduleChangeNotification: Boolean(recentChange),
-        notificationNote: recentChange ? recentChange.proposedNote : null,
+        ...alertInfo,
         facility: {
           ...f.facility,
-          status: getFacilityStatus(f.facility, now)
+          status,
+          isOnDuty: isFacilityOnDutyStatus(status)
         }
       };
     });

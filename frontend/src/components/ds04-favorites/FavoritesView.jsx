@@ -22,6 +22,43 @@ export function FavoritesView({
     };
   }, []);
 
+  const updatedFavorites = favorites.filter((fav) => fav.hasScheduleChangeNotification);
+
+  const renderFavoriteStatusBadge = (fac) => {
+    const status = fac?.status;
+    if (!status) return null;
+    if (status.isOnCall) {
+      return (
+        <span className="status-badge b-duty">
+          <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
+          {status.label || 'DE GARDĂ'}
+        </span>
+      );
+    }
+    if (status.code === 'CLOSING_SOON') {
+      return (
+        <span className="status-badge b-closing">
+          <span className="status-dot-core" style={{ background: 'var(--status-closing-dot)' }} />
+          {status.label || 'SE ÎNCHIDE ÎN CURÂND'}
+        </span>
+      );
+    }
+    if (status.isOpen) {
+      return (
+        <span className="status-badge b-open">
+          <span className="status-dot-core" style={{ background: 'var(--status-open-dot)' }} />
+          {status.label || 'DESCHIS ACUM'}
+        </span>
+      );
+    }
+    return (
+      <span className="status-badge b-closed">
+        <span className="status-dot-core" style={{ background: 'var(--status-closed-dot)' }} />
+        {status.label || 'ÎNCHIS'}
+      </span>
+    );
+  };
+
   return (
     <section className="screen-pane active-screen" id="paneDs04">
       {/* Offline Notice Banner */}
@@ -92,6 +129,38 @@ export function FavoritesView({
         </div>
       )}
 
+      {/* Top Schedule-Change Alert Banner when favorited facilities have approved/active overrides */}
+      {updatedFavorites.length > 0 && (
+        <div className="fav-schedule-alert-banner" role="alert">
+          <div className="fav-schedule-alert-icon" aria-hidden="true">⚠️</div>
+          <div className="fav-schedule-alert-body">
+            <h3 className="fav-schedule-alert-title">
+              {updatedFavorites.length === 1
+                ? 'O unitate favorită are programul actualizat'
+                : `${updatedFavorites.length} unități favorite au programul actualizat`}
+            </h3>
+            <ul className="fav-schedule-alert-list">
+              {updatedFavorites.map((fav) => {
+                const fac = fav.facility || fav;
+                return (
+                  <li key={fac.id}>
+                    <strong>{fac.name || fac.id}</strong>
+                    {fav.notificationNote ? `: „${fav.notificationNote}”` : ' — verificare orar activă'}
+                    <button
+                      type="button"
+                      className="fav-alert-detail-link"
+                      onClick={() => onOpenDetails(fac)}
+                    >
+                      Vezi detalii ›
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      )}
+
       {favorites.length === 0 ? (
         <div className="originle-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
           <div style={{ fontSize: '44px', marginBottom: '12px' }}>⭐</div>
@@ -139,13 +208,16 @@ export function FavoritesView({
                   </div>
                 )}
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <span
-                    className="originle-kicker"
-                    style={{ color: isPharm ? 'var(--color-pharmacy)' : 'var(--color-vet)', margin: 0 }}
-                  >
-                    {isPharm ? '● FARMACIE' : '● VET URGENȚĂ'}
-                  </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <span
+                      className="originle-kicker"
+                      style={{ color: isPharm ? 'var(--color-pharmacy)' : 'var(--color-vet)', margin: 0 }}
+                    >
+                      {isPharm ? '● FARMACIE' : '● VET URGENȚĂ'}
+                    </span>
+                    {renderFavoriteStatusBadge(fac)}
+                  </div>
                   <button
                     type="button"
                     style={{ background: 'none', border: 'none', color: 'var(--accent-terracotta)', fontSize: '18px', cursor: 'pointer' }}

@@ -51,6 +51,7 @@ export function FacilityDetailModal({
     try {
       const res = await api.confirmCorrection(corrId);
       setFeedbackMsg({ type: 'success', text: res.message || 'Confirmare înregistrată!' });
+      window.dispatchEvent(new CustomEvent('p10:corrections-updated'));
       loadDetails();
     } catch (err) {
       setFeedbackMsg({
@@ -86,6 +87,7 @@ export function FacilityDetailModal({
 
       setFeedbackMsg({ type: 'success', text: res.message || 'Sesizarea a fost trimisă!' });
       setProposedNote('');
+      window.dispatchEvent(new CustomEvent('p10:corrections-updated'));
       loadDetails();
     } catch (err) {
       setFeedbackMsg({

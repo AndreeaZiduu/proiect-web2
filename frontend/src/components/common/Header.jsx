@@ -8,6 +8,8 @@ export function Header({
   onOpenAuthModal,
   onReturnToWelcome,
   favoritesCount = 0,
+  favoriteAlertsCount = 0,
+  favoriteAlertNames = [],
   moderationCount = 0,
   correctionsCount = 0
 }) {
@@ -89,9 +91,22 @@ export function Header({
           <NavLink
             to="/favorite"
             className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
+            title={
+              favoriteAlertsCount > 0
+                ? `Orar actualizat pentru unități favorite: ${favoriteAlertNames.join(', ')}`
+                : 'Unitățile tale favorite'
+            }
           >
             <span>⭐ Favorite</span>
             {favoritesCount > 0 && <span className="nav-count-bubble">{favoritesCount}</span>}
+            {favoriteAlertsCount > 0 && (
+              <span
+                className="nav-alert-pill"
+                aria-label={`${favoriteAlertsCount} alerte modificare orar la favorite`}
+              >
+                ⚠️ {favoriteAlertsCount}
+              </span>
+            )}
           </NavLink>
 
           {/* Admin / Moderation Tab - Visible only for MODERATOR and ADMIN (D-003) */}

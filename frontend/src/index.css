@@ -1708,3 +1708,200 @@
   font-weight: var(--font-weight-extrabold);
   color: var(--accent-terracotta);
 }
+
+/* ==========================================================================
+   DIRECT SERVICE SEARCH SUGGESTIONS & MATCHED SERVICE PILLS
+   ========================================================================== */
+.search-capsule-container {
+  position: relative;
+  flex: 1;
+  max-width: 620px;
+}
+
+.search-capsule-container .search-city-capsule {
+  max-width: none;
+  width: 100%;
+}
+
+.search-clear-btn {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  background: var(--accent-terracotta-bg);
+  color: var(--accent-terracotta);
+  border-color: var(--accent-terracotta-border);
+}
+
+.search-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-floating);
+  padding: 12px 14px;
+  z-index: 50;
+  animation: fadeIn var(--transition-fast) ease-out;
+}
+
+.search-suggestions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.search-suggestions-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.search-suggestions-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.service-suggestion-chip {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all var(--transition-fast);
+}
+
+.service-suggestion-chip:hover {
+  border-color: var(--accent-terracotta-border);
+  background: var(--accent-terracotta-bg);
+  color: var(--accent-terracotta);
+}
+
+.service-suggestion-chip.active {
+  background: var(--accent-terracotta);
+  border-color: var(--accent-terracotta);
+  color: #FFFFFF;
+}
+
+.suggestion-count-badge {
+  font-size: 10px;
+  opacity: 0.72;
+  font-weight: var(--font-weight-medium);
+}
+
+.matched-services-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -6px 0 12px 0;
+}
+
+.matched-service-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--accent-terracotta-bg);
+  border: 1px solid var(--accent-terracotta-border);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.service-match-highlight {
+  background: rgba(194, 94, 52, 0.22);
+  color: var(--accent-terracotta);
+  font-weight: var(--font-weight-extrabold);
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   FAVORITES SCHEDULE-CHANGE ALERTS (HEADER & DS-04 BANNER)
+   ========================================================================== */
+.nav-alert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(217, 56, 41, 0.14);
+  border: 1px solid rgba(217, 56, 41, 0.35);
+  color: var(--accent-coral-alert);
+  font-size: 10px;
+  font-weight: var(--font-weight-extrabold);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.fav-schedule-alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(217, 56, 41, 0.08);
+  border: 1px solid rgba(217, 56, 41, 0.32);
+  border-left: 4px solid var(--accent-coral-alert);
+  border-radius: var(--radius-xl);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.fav-schedule-alert-icon {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.fav-schedule-alert-body {
+  flex: 1;
+}
+
+.fav-schedule-alert-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--accent-coral-alert);
+  margin: 0 0 6px 0;
+}
+
+.fav-schedule-alert-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--text-primary);
+}
+
+.fav-alert-detail-link {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: var(--accent-terracotta);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  text-decoration: underline;
+}

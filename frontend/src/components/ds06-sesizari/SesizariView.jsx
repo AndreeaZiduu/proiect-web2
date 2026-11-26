@@ -39,6 +39,7 @@ export function SesizariView({ onOpenAuthModal }) {
     try {
       const res = await api.confirmCorrection(id);
       setFeedback({ type: 'success', text: res.message || 'Confirmare înregistrată!' });
+      window.dispatchEvent(new CustomEvent('p10:corrections-updated'));
       loadData();
     } catch (err) {
       setFeedback({
@@ -67,6 +68,7 @@ export function SesizariView({ onOpenAuthModal }) {
 
       setFeedback({ type: 'success', text: res.message || 'Sesizarea a fost înregistrată!' });
       setProposedNote('');
+      window.dispatchEvent(new CustomEvent('p10:corrections-updated'));
       loadData();
     } catch (err) {
       setFeedback({

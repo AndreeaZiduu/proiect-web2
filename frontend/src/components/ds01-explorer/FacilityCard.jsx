@@ -1,7 +1,79 @@
 import React, { forwardRef } from 'react';
+import { normalizeSearchText } from './ExplorerView';
+
+function highlightServiceMatch(serviceName, query) {
+  const normQuery = normalizeSearchText(query);
+  if (!normQuery) return serviceName;
+
+  const tokens = Array.from(new Set(normQuery.split(' ').filter((t) => t.length >= 2)));
+  if (tokens.length === 0) return serviceName;
+
+  // Map each character of serviceName back to its original character span without trimming spaces
+  const chars = Array.from(serviceName);
+  const normChars = [];
+  const origIdxMap = [];
+  chars.forEach((ch, idx) => {
+    const normCh = String(ch)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[șş]/g, 's')
+      .replace(/[țţ]/g, 't')
+      .replace(/[.\-_,/()]/g, ' ');
+    for (const nc of normCh) {
+      normChars.push(nc);
+      origIdxMap.push(idx);
+    }
+  });
+
+  const normStr = normChars.join('');
+  const matchedOrigIndices = new Set();
+  for (const token of tokens) {
+    let startAt = 0;
+    while (startAt < normStr.length) {
+      const found = normStr.indexOf(token, startAt);
+      if (found === -1) break;
+      for (let i = found; i < found + token.length; i++) {
+        if (origIdxMap[i] !== undefined) {
+          matchedOrigIndices.add(origIdxMap[i]);
+        }
+      }
+      startAt = found + token.length;
+    }
+  }
+
+  if (matchedOrigIndices.size === 0) return serviceName;
+
+  const segments = [];
+  let buf = '';
+  let inMatch = matchedOrigIndices.has(0);
+  chars.forEach((ch, idx) => {
+    const isMatched = matchedOrigIndices.has(idx);
+    if (isMatched !== inMatch) {
+      segments.push({ text: buf, match: inMatch });
+      buf = ch;
+      inMatch = isMatched;
+    } else {
+      buf += ch;
+    }
+  });
+  if (buf) segments.push({ text: buf, match: inMatch });
+
+  return segments.map((seg, i) =>
+    seg.match ? (
+      <mark key={i} className="service-match-highlight">
+        {seg.text}
+      </mark>
+    ) : (
+      <React.Fragment key={i}>{seg.text}</React.Fragment>
+    )
+  );
+}
 
 export const FacilityCard = forwardRef(function FacilityCard({
   facility,
+  searchQuery = '',
+  matchedServices = [],
   isSelected,
   isFavorited,
   onSelect,
@@ -103,6 +175,23 @@ export const FacilityCard = forwardRef(function FacilityCard({
           </span>
         )}
       </p>
+
+      {/* Matched Service & Medication Pills when searching by keyword */}
+      {matchedServices.length > 0 && (
+        <div className="matched-services-row" aria-label="Servicii și medicamente potrivite căutării">
+          {matchedServices.slice(0, 6).map((srv, idx) => (
+            <span key={idx} className="matched-service-pill">
+              <span aria-hidden="true">✓</span>
+              <span>{highlightServiceMatch(srv, searchQuery)}</span>
+            </span>
+          ))}
+          {matchedServices.length > 6 && (
+            <span className="matched-service-pill">
+              +{matchedServices.length - 6} altele
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Actions: Quick Call, Route, Favorite & Details */}
       <div

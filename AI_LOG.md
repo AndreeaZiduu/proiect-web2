@@ -1043,3 +1043,43 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Build Frontend:** `npm run build --prefix frontend` (`vite build`) — **compilat cu succes** în `frontend/dist/`.
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py --fix` — **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/auth-landing-and-duty-filter`.
+
+
+# Sesiunea 29 — Servicii Oficiale, Catalog Medicamente Umane & Veterinare și Autocomplete Curat (2026-11-26)
+
+## 1. Ce a Cerut Utilizatorul
+1. Lucrul conform fluxului `/build` pe o ramură nouă dedicată: `feat/official-services-and-medications` (fără modificări pe `main`).
+2. **Servicii oficiale și catalog bogat de medicamente în `backend/prisma/seed.js`** (etichete curate, zero formulări de tip „stoc” / „stoc disponibil” / „orientativ”):
+   - Farmacii umane: 6 servicii oficiale (`Vaccinare antigripală în farmacie`, `Eliberare rețete compensate CAS`, `Preparare rețete magistrale`, `Măsurare tensiune arterială`, `Testare rapidă gripă / COVID-19`, `Consiliere dermocosmetică`) + 25 medicamente umane (`Parasinus`, `Parasinus Penta`, `Nurofen Forte`, `Nurofen Express`, `Paracetamol Sinus`, `Algocalmin`, `Theraflu Extra`, `Coldrex MaxGrip`, `Strepsils Intensiv`, `Tantum Verde`, `ACC 600`, `Mucosolvan`, `Ventolin`, `Symbicort`, `Aerius`, `Claritine`, `Xyzal`, `Nasonex`, `Augmentin 1g`, `Amoksiklav`, `Zinnat`, `Sumamed`, `Euthyrox 50/100`, `Insulina Lantus`, `Vaccin antigripal`).
+   - Cabinete/clinici veterinare Sibiu: 7 servicii oficiale (`Urgențe veterinare 24/7`, `Ecografie veterinară`, `Chirurgie țesuturi moi`, `Microcipare și pașaport animale`, `Analize biochimie și hematologie`, `Detartraj cu ultrasunete`, `Consult cardiologie veterinară`) + 15 medicamente și produse veterinare (`Bravecto (antiparazitar câini)`, `NexGard Spectra (câini)`, `Simparica Trio (câini)`, `ForestO zgardă antiparazitară`, `Advantix spot-on câini`, `Broadline (pisici)`, `Milbemax (deparazitare câini/pisici)`, `Drontal Plus (câini)`, `Vaccin polivalent câini (DHPPiL)`, `Vaccin antirabic`, `Vaccin trivalent pisici (Nobivac Tricat)`, `Apoquel (dermatologie câini)`, `Vetmedin (cardiologie câini)`, `Synulox (antibiotic veterinar)`, `Caninsulin`).
+   - Actualizarea metadatelor de sursă prin `resolveFacilitySource` pentru a include `Catalog oficial & site-uri unități Sibiu`.
+3. **Interfață de căutare și afișare pe carduri (`ExplorerView.jsx` & `FacilityCard.jsx`):**
+   - Eliminarea completă a termenilor „stoc” / „stoc disponibil” / „orientativ”.
+   - Actualizarea placeholder-ului de căutare la: `'Caută farmacie, cabinet, stradă, serviciu sau medicament (ex: "Parasinus", "Bravecto", "Vaccinare antigripală")...'`.
+   - Sugestii de tip autocomplete pe măsură ce utilizatorul tastează și evidențierea curată pe `FacilityCard.jsx` (ex: `✓ Parasinus`).
+4. **Verificare:** Rularea `npm run seed --prefix backend`, `npm test --prefix backend`, `npm run build --prefix frontend` și actualizarea `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **Control Versiuni:**
+  - Creată ramura `feat/official-services-and-medications`.
+* **Catalog Servicii Oficiale & Medicamente (`backend/prisma/seed.js`):**
+  - Exportate listele oficiale `OFFICIAL_PHARMACY_SERVICES`, `HUMAN_MEDICATIONS`, `OFFICIAL_VET_SERVICES`, `VET_MEDICATIONS` și `CATALOG_SOURCE_LABEL`.
+  - Actualizată funcția `enrichFacilityServices(fac)` cu alocare realistă pe farmacii (inclusiv unități Non-Stop) și unități veterinare (24/7 și cabinete), filtrând orice mențiune legată de stoc/orientativ.
+  - Adăugată și exportată funcția `resolveFacilitySource(fac)` pentru popularea `sourceName` cu `Catalog oficial & site-uri unități Sibiu`.
+* **UI Căutare cu Autocomplete & Evidențiere (`ExplorerView.jsx`, `FacilityCard.jsx`, `index.css`):**
+  - `ExplorerView.jsx`: actualizat placeholder-ul exact cerut, actualizate sugestiile rapide când input-ul este gol și adăugată funcția `getAutocompleteSuggestions` pentru sugestii live filtrate din catalog pe măsură ce utilizatorul tastează (cu număr de unități).
+  - `FacilityCard.jsx`: evidențiere curată a serviciilor și medicamentelor potrivite (`✓ Parasinus`), limitată la maxim 6 badge-uri vizibile per card cu sumar `+N altele`.
+  - `frontend/src/index.css`: adăugat stilul `.suggestion-count-badge` pentru sugestiile autocomplete.
+* **Teste Automate (`backend/tests/`):**
+  - Adăugat `backend/tests/official-services-and-medications.test.js` (4 teste Vitest pentru acoperirea tuturor serviciilor și medicamentelor umane/veterinare, absența formulărilor despre stoc, `resolveFacilitySource` și interogările `/api/facilities?q=Parasinus` / `?q=Bravecto`).
+  - Actualizat `backend/tests/service-search-and-fav-alerts.test.js` pentru etichetele curate fără mențiuni de stoc (`Ventolin`, `Eliberare rețete compensate CAS`, `Măsurare tensiune arterială`, `Preparare rețete magistrale`).
+* **Registru de Cunoștințe (`docs/agents/PATTERNS.md`):**
+  - Adăugat `PATTERN-005` (`Accent-insensitive catalog autocomplete and matched-pill highlighting`) cu statut `candidate`.
+
+## 3. Verificări
+* **Seed MySQL (`npm run seed --prefix backend`):** **Succes** — 65 unități încărcate (50 `PHARMACY`, 15 `EMERGENCY_VET`), 12 rotații de gardă active.
+* **Teste Backend (`npm test --prefix backend`):** **56 teste trecute din 56** (7 fișiere de test, 0 eșecuri).
+* **Linting Frontend (`npm run lint --prefix frontend`):** **0 avertismente, 0 erori** (`oxlint` pe 17 fișiere).
+* **Build Frontend (`npm run build --prefix frontend`):** **Compilat cu succes** (`vite build` în `frontend/dist/`).
+* **Linter Registru (`python3 docs/agents/tools/ledger-lint.py --fix`):** **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/official-services-and-medications`.
