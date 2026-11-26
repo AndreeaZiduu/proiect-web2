@@ -1003,3 +1003,43 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Build Frontend:** `cd frontend && npm run build` (vite build) — **Compilat cu succes în dist/**.
 * **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py` — **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/pwa-offline`.
+
+
+# Sesiunea 28 — Ecran Autentificare la Intrare, Filtru „De Gardă” Activ & Eliminare Widget Prototip (2026-11-26)
+
+## 1. Ce a Cerut Utilizatorul
+1. Lucrul pe o ramură nouă dedicată: `feat/auth-landing-and-duty-filter` (conform fluxului `/build`, fără modificări pe `main`).
+2. **Eliminarea completă a widget-ului de inspecție prototip:**
+   - Ștergerea componentei `DemoDrawer` („Panou Inspecție Prototip”, `STĂRI INTERFAȚĂ`, `NAVIGARE DIRECTĂ RUTĂ`) și a butonului plutitor `⚙️ Testează Rolurile` din `App.jsx` și `ExplorerView.jsx`.
+3. **Repararea filtrului „De Gardă” (`On Duty`) care întorcea 0 rezultate:**
+   - Verificarea exactă în `ExplorerView.jsx` a proprietăților returnate de backend pentru gardă (`status.isOnCall`, `status === 'ON_DUTY'`, `status.code === 'ON_DUTY'`, `isOnDuty`, `onDuty`, respectiv unități deschise Non-Stop 24/7).
+   - Actualizarea seed-ului `backend/prisma/seed.js` și a logicii backend din `backend/src/server.js` astfel încât rotațiile de gardă active să fie calculate relativ la `new Date()` (data curentă, fără date fixe expirate din trecut), garantând afișarea farmaciilor și clinicilor veterinare de gardă / 24/7 la activarea filtrului.
+4. **Adăugarea ecranului inițial de Autentificare / Welcome Gate la intrarea în aplicație:**
+   - Crearea componentei `frontend/src/components/auth/AuthWelcomeScreen.jsx` stilizată cu design tokens din `docs/design/DESIGN.md` (Light & Dark mode).
+   - Afișarea la prima deschidere a sesiunii, persistată în `sessionStorage` (`p10_session_entered`), cu carduri demo 1-click și formular clasic pentru `USER`, `MODERATOR` și `ADMIN`, plus buton secundar vizibil **„Continuă ca Vizitator (fără cont)”** (`ANON`).
+   - Meniu curat de cont în `Header.jsx` care afișează rolul/utilizatorul activ și oferă acțiunea **„Deconectare / Schimbă contul”** pentru revenire la `AuthWelcomeScreen`.
+5. **Verificare:** Rularea `npm test --prefix backend`, `npm run build --prefix frontend` și actualizarea `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **Control Versiuni:**
+  - Creată ramura `feat/auth-landing-and-duty-filter`.
+* **Eliminare Inspector Prototip:**
+  - Șters `frontend/src/components/common/DemoDrawer.jsx` și stilurile `.demo-fab` / `.demo-drawer` din `frontend/src/index.css`.
+  - Curățat `frontend/src/App.jsx`, `frontend/src/components/common/Header.jsx` și `frontend/src/components/ds01-explorer/ExplorerView.jsx` de `previewState` și `isDemoDrawerOpen`.
+* **Reparare Filtru „De Gardă” & Rotații Relative la Prezent:**
+  - `backend/prisma/seed.js`: adăugată funcția exportată `buildOnCallRotations(now = new Date())` care generează rotații active relativ la `now` pentru farmacii și clinici veterinare din Sibiu și Mediaș, eliminând datele fixe din trecut (`2026-11-17` / `2026-11-21`).
+  - `backend/src/server.js`: `GET /api/facilities` și `GET /api/facilities/:id` expun flag-ul `isOnDuty` (acoperind rotațiile active `ON_CALL_ROTATION` și unitățile deschise `Deschis Non-Stop`), iar filtrarea backend acceptă atât `onCall=true`, cât și alias-ul `onDuty=true`.
+  - `frontend/src/components/ds01-explorer/ExplorerView.jsx`: adăugat helper-ul `isFacilityOnDuty(facility)` folosit consistent pentru contorul și filtrarea `De Gardă ({counts.duty})`.
+  - `backend/tests/facilities-duty.test.js`: adăugate 3 teste automate Vitest pentru filtrul `onCall=true`, alias-ul `onDuty=true`, flag-ul `isOnDuty` și generarea dinamică `buildOnCallRotations(new Date())`.
+* **Ecran Inițial de Autentificare & Meniu Cont Header:**
+  - `frontend/src/context/AuthContext.jsx`: adăugată persistența sesiunii de intrare în `sessionStorage` (`hasEnteredApp`, `continueAsVisitor`, `returnToWelcomeScreen`).
+  - `frontend/src/components/auth/AuthWelcomeScreen.jsx`: creat ecranul de bun venit cu design tokens Originle (`DESIGN.md`, suport Light/Dark), carduri explicative 1-click pentru `USER`, `MODERATOR` și `ADMIN`, formular Login/Register și butonul **„Continuă ca Vizitator (fără cont)”**.
+  - `frontend/src/components/common/Header.jsx`: înlocuit declanșatorul inspectorului cu un meniu dropdown de cont ce afișează rolul/utilizatorul activ și butonul **„Deconectare / Schimbă contul”**.
+  - `frontend/src/index.css`: adăugate stilurile pentru meniul de cont și `AuthWelcomeScreen` folosind exclusiv variabilele din `DESIGN.md`.
+
+## 3. Verificări
+* **Teste Backend:** `npm test --prefix backend` — **48 teste trecute din 48** (5 fișiere de test, inclusiv cele 3 teste noi din `tests/facilities-duty.test.js`).
+* **Linting Frontend:** `npm run lint --prefix frontend` (`oxlint`) — **0 erori, 0 avertismente** (17 fișiere).
+* **Build Frontend:** `npm run build --prefix frontend` (`vite build`) — **compilat cu succes** în `frontend/dist/`.
+* **Linter Registru:** `python3 docs/agents/tools/ledger-lint.py --fix` — **`✓ ledger ok`**.
+* **Ramură curentă:** `feat/auth-landing-and-duty-filter`.

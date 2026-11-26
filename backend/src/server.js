@@ -124,9 +124,17 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // 3. Director unități + filtrare + sortare distanță + status calculat
+function isFacilityOnDutyStatus(status) {
+  return Boolean(
+    status?.isOnCall ||
+    status?.code === 'ON_DUTY' ||
+    (status?.isOpen && status?.label === 'Deschis Non-Stop')
+  );
+}
+
 app.get('/api/facilities', async (req, res) => {
   try {
-    const { q, type, city, openNow, onCall, lat, lng, at } = req.query;
+    const { q, type, city, openNow, onCall, onDuty, lat, lng, at } = req.query;
     const moment = at ? new Date(at) : new Date();
 
     const where = {};
@@ -166,6 +174,7 @@ app.get('/api/facilities', async (req, res) => {
 
     let enriched = facilities.map((fac) => {
       const status = getFacilityStatus(fac, moment);
+      const isOnDuty = isFacilityOnDutyStatus(status);
       const distanceKm =
         userLat !== null && !Number.isNaN(userLat) && userLng !== null && !Number.isNaN(userLng)
           ? calculateDistanceKm(userLat, userLng, fac.latitude, fac.longitude)
@@ -174,6 +183,7 @@ app.get('/api/facilities', async (req, res) => {
       return {
         ...fac,
         status,
+        isOnDuty,
         distanceKm
       };
     });
@@ -182,8 +192,8 @@ app.get('/api/facilities', async (req, res) => {
       enriched = enriched.filter((f) => f.status.isOpen);
     }
 
-    if (onCall === 'true') {
-      enriched = enriched.filter((f) => f.status.isOnCall);
+    if (onCall === 'true' || onDuty === 'true') {
+      enriched = enriched.filter((f) => f.isOnDuty);
     }
 
     if (userLat !== null && !Number.isNaN(userLat)) {
@@ -222,9 +232,11 @@ app.get('/api/facilities/:id', async (req, res) => {
 
     if (!facility) return res.status(404).json({ error: 'Unitatea nu a fost găsită' });
 
+    const status = getFacilityStatus(facility, moment);
     res.json({
       ...facility,
-      status: getFacilityStatus(facility, moment)
+      status,
+      isOnDuty: isFacilityOnDutyStatus(status)
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -689,8 +701,9 @@ app.post('/api/rotations/import', authenticateToken, requireRole('ADMIN'), async
         startsAt = new Date(parts[1]);
         endsAt = new Date(parts[2]);
       } else {
-        startsAt = new Date('2026-11-21T08:00:00+02:00');
-        endsAt = new Date('2026-11-22T08:00:00+02:00');
+        const now = new Date();
+        startsAt = new Date(now.getTime() - 60 * 60 * 1000);
+        endsAt = new Date(now.getTime() + 23 * 60 * 60 * 1000);
       }
 
       // Verificare idempotență (evită dublurile)

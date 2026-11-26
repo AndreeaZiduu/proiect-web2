@@ -166,9 +166,10 @@ function parseHolidaySchedule(raw, facilityType) {
   }
 
   if (!foundDate) {
+    const year = new Date().getUTCFullYear();
     const defaultUpcoming = [
-      { date: new Date('2026-11-30T00:00:00Z'), name: 'Sfântul Andrei' },
-      { date: new Date('2026-12-01T00:00:00Z'), name: 'Ziua Națională a României' }
+      { date: new Date(`${year}-11-30T00:00:00Z`), name: 'Sfântul Andrei' },
+      { date: new Date(`${year}-12-01T00:00:00Z`), name: 'Ziua Națională a României' }
     ];
 
     if (text.toUpperCase().includes('NON STOP')) {
@@ -210,6 +211,38 @@ function parseHolidaySchedule(raw, facilityType) {
   }
 
   return holidays;
+}
+
+export function buildOnCallRotations(now = new Date()) {
+  const yearMonth = now.toISOString().slice(0, 7);
+  const batchId = `BATCH-${yearMonth}`;
+  const hourMs = 60 * 60 * 1000;
+  const dayMs = 24 * hourMs;
+
+  // Intervale relative la data curentă astfel încât garda activă să acopere mereu prezentul
+  const activeStart = new Date(now.getTime() - 6 * hourMs);
+  const activeEnd = new Date(now.getTime() + 18 * hourMs);
+  const extendedEnd = new Date(now.getTime() + 42 * hourMs);
+  const upcomingStart = new Date(now.getTime() + 2 * dayMs);
+  const upcomingEnd = new Date(now.getTime() + 4 * dayMs);
+
+  return [
+    // Ture active pentru data curentă (acoperă imediat `new Date()`)
+    { facilityId: 'FAC-PHARM-002', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-PHARM-015', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-PHARM-028', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-PHARM-030', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-PHARM-001', startsAt: activeStart, endsAt: activeEnd, importBatch: batchId },
+    { facilityId: 'FAC-VET-001', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-VET-002', startsAt: activeStart, endsAt: extendedEnd, importBatch: batchId },
+    { facilityId: 'FAC-VET-003', startsAt: activeStart, endsAt: activeEnd, importBatch: batchId },
+
+    // Ture programate pentru zilele următoare / weekend
+    { facilityId: 'FAC-PHARM-008', startsAt: upcomingStart, endsAt: upcomingEnd, importBatch: batchId },
+    { facilityId: 'FAC-PHARM-042', startsAt: upcomingStart, endsAt: upcomingEnd, importBatch: batchId },
+    { facilityId: 'FAC-VET-011', startsAt: upcomingStart, endsAt: upcomingEnd, importBatch: batchId },
+    { facilityId: 'FAC-VET-013', startsAt: upcomingStart, endsAt: upcomingEnd, importBatch: batchId }
+  ];
 }
 
 async function main() {
@@ -289,7 +322,7 @@ async function main() {
         longitude: fac.longitude,
         phone: fac.phone || null,
         sourceName: fac.source,
-        lastVerifiedAt: new Date('2026-11-17T12:00:00Z'),
+        lastVerifiedAt: new Date(),
         services: {
           create: (fac.services || []).map((srv) => ({ serviceName: srv }))
         },
@@ -309,97 +342,8 @@ async function main() {
   console.log(`✓ Inserat ${pharmacyCount} farmacii (PHARMACY)`);
   console.log(`✓ Inserat ${vetCount} cabinete/clinici veterinare (EMERGENCY_VET)`);
 
-  // 4. Populare ture de gardă active (ziua curentă + weekend) pentru Sibiu
-  const batchId = 'BATCH-2026-11';
-  const onCallRotations = [
-    // Ture active pentru ZIUA CURENTĂ (17.11.2026 - 18.11.2026)
-    {
-      facilityId: 'FAC-PHARM-002', // Adefarm Plus B-dul M.Viteazu 11 (Non-Stop)
-      startsAt: new Date('2026-11-17T08:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-PHARM-028', // Polisano Pharma B-dul M.Viteazu 1 (Non-Stop)
-      startsAt: new Date('2026-11-17T08:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-PHARM-001', // Adefarm Plus str. Tribunei 1
-      startsAt: new Date('2026-11-17T20:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-001', // Spitalul Veterinar Universitar USAMV Sibiu (24/7)
-      startsAt: new Date('2026-11-17T08:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-002', // Fan Vet Sibiu (24/7)
-      startsAt: new Date('2026-11-17T08:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-003', // Vet Care Sibiu
-      startsAt: new Date('2026-11-17T20:00:00+02:00'),
-      endsAt: new Date('2026-11-18T08:00:00+02:00'),
-      importBatch: batchId
-    },
-
-    // Ture active pentru WEEKEND (21.11.2026 - 23.11.2026)
-    {
-      facilityId: 'FAC-PHARM-002',
-      startsAt: new Date('2026-11-21T08:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-PHARM-028',
-      startsAt: new Date('2026-11-21T08:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-PHARM-008', // Centrul Farmaceutic Coposu
-      startsAt: new Date('2026-11-21T14:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-PHARM-042', // San Marco Mediaș
-      startsAt: new Date('2026-11-21T14:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-001',
-      startsAt: new Date('2026-11-21T08:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-002',
-      startsAt: new Date('2026-11-21T08:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-011', // Dr. Popa Sibiu
-      startsAt: new Date('2026-11-21T14:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    },
-    {
-      facilityId: 'FAC-VET-013', // PrimaVet Mediaș
-      startsAt: new Date('2026-11-21T13:00:00+02:00'),
-      endsAt: new Date('2026-11-23T08:00:00+02:00'),
-      importBatch: batchId
-    }
-  ];
+  // 4. Populare ture de gardă active (ziua curentă + următoarele zile) pentru Sibiu
+  const onCallRotations = buildOnCallRotations(new Date());
 
   for (const rot of onCallRotations) {
     await prisma.onCallRotation.create({
@@ -411,11 +355,14 @@ async function main() {
   console.log('--- Populare bază de date finalizată cu succes! ---');
 }
 
-main()
-  .catch((e) => {
-    console.error('Eroare la seed:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+if (isDirectRun) {
+  main()
+    .catch((e) => {
+      console.error('Eroare la seed:', e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}

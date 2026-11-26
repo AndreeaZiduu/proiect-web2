@@ -9,6 +9,7 @@
 - PATTERN-001 · Responsive split-screen desktop and toggle mobile view · candidate
 - PATTERN-002 · Warm Editorial Minimalist styling and semantic status palette · candidate
 - PATTERN-003 · Integrated OSRM road routing on interactive map with external app fallback · candidate
+- PATTERN-004 · Session-scoped Welcome Gate with Visitor Bypass and Header Account Menu · candidate
 
 ---
 
@@ -32,3 +33,10 @@
 - **Status:** candidate
 - **How:** Query public OSRM routing endpoint for driving directions between user coordinates (or Piața Mare fallback) and the target facility to draw an interactive polyline on the Leaflet map with estimated duration and distance in kilometers, while providing deep links for external launch into Google Maps and Waze.
 - **Example:** `frontend/src/services/api.js` (`getOsrmRoute`) and `frontend/src/components/ds01-explorer/SibiuMap.jsx` rendering the terracotta route polyline and floating travel summary.
+
+---
+
+## PATTERN-004 · Session-scoped Welcome Gate with Visitor Bypass and Header Account Menu
+- **Status:** candidate
+- **How:** Gate application entry behind `AuthWelcomeScreen` until the user selects a role/account or clicks "Continuă ca Vizitator (fără cont)", persisting entry in `sessionStorage` so page refreshes remain inside the app while allowing return via a top-header account menu ("Deconectare / Schimbă contul").
+- **Example:** `frontend/src/context/AuthContext.jsx` (`hasEnteredApp`, `continueAsVisitor`, `returnToWelcomeScreen`), `frontend/src/components/auth/AuthWelcomeScreen.jsx`, and `frontend/src/components/common/Header.jsx`.

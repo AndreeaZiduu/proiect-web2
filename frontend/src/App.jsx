@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-do
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Header } from './components/common/Header';
 import { AuthModal } from './components/common/AuthModal';
-import { DemoDrawer } from './components/common/DemoDrawer';
+import { AuthWelcomeScreen } from './components/auth/AuthWelcomeScreen';
 import { ExplorerView } from './components/ds01-explorer/ExplorerView';
 import { FacilityDetailModal } from './components/ds02-details/FacilityDetailModal';
 import { EmergencyGuideView } from './components/ds03-emergency/EmergencyGuideView';
@@ -13,18 +13,14 @@ import { SesizariView } from './components/ds06-sesizari/SesizariView';
 import { api } from './services/api';
 
 function AppContent() {
-  const { role, isModerator } = useAuth();
+  const { role, isModerator, hasEnteredApp, returnToWelcomeScreen } = useAuth();
   const navigate = useNavigate();
 
   // Theme: 'light' | 'dark'
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
-  // State Preview Mode for Demo & Test inspection: 'normal' | 'loading' | 'empty' | 'error'
-  const [previewState, setPreviewState] = useState('normal');
-
-  // Modals & Drawers
+  // Modals
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isDemoDrawerOpen, setIsDemoDrawerOpen] = useState(false);
   const [detailFacility, setDetailFacility] = useState(null);
   const [routeTargetFacility, setRouteTargetFacility] = useState(null);
 
@@ -141,6 +137,10 @@ function AppContent() {
     }
   };
 
+  if (!hasEnteredApp) {
+    return <AuthWelcomeScreen theme={theme} onToggleTheme={toggleTheme} />;
+  }
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Top Header with React Router NavLinks */}
@@ -148,7 +148,10 @@ function AppContent() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenDemoDrawer={() => setIsDemoDrawerOpen(true)}
+        onReturnToWelcome={() => {
+          returnToWelcomeScreen();
+          navigate('/');
+        }}
         favoritesCount={favorites.length}
         moderationCount={moderationCount}
         correctionsCount={correctionsCount}
@@ -175,7 +178,6 @@ function AppContent() {
                 favorites={favorites}
                 onToggleFavorite={handleToggleFavorite}
                 onOpenDetails={handleOpenDetails}
-                previewState={previewState}
                 routeTargetFacility={routeTargetFacility}
                 onClearRouteTarget={handleClearRouteTarget}
                 onOfflineChange={handleOfflineChange}
@@ -209,7 +211,6 @@ function AppContent() {
                   favorites={favorites}
                   onToggleFavorite={handleToggleFavorite}
                   onOpenDetails={handleOpenDetails}
-                  previewState={previewState}
                   routeTargetFacility={routeTargetFacility}
                   onClearRouteTarget={handleClearRouteTarget}
                   onOfflineChange={handleOfflineChange}
@@ -229,24 +230,6 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-
-      {/* Floating Demo FAB Button */}
-      <button
-        type="button"
-        className="demo-fab"
-        onClick={() => setIsDemoDrawerOpen(true)}
-        title="Deschide panoul de testare și inspecție rapidă a rolurilor"
-      >
-        <span>⚙️ Testează Rolurile</span>
-      </button>
-
-      {/* Demo Drawer */}
-      <DemoDrawer
-        isOpen={isDemoDrawerOpen}
-        onClose={() => setIsDemoDrawerOpen(false)}
-        previewState={previewState}
-        onSetPreviewState={setPreviewState}
-      />
 
       {/* Auth Modal */}
       <AuthModal

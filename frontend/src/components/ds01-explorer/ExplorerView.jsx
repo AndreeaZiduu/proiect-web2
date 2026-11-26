@@ -50,12 +50,36 @@ function matchesFacilityQuery(facility, normalizedQuery) {
   return tokens.every((token) => target.includes(token));
 }
 
+export function isFacilityOnDuty(facility) {
+  if (!facility) return false;
+  const status = facility.status;
+  if (typeof status === 'string') {
+    return status === 'ON_DUTY' || status === 'ON_CALL';
+  }
+  if (
+    status?.isOnCall ||
+    status?.isOnDuty ||
+    status?.code === 'ON_DUTY' ||
+    status?.source === 'ON_CALL_ROTATION' ||
+    status?.label === 'Deschis Non-Stop' ||
+    facility.isOnDuty ||
+    facility.onDuty ||
+    facility.isOnCall
+  ) {
+    return true;
+  }
+  return Boolean(
+    status?.isOpen &&
+      Array.isArray(facility.regularSchedules) &&
+      facility.regularSchedules.some((s) => s.openMinute === 0 && s.closeMinute === 1440)
+  );
+}
+
 export function ExplorerView({
   theme,
   favorites = [],
   onToggleFavorite,
   onOpenDetails,
-  previewState = 'normal',
   routeTargetFacility = null,
   onClearRouteTarget,
   onOfflineChange
@@ -229,8 +253,8 @@ export function ExplorerView({
     const total = filteredBySearchAndCity.length;
     const pharm = filteredBySearchAndCity.filter((f) => f.type === 'PHARMACY').length;
     const vet = filteredBySearchAndCity.filter((f) => f.type === 'EMERGENCY_VET').length;
-    const open = filteredBySearchAndCity.filter((f) => f.status?.isOpen || f.status?.isOnCall).length;
-    const duty = filteredBySearchAndCity.filter((f) => f.status?.isOnCall).length;
+    const open = filteredBySearchAndCity.filter((f) => f.status?.isOpen || isFacilityOnDuty(f)).length;
+    const duty = filteredBySearchAndCity.filter((f) => isFacilityOnDuty(f)).length;
     return { total, pharm, vet, open, duty };
   }, [filteredBySearchAndCity]);
 
@@ -246,10 +270,10 @@ export function ExplorerView({
       }
 
       // Status filters
-      if (filterOpenNow && !fac.status?.isOpen && !fac.status?.isOnCall) {
+      if (filterOpenNow && !fac.status?.isOpen && !isFacilityOnDuty(fac)) {
         return false;
       }
-      if (filterOnCall && !fac.status?.isOnCall) {
+      if (filterOnCall && !isFacilityOnDuty(fac)) {
         return false;
       }
 
@@ -396,7 +420,7 @@ export function ExplorerView({
             onClick={handleToggleOnCall}
           >
             <span className="status-dot-core pulse-dot" style={{ background: 'var(--status-duty-dot)' }} />
-            De Gardă
+            De Gardă ({counts.duty})
           </button>
         </div>
       </div>
@@ -432,7 +456,7 @@ export function ExplorerView({
           </div>
 
           {/* Loading Skeleton */}
-          {((loading && allFacilities.length === 0) || previewState === 'loading') && (
+          {loading && allFacilities.length === 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {[1, 2, 3].map((n) => (
                 <div key={n} className="originle-card" style={{ padding: '20px' }}>
@@ -446,7 +470,7 @@ export function ExplorerView({
           )}
 
           {/* Empty State */}
-          {!loading && previewState !== 'loading' && (displayedFacilities.length === 0 || previewState === 'empty') && (
+          {!loading && !error && displayedFacilities.length === 0 && (
             <div className="originle-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
               <div style={{ fontSize: '40px', marginBottom: '12px' }}>📭</div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)' }}>
@@ -466,7 +490,7 @@ export function ExplorerView({
           )}
 
           {/* Error State */}
-          {(error || previewState === 'error') && (
+          {error && (
             <div className="error-alert-banner">
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚠️</div>
               <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)' }}>
@@ -486,7 +510,7 @@ export function ExplorerView({
           )}
 
           {/* Real Facilities List */}
-          {(!loading || displayedFacilities.length > 0) && previewState === 'normal' && displayedFacilities.length > 0 && (
+          {(!loading || displayedFacilities.length > 0) && !error && displayedFacilities.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {displayedFacilities.map((fac) => (
                 <FacilityCard

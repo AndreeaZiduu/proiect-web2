@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { api } from '../services/api';
 
 const AuthContext = createContext(null);
+const SESSION_ENTERED_KEY = 'p10_session_entered';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -14,7 +15,24 @@ export function AuthProvider({ children }) {
   });
 
   const [token, setToken] = useState(() => localStorage.getItem('token') || null);
+  const [hasEnteredApp, setHasEnteredApp] = useState(() => {
+    try {
+      return sessionStorage.getItem(SESSION_ENTERED_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
   const role = user?.role || 'ANON';
+
+  const markSessionEntered = () => {
+    try {
+      sessionStorage.setItem(SESSION_ENTERED_KEY, 'true');
+    } catch {
+      // Ignore storage restriction errors
+    }
+    setHasEnteredApp(true);
+  };
 
   const login = async (email, password) => {
     const data = await api.login(email, password);
@@ -22,6 +40,7 @@ export function AuthProvider({ children }) {
     setUser(data.user);
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    markSessionEntered();
     return data;
   };
 
@@ -31,6 +50,7 @@ export function AuthProvider({ children }) {
     setUser(data.user);
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    markSessionEntered();
     return data;
   };
 
@@ -41,9 +61,24 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('user');
   };
 
+  const continueAsVisitor = () => {
+    logout();
+    markSessionEntered();
+  };
+
+  const returnToWelcomeScreen = () => {
+    logout();
+    try {
+      sessionStorage.removeItem(SESSION_ENTERED_KEY);
+    } catch {
+      // Ignore storage restriction errors
+    }
+    setHasEnteredApp(false);
+  };
+
   const switchRole = async (targetRole) => {
     if (targetRole === 'ANON') {
-      logout();
+      continueAsVisitor();
       return;
     }
 
@@ -74,6 +109,7 @@ export function AuthProvider({ children }) {
       setUser(mockUser);
       localStorage.setItem('token', mockToken);
       localStorage.setItem('user', JSON.stringify(mockUser));
+      markSessionEntered();
     }
   };
 
@@ -83,6 +119,7 @@ export function AuthProvider({ children }) {
         user,
         token,
         role,
+        hasEnteredApp,
         isAnon: role === 'ANON',
         isUser: role === 'USER' || role === 'MODERATOR' || role === 'ADMIN',
         isModerator: role === 'MODERATOR' || role === 'ADMIN',
@@ -90,7 +127,9 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
-        switchRole
+        switchRole,
+        continueAsVisitor,
+        returnToWelcomeScreen
       }}
     >
       {children}
