@@ -1119,3 +1119,23 @@ Integritatea a fost re-validată prin `ledger-lint`.
 * **Teste Backend (`npm test --prefix backend`):** **56 teste trecute din 56** (7 fișiere de test, fără modificări pe backend).
 * **Linter Registru (`python3 docs/agents/tools/ledger-lint.py --fix`):** **`✓ ledger ok`**.
 * **Ramură curentă:** `feat/location-permission-prompt`.
+
+
+# Sesiunea 31 — Simplificare și Centrare Ecran Autentificare `AuthWelcomeScreen` (2026-11-28)
+
+## 1. Ce a Cerut Utilizatorul
+1. Eliminarea completă a coloanei din stânga cu cele trei carduri de conturi demo 1-click (`Conturi Demonstrație 1-Click`: `Utilizator Înregistrat`, `Moderator Sibiu`, `Administrator Sistem`) din `frontend/src/components/auth/AuthWelcomeScreen.jsx`.
+2. Centrarea cardului de autentificare/înregistrare (`Intră în contul tău` / `Creează cont nou`) pe mijlocul paginii (`max-width: 28rem; margin: 0 auto`), păstrând sus butonul **„Continuă ca Vizitator (fără cont) →”** și jos caseta compactă cu credențialele demo.
+3. Rularea `npm run build --prefix frontend` pentru confirmarea lipsei erorilor de build și actualizarea `AI_LOG.md`.
+
+## 2. Ce S-a Livrat
+* **`frontend/src/components/auth/AuthWelcomeScreen.jsx`**:
+  - Eliminate constanta `ROLE_CARDS`, handler-ul `handleRoleSelect`, starea `loadingRole` și întreaga coloană `.auth-roles-column` / grila `.auth-welcome-grid`.
+  - Păstrate antetul cu comutatorul Light/Dark, secțiunea Hero cu butonul **„👀 Continuă ca Vizitator (fără cont) →”**, formularul clasic de conectare/înregistrare și caseta compactă cu credențialele demo (`user@sibiu.ro`, `moderator@sibiu.ro`, `admin@sibiu.ro`) la baza cardului.
+* **`frontend/src/index.css`**:
+  - Eliminate stilurile neutilizate pentru coloana și cardurile 1-click (`.auth-welcome-grid`, `.auth-roles-column`, `.auth-role-cards-stack`, `.auth-role-card*`, `.auth-role-email-pill`).
+  - Centrat `.auth-login-card` cu `width: 100%; max-width: 28rem; margin: 0 auto;`.
+
+## 3. Verificări
+* **Linting Frontend (`npm run lint`):** **0 avertismente, 0 erori** (`oxlint` pe 18 fișiere).
+* **Build Frontend (`npm run build`):** **Compilat cu succes** (`vite build` în 1.98s, `dist/` generat fără erori).

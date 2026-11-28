@@ -6,10 +6,17 @@ const DEFAULT_SIBIU_CENTER = [45.7983, 24.1256]; // Centrul Sibiului
 export function SibiuMap({
   facilities = [],
   selectedFacility = null,
+  selectedRouteFacility = null,
   routeData = null,
   userLocation = null,
+  isRealLocation = false,
+  isManualLocation = false,
+  isPickingOrigin = false,
   theme = 'light',
-  onSelectFacility
+  onSelectFacility,
+  onPickOrigin,
+  onCancelPickOrigin,
+  onClearRoute
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -17,6 +24,21 @@ export function SibiuMap({
   const routeLayerRef = useRef(null);
   const tileLayerRef = useRef(null);
   const prevUserLocationRef = useRef(null);
+  const lastOpenedPopupIdRef = useRef(null);
+  const lastCenteredFacilityIdRef = useRef(null);
+  const hadRouteRef = useRef(false);
+  const facilitiesRef = useRef(facilities);
+  const isPickingOriginRef = useRef(isPickingOrigin);
+  const onPickOriginRef = useRef(onPickOrigin);
+
+  useEffect(() => {
+    facilitiesRef.current = facilities;
+  }, [facilities]);
+
+  useEffect(() => {
+    isPickingOriginRef.current = isPickingOrigin;
+    onPickOriginRef.current = onPickOrigin;
+  }, [isPickingOrigin, onPickOrigin]);
 
   // Initialize Leaflet map
   useEffect(() => {
@@ -43,11 +65,28 @@ export function SibiuMap({
     routeLayerRef.current = L.layerGroup().addTo(map);
     mapInstanceRef.current = map;
 
+    const handleMapClick = (e) => {
+      if (isPickingOriginRef.current && onPickOriginRef.current && e?.latlng) {
+        onPickOriginRef.current({ lat: e.latlng.lat, lng: e.latlng.lng });
+      }
+    };
+    map.on('click', handleMapClick);
+
     return () => {
+      map.off('click', handleMapClick);
       map.remove();
       mapInstanceRef.current = null;
     };
   }, []);
+
+  // Toggle crosshair cursor when picking origin on map
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    const container = mapInstanceRef.current.getContainer();
+    if (container) {
+      container.style.cursor = isPickingOrigin ? 'crosshair' : '';
+    }
+  }, [isPickingOrigin]);
 
   // Update Tile Layer filter when Theme changes
   useEffect(() => {
@@ -63,7 +102,7 @@ export function SibiuMap({
     }
   }, [theme]);
 
-  // Update Markers (Origin "Tu ești aici" / Centrul Sibiului + Facilities)
+  // Update Markers (Origin "📍 Locația mea" / "📍 Punctul meu de plecare" / "Centrul Sibiului" + Facilities)
   useEffect(() => {
     if (!mapInstanceRef.current || !markersLayerRef.current) return;
 
@@ -71,16 +110,23 @@ export function SibiuMap({
     markersLayer.clearLayers();
 
     if (userLocation) {
+      const originPinLabel = isManualLocation ? '📍 Punctul meu de plecare' : '📍 Locația mea';
+      const originPopupKicker = isManualLocation ? '● PUNCT DE PLECARE MANUAL' : '● LOCAȚIA TA CURENTĂ';
+      const originPopupTitle = isManualLocation ? 'Punctul meu de plecare' : 'Locația mea';
+      const originPopupDesc = isManualLocation
+        ? 'Punct ales manual pe hartă pentru sortare și trasee OSRM.'
+        : 'Locație detectată din browser pentru sortare și trasee OSRM.';
+
       const userIcon = L.divIcon({
         className: 'custom-leaflet-pin',
         html: `
           <div class="user-location-pin">
             <span class="user-location-pin-dot"></span>
-            <span>📍 Tu ești aici</span>
+            <span>${originPinLabel}</span>
           </div>
         `,
         iconSize: null,
-        iconAnchor: [58, 14]
+        iconAnchor: [isManualLocation ? 88 : 58, 14]
       });
       const userMarker = L.marker([userLocation.lat, userLocation.lng], {
         icon: userIcon,
@@ -89,11 +135,11 @@ export function SibiuMap({
       userMarker.bindPopup(`
         <div style="padding: 6px; font-family: var(--font-family-primary);">
           <div style="font-size: 11px; font-weight: 800; color: var(--accent-terracotta); text-transform: uppercase;">
-            ● LOCAȚIA TA CURENTĂ
+            ${originPopupKicker}
           </div>
-          <div style="font-size: 13px; font-weight: 700; margin-top: 2px;">Tu ești aici</div>
+          <div style="font-size: 13px; font-weight: 700; margin-top: 2px;">${originPopupTitle}</div>
           <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
-            Punct de plecare pentru sortare și trasee OSRM.
+            ${originPopupDesc}
           </div>
         </div>
       `);
@@ -169,7 +215,7 @@ export function SibiuMap({
           </div>
           <div style="font-size: 13px; font-weight: 700; margin: 3px 0 2px 0;">${fac.name}</div>
           <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">
-            ${fac.address} ${fac.distanceKm !== null ? `• 📏 ${fac.distanceKm} km` : ''}
+            ${fac.address} ${fac.distanceKm !== null && fac.distanceKm !== undefined ? `• 📏 ${fac.distanceKm} km` : ''}
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             ${fac.phone ? `<a href="tel:${fac.phone}" class="pill-btn pill-btn-primary" style="padding: 4px 10px; font-size: 11px; text-decoration: none;">📞 Sună</a>` : ''}
@@ -181,21 +227,30 @@ export function SibiuMap({
 
       marker.bindPopup(popupHtml);
 
-      marker.on('click', () => {
+      marker.on('click', (e) => {
+        if (isPickingOriginRef.current && onPickOriginRef.current && e?.latlng) {
+          onPickOriginRef.current({ lat: e.latlng.lat, lng: e.latlng.lng });
+          return;
+        }
         if (onSelectFacility) {
           onSelectFacility(fac);
         }
       });
 
-      if (isSelected) {
+      marker.addTo(markersLayer);
+
+      if (isSelected && lastOpenedPopupIdRef.current !== fac.id) {
+        lastOpenedPopupIdRef.current = fac.id;
         marker.openPopup();
       }
-
-      marker.addTo(markersLayer);
     });
-  }, [facilities, selectedFacility, userLocation, onSelectFacility]);
 
-  // Pan map to user location when detected (unless an active route is controlling bounds)
+    if (!selectedFacility) {
+      lastOpenedPopupIdRef.current = null;
+    }
+  }, [facilities, selectedFacility, userLocation, isRealLocation, isManualLocation, onSelectFacility]);
+
+  // Pan map to user location when detected or manually picked (unless an active route is controlling bounds)
   useEffect(() => {
     if (!mapInstanceRef.current || !userLocation) {
       prevUserLocationRef.current = userLocation;
@@ -206,18 +261,24 @@ export function SibiuMap({
     prevUserLocationRef.current = userLocation;
 
     if (changed && !routeData) {
-      mapInstanceRef.current.setView([userLocation.lat, userLocation.lng], 14, { animate: true });
+      if (isManualLocation) {
+        mapInstanceRef.current.panTo([userLocation.lat, userLocation.lng], { animate: true });
+      } else {
+        mapInstanceRef.current.setView([userLocation.lat, userLocation.lng], 14, { animate: true });
+      }
     }
-  }, [userLocation, routeData]);
+  }, [userLocation, isManualLocation, routeData]);
 
   // Update Route Polyline
   useEffect(() => {
     if (!mapInstanceRef.current || !routeLayerRef.current) return;
 
+    const map = mapInstanceRef.current;
     const routeLayer = routeLayerRef.current;
     routeLayer.clearLayers();
 
     if (routeData && routeData.coordinates && routeData.coordinates.length > 0) {
+      hadRouteRef.current = true;
       const polyline = L.polyline(routeData.coordinates, {
         color: '#C25E34', // terracotta accent per DESIGN.md
         weight: 5,
@@ -225,11 +286,29 @@ export function SibiuMap({
         dashArray: routeData.isFallback ? '6, 8' : undefined
       }).addTo(routeLayer);
 
-      mapInstanceRef.current.fitBounds(polyline.getBounds(), { padding: [40, 40] });
-    } else if (selectedFacility) {
-      mapInstanceRef.current.setView([selectedFacility.latitude, selectedFacility.longitude], 15, {
+      map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
+    } else if (hadRouteRef.current) {
+      hadRouteRef.current = false;
+      lastCenteredFacilityIdRef.current = selectedFacility?.id || null;
+      map.closePopup();
+
+      const visibleCoords = (facilitiesRef.current || [])
+        .filter((f) => typeof f.latitude === 'number' && typeof f.longitude === 'number')
+        .map((f) => [f.latitude, f.longitude]);
+
+      if (visibleCoords.length > 0) {
+        const bounds = L.latLngBounds([DEFAULT_SIBIU_CENTER, ...visibleCoords]);
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14, animate: true });
+      } else {
+        map.setView(DEFAULT_SIBIU_CENTER, 14, { animate: true });
+      }
+    } else if (selectedFacility && lastCenteredFacilityIdRef.current !== selectedFacility.id) {
+      lastCenteredFacilityIdRef.current = selectedFacility.id;
+      map.setView([selectedFacility.latitude, selectedFacility.longitude], 15, {
         animate: true
       });
+    } else if (!selectedFacility) {
+      lastCenteredFacilityIdRef.current = null;
     }
   }, [routeData, selectedFacility]);
 
@@ -246,6 +325,11 @@ export function SibiuMap({
     mapInstanceRef.current.setView(targetCenter, 14, { animate: true });
   };
 
+  const routeOriginLabel = userLocation
+    ? (isManualLocation ? 'Punctul meu de plecare' : 'Locația mea')
+    : 'Centrul Sibiului';
+  const activeRouteFacility = selectedRouteFacility || selectedFacility;
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '480px' }}>
       {/* Map Tools */}
@@ -260,18 +344,38 @@ export function SibiuMap({
           type="button"
           className="map-tool-btn"
           onClick={handleCenter}
-          title={userLocation ? 'Centrează pe locația mea' : 'Centrează Centrul Sibiului'}
+          title={
+            userLocation
+              ? (isManualLocation ? 'Centrează pe punctul de plecare' : 'Centrează pe locația mea')
+              : 'Centrează Centrul Sibiului'
+          }
         >
           {userLocation ? '📍' : '🎯'}
         </button>
       </div>
 
+      {/* Pick-on-map active hint */}
+      {isPickingOrigin && (
+        <div className="map-pick-origin-hint" role="status">
+          <span>📌 Dă click oriunde pe hartă pentru a seta punctul de plecare</span>
+          {onCancelPickOrigin && (
+            <button
+              type="button"
+              className="map-pick-cancel-btn"
+              onClick={onCancelPickOrigin}
+            >
+              Anulează
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Route Info Banner (OSRM Street Routing with external Google Maps & Waze fallbacks) */}
-      {routeData && selectedFacility && (
+      {routeData && activeRouteFacility && (
         <div className="osrm-route-banner">
           <div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Traseu Auto: {userLocation ? 'Tu ești aici' : 'Centrul Sibiului'} → {selectedFacility.name}
+              Traseu Auto: {routeOriginLabel} → {activeRouteFacility.name}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {routeData.durationMin !== null ? (
@@ -289,9 +393,9 @@ export function SibiuMap({
               )}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div className="osrm-route-banner-actions">
             <a
-              href={`https://www.google.com/maps/dir/?api=1&destination=${selectedFacility.latitude},${selectedFacility.longitude}`}
+              href={`https://www.google.com/maps/dir/?api=1&destination=${activeRouteFacility.latitude},${activeRouteFacility.longitude}`}
               target="_blank"
               rel="noreferrer"
               className="pill-btn pill-btn-primary"
@@ -301,7 +405,7 @@ export function SibiuMap({
               Google Maps ↗
             </a>
             <a
-              href={`https://waze.com/ul?ll=${selectedFacility.latitude},${selectedFacility.longitude}&navigate=yes`}
+              href={`https://waze.com/ul?ll=${activeRouteFacility.latitude},${activeRouteFacility.longitude}&navigate=yes`}
               target="_blank"
               rel="noreferrer"
               className="pill-btn pill-btn-outline"
@@ -310,6 +414,18 @@ export function SibiuMap({
             >
               Waze ↗
             </a>
+            {onClearRoute && (
+              <button
+                type="button"
+                className="pill-btn route-close-btn"
+                style={{ padding: '6px 12px', fontSize: '12px' }}
+                onClick={onClearRoute}
+                title="Închide traseul activ (Esc)"
+                aria-label="Închide traseul"
+              >
+                ✕ Închide traseul
+              </button>
+            )}
           </div>
         </div>
       )}

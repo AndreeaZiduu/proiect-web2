@@ -8,6 +8,7 @@ import { LocationConsentModal } from './LocationConsentModal';
 export const DEFAULT_SIBIU_CENTER = { lat: 45.7983, lng: 24.1256 };
 const LOCATION_CONSENT_KEY = 'p10_location_consent';
 const LOCATION_COORDS_KEY = 'p10_location_coords';
+const LOCATION_SOURCE_KEY = 'p10_location_source';
 
 function calculateDistanceKm(lat1, lng1, lat2, lng2) {
   if (
@@ -49,6 +50,27 @@ function readStoredCoords() {
   } catch {
     return null;
   }
+}
+
+function readStoredLocationSource() {
+  try {
+    return sessionStorage.getItem(LOCATION_SOURCE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function sortFacilitiesByOrigin(list, origin) {
+  return [...list]
+    .map((fac) => ({
+      ...fac,
+      distanceKm: calculateDistanceKm(origin.lat, origin.lng, fac.latitude, fac.longitude)
+    }))
+    .sort((a, b) => {
+      const distA = a.distanceKm !== null && a.distanceKm !== undefined ? a.distanceKm : 9999;
+      const distB = b.distanceKm !== null && b.distanceKm !== undefined ? b.distanceKm : 9999;
+      return distA - distB;
+    });
 }
 
 const QUICK_SERVICE_SUGGESTIONS = [
@@ -272,9 +294,21 @@ export function ExplorerView({
 
   // Geolocation consent & active origin (no silent navigator.geolocation call before user consent)
   const [showLocationPrompt, setShowLocationPrompt] = useState(() => readStoredConsent() === null);
-  const [userLocation, setUserLocation] = useState(() =>
-    readStoredConsent() === 'granted' ? readStoredCoords() : null
+  const [userLocation, setUserLocation] = useState(() => {
+    const consent = readStoredConsent();
+    const source = readStoredLocationSource();
+    if (source === 'manual' || consent === 'granted') {
+      return readStoredCoords();
+    }
+    return null;
+  });
+  const [isRealLocation, setIsRealLocation] = useState(
+    () => readStoredConsent() === 'granted' && Boolean(readStoredCoords()) && readStoredLocationSource() !== 'manual'
   );
+  const [isManualLocation, setIsManualLocation] = useState(
+    () => Boolean(readStoredCoords()) && readStoredLocationSource() === 'manual'
+  );
+  const [isPickingOrigin, setIsPickingOrigin] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState(null);
 
@@ -282,28 +316,56 @@ export function ExplorerView({
 
   // Selected facility and routing
   const [selectedFacility, setSelectedFacility] = useState(null);
+  const [selectedRouteFacility, setSelectedRouteFacility] = useState(null);
   const [routeData, setRouteData] = useState(null);
-  const selectedFacilityRef = useRef(null);
+  const selectedRouteFacilityRef = useRef(null);
   const routeDataRef = useRef(null);
+  const routeRequestIdRef = useRef(0);
 
   useEffect(() => {
-    selectedFacilityRef.current = selectedFacility;
+    selectedRouteFacilityRef.current = selectedRouteFacility;
     routeDataRef.current = routeData;
-  }, [selectedFacility, routeData]);
+  }, [selectedRouteFacility, routeData]);
 
   const cardRefs = useRef({});
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchContainerRef = useRef(null);
 
+  const handleClearRoute = useCallback(() => {
+    routeRequestIdRef.current += 1;
+    setRouteData(null);
+    setSelectedRouteFacility(null);
+  }, []);
+
+  const recalculateActiveRoute = useCallback((originCoords) => {
+    if (routeDataRef.current && selectedRouteFacilityRef.current) {
+      const target = selectedRouteFacilityRef.current;
+      const reqId = ++routeRequestIdRef.current;
+      api
+        .getOsrmRoute(originCoords, { lat: target.latitude, lng: target.longitude })
+        .then((updatedRoute) => {
+          if (routeRequestIdRef.current === reqId) {
+            setRouteData(updatedRoute);
+          }
+        });
+    }
+  }, []);
+
   const requestBrowserLocation = useCallback(() => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      setLocationError('Browserul nu suportă localizarea GPS — folosim Centrul Sibiului.');
+      setUserLocation(null);
+      setIsRealLocation(false);
+      setIsManualLocation(false);
+      setLocationError(
+        'Browserul nu suportă localizarea GPS — folosim Centrul Sibiului ca punct de plecare.'
+      );
       setIsLocating(false);
       return;
     }
 
     setIsLocating(true);
     setLocationError(null);
+    setIsPickingOrigin(false);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -314,48 +376,73 @@ export function ExplorerView({
         try {
           sessionStorage.setItem(LOCATION_CONSENT_KEY, 'granted');
           sessionStorage.setItem(LOCATION_COORDS_KEY, JSON.stringify(coords));
+          sessionStorage.setItem(LOCATION_SOURCE_KEY, 'real');
         } catch {
           // Ignore storage restrictions
         }
         setUserLocation(coords);
+        setIsRealLocation(true);
+        setIsManualLocation(false);
         setIsLocating(false);
         setLocationError(null);
-
-        // Recalculate active OSRM route from the newly detected user origin
-        if (routeDataRef.current && selectedFacilityRef.current) {
-          const target = selectedFacilityRef.current;
-          api
-            .getOsrmRoute(coords, { lat: target.latitude, lng: target.longitude })
-            .then((updatedRoute) => setRouteData(updatedRoute));
-        }
+        setAllFacilities((prev) => (prev.length > 0 ? sortFacilitiesByOrigin(prev, coords) : prev));
+        recalculateActiveRoute(coords);
       },
       (geoErr) => {
-        const isDenied = geoErr && geoErr.code === 1;
-        if (isDenied) {
+        const code = geoErr?.code;
+        if (code === 1) {
           try {
             sessionStorage.setItem(LOCATION_CONSENT_KEY, 'denied');
             sessionStorage.removeItem(LOCATION_COORDS_KEY);
+            sessionStorage.removeItem(LOCATION_SOURCE_KEY);
           } catch {
             // Ignore storage restrictions
           }
-          setUserLocation(null);
-          setLocationError('Accesul la locație a fost refuzat în browser — folosim Centrul Sibiului.');
+          setLocationError(
+            'Accesul la locație este blocat în browser sau în setările sistemului (OS) — folosim Centrul Sibiului.'
+          );
+        } else if (code === 2) {
+          try {
+            sessionStorage.removeItem(LOCATION_COORDS_KEY);
+            sessionStorage.removeItem(LOCATION_SOURCE_KEY);
+          } catch {
+            // Ignore storage restrictions
+          }
+          setLocationError(
+            'Poziția dispozitivului este indisponibilă (setări OS / Wi-Fi) — folosim Centrul Sibiului.'
+          );
+        } else if (code === 3) {
+          try {
+            sessionStorage.removeItem(LOCATION_COORDS_KEY);
+            sessionStorage.removeItem(LOCATION_SOURCE_KEY);
+          } catch {
+            // Ignore storage restrictions
+          }
+          setLocationError(
+            'Detectarea locației a expirat (timeout) — folosim Centrul Sibiului ca punct de plecare.'
+          );
         } else {
-          setLocationError('Nu am putut detecta locația curentă — folosim Centrul Sibiului.');
+          setLocationError(
+            'Nu am putut detecta locația curentă — folosim Centrul Sibiului ca punct de plecare.'
+          );
         }
+        setUserLocation(null);
+        setIsRealLocation(false);
+        setIsManualLocation(false);
         setIsLocating(false);
+        recalculateActiveRoute(DEFAULT_SIBIU_CENTER);
       },
       {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 10000,
-        maximumAge: 60000
+        maximumAge: 300000
       }
     );
-  }, []);
+  }, [recalculateActiveRoute]);
 
-  // Only refresh geolocation on mount if the user already granted consent in this session
+  // Only refresh geolocation on mount if the user already granted consent for real GPS in this session
   useEffect(() => {
-    if (readStoredConsent() === 'granted') {
+    if (readStoredConsent() === 'granted' && readStoredLocationSource() !== 'manual') {
       requestBrowserLocation();
     }
   }, [requestBrowserLocation]);
@@ -374,13 +461,39 @@ export function ExplorerView({
     try {
       sessionStorage.setItem(LOCATION_CONSENT_KEY, 'denied');
       sessionStorage.removeItem(LOCATION_COORDS_KEY);
+      sessionStorage.removeItem(LOCATION_SOURCE_KEY);
     } catch {
       // Ignore storage restrictions
     }
     setShowLocationPrompt(false);
     setUserLocation(null);
+    setIsRealLocation(false);
+    setIsManualLocation(false);
+    setIsPickingOrigin(false);
     setLocationError(null);
   }, []);
+
+  const handlePickOriginOnMap = useCallback((coords) => {
+    const nextCoords = {
+      lat: Number(coords.lat),
+      lng: Number(coords.lng)
+    };
+    try {
+      sessionStorage.setItem(LOCATION_CONSENT_KEY, 'granted');
+      sessionStorage.setItem(LOCATION_COORDS_KEY, JSON.stringify(nextCoords));
+      sessionStorage.setItem(LOCATION_SOURCE_KEY, 'manual');
+    } catch {
+      // Ignore storage restrictions
+    }
+    setShowLocationPrompt(false);
+    setUserLocation(nextCoords);
+    setIsRealLocation(false);
+    setIsManualLocation(true);
+    setIsPickingOrigin(false);
+    setLocationError(null);
+    setAllFacilities((prev) => (prev.length > 0 ? sortFacilitiesByOrigin(prev, nextCoords) : prev));
+    recalculateActiveRoute(nextCoords);
+  }, [recalculateActiveRoute]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -549,13 +662,34 @@ export function ExplorerView({
 
   // Handle OSRM route calculation using user's detected coordinates or default Sibiu center
   const handleDrawRoute = useCallback(async (facility) => {
+    const reqId = ++routeRequestIdRef.current;
     setSelectedFacility(facility);
+    setSelectedRouteFacility(facility);
     setMobileView('map');
     const startPoint = activeOrigin;
     const endPoint = { lat: facility.latitude, lng: facility.longitude };
     const route = await api.getOsrmRoute(startPoint, endPoint);
-    setRouteData(route);
+    if (routeRequestIdRef.current === reqId) {
+      if (route) {
+        setRouteData(route);
+      } else {
+        setRouteData(null);
+        setSelectedRouteFacility(null);
+      }
+    }
   }, [activeOrigin]);
+
+  // Clear active route on Escape key
+  useEffect(() => {
+    if (!routeData && !selectedRouteFacility) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        handleClearRoute();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [routeData, selectedRouteFacility, handleClearRoute]);
 
   // Trigger route drawing if requested externally (e.g. from FacilityDetailModal or Favorites)
   useEffect(() => {
@@ -794,16 +928,34 @@ export function ExplorerView({
           </button>
           <button
             type="button"
-            className={`filter-chip location-chip ${userLocation ? 'active-location' : ''}`}
+            className={`filter-chip location-chip ${isRealLocation ? 'active-location' : ''}`}
             onClick={handleAllowLocation}
             disabled={isLocating}
             title={
-              userLocation
-                ? 'Actualizează locația curentă pentru sortare și traseu OSRM'
-                : 'Folosește locația curentă pentru sortare și traseu OSRM'
+              isRealLocation
+                ? 'Actualizează locația curentă din browser pentru sortare și traseu OSRM'
+                : 'Detectează locația curentă din browser pentru sortare și traseu OSRM'
             }
           >
             <span>{isLocating ? '⏳ Se localizează...' : '📍 Locația mea'}</span>
+          </button>
+          <button
+            type="button"
+            className={`filter-chip location-chip ${isPickingOrigin || isManualLocation ? 'active-location' : ''}`}
+            aria-pressed={isPickingOrigin}
+            onClick={() => {
+              setIsPickingOrigin((prev) => {
+                const next = !prev;
+                if (next) {
+                  setMobileView('map');
+                  setLocationError(null);
+                }
+                return next;
+              });
+            }}
+            title="Activează și dă click oriunde pe hartă pentru a seta manual punctul de plecare"
+          >
+            <span>📌 Setează plecarea pe hartă</span>
           </button>
         </div>
       </div>
@@ -848,7 +1000,11 @@ export function ExplorerView({
               ● CATALOG DISPONIBILITATE ({displayedFacilities.length} UNITĂȚI)
             </span>
             <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
-              {userLocation ? 'Sortat după distanța de la locația ta' : 'Sortat după distanță (Centrul Sibiului)'}
+              {isManualLocation
+                ? 'Sortat după distanța de la punctul ales'
+                : isRealLocation
+                  ? 'Sortat după distanța de la locația ta'
+                  : 'Sortat după distanță (Centrul Sibiului)'}
             </span>
           </div>
 
@@ -923,6 +1079,7 @@ export function ExplorerView({
                   searchQuery={searchQuery}
                   matchedServices={getMatchingServices(fac, searchQuery)}
                   isSelected={selectedFacility?.id === fac.id}
+                  isRouteActive={Boolean(routeData && selectedRouteFacility?.id === fac.id)}
                   isFavorited={isFavorited(fac.id)}
                   onSelect={(f) => {
                     setSelectedFacility(f);
@@ -930,6 +1087,7 @@ export function ExplorerView({
                   onToggleFavorite={onToggleFavorite}
                   onOpenDetails={onOpenDetails}
                   onDrawRoute={handleDrawRoute}
+                  onClearRoute={handleClearRoute}
                 />
               ))}
             </div>
@@ -941,10 +1099,17 @@ export function ExplorerView({
           <SibiuMap
             facilities={displayedFacilities}
             selectedFacility={selectedFacility}
+            selectedRouteFacility={selectedRouteFacility}
             routeData={routeData}
             userLocation={userLocation}
+            isRealLocation={isRealLocation}
+            isManualLocation={isManualLocation}
+            isPickingOrigin={isPickingOrigin}
             theme={theme}
             onSelectFacility={handleSelectFacilityFromMap}
+            onPickOrigin={handlePickOriginOnMap}
+            onCancelPickOrigin={() => setIsPickingOrigin(false)}
+            onClearRoute={handleClearRoute}
           />
         </div>
       </div>
