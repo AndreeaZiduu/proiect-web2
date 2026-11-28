@@ -75,11 +75,13 @@ export const FacilityCard = forwardRef(function FacilityCard({
   searchQuery = '',
   matchedServices = [],
   isSelected,
+  isRouteActive = false,
   isFavorited,
   onSelect,
   onToggleFavorite,
   onOpenDetails,
-  onDrawRoute
+  onDrawRoute,
+  onClearRoute
 }, ref) {
   const isPharm = facility.type === 'PHARMACY';
   const status = facility.status || { isOpen: false, code: 'CLOSED', label: 'Închis' };
@@ -222,12 +224,17 @@ export const FacilityCard = forwardRef(function FacilityCard({
 
           <button
             type="button"
-            className="pill-btn pill-btn-outline"
+            className={`pill-btn ${isRouteActive ? 'route-close-btn' : 'pill-btn-outline'}`}
             style={{ padding: '6px 12px', fontSize: '12px' }}
-            onClick={() => onDrawRoute(facility)}
-            title="Calculează și trasează traseul stradal OSRM pe hartă"
+            aria-pressed={isRouteActive}
+            onClick={() => (isRouteActive && onClearRoute ? onClearRoute() : onDrawRoute(facility))}
+            title={
+              isRouteActive
+                ? 'Închide traseul activ de pe hartă (Esc)'
+                : 'Calculează și trasează traseul stradal OSRM pe hartă'
+            }
           >
-            🗺️ Traseu
+            {isRouteActive ? '✕ Închide traseul' : '🗺️ Traseu'}
           </button>
 
           <a

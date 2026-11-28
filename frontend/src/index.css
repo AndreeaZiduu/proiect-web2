@@ -1510,19 +1510,6 @@
       color: var(--text-muted);
     }
 
-    .auth-welcome-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 0.95fr;
-      gap: var(--space-6);
-      align-items: start;
-    }
-
-    .auth-roles-column {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-
     .auth-section-heading {
       font-size: var(--font-size-xl);
       font-weight: var(--font-weight-extrabold);
@@ -1530,50 +1517,10 @@
       letter-spacing: -0.01em;
     }
 
-    .auth-role-cards-stack {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-
-    .auth-role-card {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      padding: var(--space-5);
-    }
-
-    .auth-role-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
-      flex-wrap: wrap;
-    }
-
-    .auth-role-email-pill {
-      font-family: var(--font-family-mono);
-      font-size: 11px;
-      font-weight: var(--font-weight-semibold);
-      padding: 2px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid transparent;
-    }
-
-    .auth-role-card-title {
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-bold);
-      color: var(--text-primary);
-    }
-
-    .auth-role-card-desc {
-      font-size: var(--font-size-sm);
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: var(--space-2);
-    }
-
     .auth-login-card {
+      width: 100%;
+      max-width: 28rem;
+      margin: 0 auto;
       padding: var(--space-6);
     }
 
@@ -1626,7 +1573,6 @@
 
     /* Responsive */
     @media (max-width: 1024px) {
-      .auth-welcome-grid { grid-template-columns: 1fr; }
       .steps-grid-3x2 { grid-template-columns: repeat(2, 1fr); }
       .hotlines-top-grid-4 { grid-template-columns: repeat(2, 1fr); }
       .favorites-catalog-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1690,7 +1636,7 @@
   position: absolute;
   top: 16px;
   left: 16px;
-  right: 16px;
+  right: 64px;
   background: var(--bg-surface);
   border: 1px solid var(--accent-terracotta-border);
   border-radius: var(--radius-lg);
@@ -1700,7 +1646,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.osrm-route-banner-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.route-close-btn {
+  background: var(--status-duty-bg);
+  color: var(--status-duty-text);
+  border: 1.5px solid var(--accent-terracotta);
+  font-weight: var(--font-weight-bold);
+}
+
+.route-close-btn:hover {
+  background: var(--accent-terracotta);
+  color: #FFFFFF;
+  border-color: var(--accent-terracotta);
+  transform: translateY(-1.5px);
 }
 
 .route-info-time {
@@ -2052,4 +2020,41 @@
   border-radius: var(--radius-full);
   background: #FFFFFF;
   animation: pulse-duty 2s infinite ease-in-out;
+}
+
+.map-pick-origin-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-terracotta);
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-floating);
+}
+
+.map-pick-cancel-btn {
+  background: var(--accent-terracotta-bg);
+  color: var(--accent-terracotta);
+  border: 1px solid var(--accent-terracotta-border);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.map-pick-cancel-btn:hover {
+  background: var(--accent-terracotta);
+  color: #FFFFFF;
 }
